@@ -9,7 +9,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import utility.DAO;
+import utility.UsersDAO;
 
 /**
  * Servlet implementation class LoginServlet
@@ -40,8 +40,9 @@ public class LoginServlet extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String id = request.getParameter("ID");
 		String pwd = request.getParameter("PWD");
+		String nname = null;
 		String flag = null;
-		DAO dao = new DAO();
+		UsersDAO dao = new UsersDAO();
 		String selectedPwd = dao.getPwd(id);
 		if(selectedPwd == null) {
 			flag = "NOID";

@@ -5,7 +5,7 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
-public class DAO {
+public class UsersDAO {
 	private String driver = "oracle.jdbc.OracleDriver";
 	private String url = "jdbc:oracle:thin:@//localhost:1521/xe";
 	private Connection con = null;
@@ -25,7 +25,6 @@ public class DAO {
 			if(rs.next()) {
 				pwd = rs.getString(1);
 			}
-			System.out.println(id+" / "+pwd);
 		}catch(Exception e) {
 			e.printStackTrace();
 		}finally {
