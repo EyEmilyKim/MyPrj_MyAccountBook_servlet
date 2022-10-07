@@ -22,7 +22,7 @@
 </c:if>
 <c:if test="${param.R == 'OK' }">
 	<script type="text/javascript">
-		alert("로그인 되었습니다.\n반갑습니다 XXX님~~");
+		alert("로그인 되었습니다.");
 		location.href="index.jsp";
 	</script>
 </c:if>
