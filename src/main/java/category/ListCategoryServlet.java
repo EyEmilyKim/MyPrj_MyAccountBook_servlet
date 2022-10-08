@@ -33,7 +33,7 @@ public class ListCategoryServlet extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		CategoriesDAO dao = new CategoriesDAO();
-		ArrayList<Category> list = dao.listAllCategory();
+		ArrayList<Category> list = dao.listCategory();
 		request.setAttribute("LIST", list);
 		request.setAttribute("SIZE", list.size());
 		RequestDispatcher rd = request.getRequestDispatcher("listCategory.jsp");

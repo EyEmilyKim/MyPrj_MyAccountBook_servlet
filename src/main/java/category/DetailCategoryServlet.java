@@ -35,7 +35,7 @@ public class DetailCategoryServlet extends HttpServlet {
 		String cate_code = request.getParameter("CCODE");
 		System.out.println("DetailCategoryServlet 수신 CCODE : "+cate_code);
 		CategoriesDAO dao = new CategoriesDAO();
-		Category c = dao.getThatCategory(cate_code);
+		Category c = dao.getCategory(cate_code);
 		request.setAttribute("C", c);
 		RequestDispatcher rd = request.getRequestDispatcher("updateCategory.jsp");
 		rd.forward(request, response);

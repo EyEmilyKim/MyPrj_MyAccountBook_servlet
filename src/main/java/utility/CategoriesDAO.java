@@ -16,7 +16,7 @@ public class CategoriesDAO /* extends DAO */{
 	private ResultSet rs = null;
 	
 	//cate_code로 특정 카테고리 검색 메서드
-	public Category getThatCategory(String code) {
+	public Category getCategory(String code) {
 		Category c = null;
 		String select = "select seqno, inex, cate_name, cate_code from mab_categories where cate_code = ?";
 		try {
@@ -48,7 +48,7 @@ public class CategoriesDAO /* extends DAO */{
 	}
 	
 	//전체 카테고리 검색 메서드
-	public ArrayList<Category> listAllCategory() {
+	public ArrayList<Category> listCategory() {
 		ArrayList<Category> list = new ArrayList<Category>();
 		String select = "select seqno, inex, cate_name, cate_code from mab_categories";
 		try {
@@ -107,7 +107,7 @@ public class CategoriesDAO /* extends DAO */{
 	}
 	
 	//Categories 테이블의 최신 일련번호 검색
-	public int getMaxSeqno() {
+	public int getCateSeqno() {
 		String select = "select max(seqno) from mab_categories";
 		int max = 0;
 		try {

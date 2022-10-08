@@ -31,7 +31,7 @@ public class EditCategoryServlet extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		CategoriesDAO dao = new CategoriesDAO();
-		int maxSeqno = dao.getMaxSeqno();
+		int maxSeqno = dao.getCateSeqno();
 		response.sendRedirect("addCategory.jsp?MSN="+maxSeqno);
 	}
 
