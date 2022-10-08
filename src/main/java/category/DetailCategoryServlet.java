@@ -10,7 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import model.Category;
-import utility.CategoriesDAO;
+import utility.CategoryDAO;
 
 /**
  * Servlet implementation class DetailCategoryServlet
@@ -34,7 +34,7 @@ public class DetailCategoryServlet extends HttpServlet {
 		request.setCharacterEncoding("UTF-8");
 		String cate_code = request.getParameter("CCODE");
 		System.out.println("DetailCategoryServlet 수신 CCODE : "+cate_code);
-		CategoriesDAO dao = new CategoriesDAO();
+		CategoryDAO dao = new CategoryDAO();
 		Category c = dao.getCategory(cate_code);
 		request.setAttribute("C", c);
 		RequestDispatcher rd = request.getRequestDispatcher("updateCategory.jsp");

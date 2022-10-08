@@ -9,7 +9,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import model.Category;
-import utility.CategoriesDAO;
+import utility.CategoryDAO;
 
 /**
  * Servlet implementation class UpdateCategoryServlet
@@ -35,7 +35,7 @@ public class UpdateCategoryServlet extends HttpServlet {
 		Category c = new Category();
 		c.setCate_code(cate_code);
 		c.setCate_name(cate_name);
-		CategoriesDAO dao = new CategoriesDAO();
+		CategoryDAO dao = new CategoryDAO();
 		boolean flag = dao.updateCategory(c);
 		response.sendRedirect("updateCategoryResult.jsp?R="+flag);
 	}

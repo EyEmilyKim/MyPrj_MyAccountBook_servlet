@@ -8,7 +8,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import model.Category;
-import utility.CategoriesDAO;
+import utility.CategoryDAO;
 
 /**
  * Servlet implementation class AddCategoryServlet
@@ -40,7 +40,7 @@ public class AddCategoryServlet extends HttpServlet {
 		c.setInex(inex);
 		c.setCate_name(cate_name);
 		c.setCate_code(cate_code);
-		CategoriesDAO dao = new CategoriesDAO();
+		CategoryDAO dao = new CategoryDAO();
 		boolean flag = dao.insertCategory(c); 
 		String jumpTo = "addCategoryResult.jsp?R=";
 		if(flag) {

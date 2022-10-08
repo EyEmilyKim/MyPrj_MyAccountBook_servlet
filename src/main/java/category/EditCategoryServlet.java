@@ -9,7 +9,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import utility.CategoriesDAO;
+import utility.CategoryDAO;
 
 /**
  * Servlet implementation class EditCategoryServlet
@@ -30,7 +30,7 @@ public class EditCategoryServlet extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		CategoriesDAO dao = new CategoriesDAO();
+		CategoryDAO dao = new CategoryDAO();
 		int maxSeqno = dao.getCateSeqno();
 		response.sendRedirect("addCategory.jsp?MSN="+maxSeqno);
 	}

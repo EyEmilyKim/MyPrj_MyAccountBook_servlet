@@ -11,7 +11,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import model.Category;
-import utility.CategoriesDAO;
+import utility.CategoryDAO;
 
 /**
  * Servlet implementation class ListCategoryServlet
@@ -32,7 +32,7 @@ public class ListCategoryServlet extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		CategoriesDAO dao = new CategoriesDAO();
+		CategoryDAO dao = new CategoryDAO();
 		ArrayList<Category> list = dao.listCategory();
 		request.setAttribute("LIST", list);
 		request.setAttribute("SIZE", list.size());

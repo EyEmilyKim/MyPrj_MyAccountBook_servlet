@@ -8,7 +8,7 @@ import java.util.ArrayList;
 
 import model.Category;
 
-public class CategoriesDAO /* extends DAO */{
+public class CategoryDAO{
 	private String driver = "oracle.jdbc.OracleDriver";
 	private String url = "jdbc:oracle:thin:@//localhost:1521/xe";
 	private Connection con = null;
