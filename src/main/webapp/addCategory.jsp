@@ -20,7 +20,7 @@
 			<input type="text" placeholder="카테고리명을 입력하세요" name="CNAME"></td></tr>
 		<tr><td>
 			<input type="submit" value="등록">
-			<input type="reset" value="취소" onClick="goBack()">		
+			<input type="reset" value="취소" onClick="goBack()"></td>
 		</table>
 	</form>
 	</div>
@@ -46,11 +46,13 @@ function setIn(){
 }
 function check(){
 	let inex = document.fmC.INEX.value;
+	let s_inex = "";
+	if(inex == "EX") s_inex = "지출"; else s_inex = "수입";
 	let cname = document.fmC.CNAME.value;
 	if(inex == ''){ alert("지출/소비 구분을 선택해주세요."); return false }
 	if(cname == ''){ alert("카테고리명을 입력해주세요."); return false }
 	if(! confirm("등록하시겠습니까?\n\n구분 : "+inex+"\n카테고리명 : "+cname) ) return false;
-	confirm("등록될 seqno : "+document.fmC.SEQNO.value);
+	if(! confirm("등록될 seqno : "+document.fmC.SEQNO.value) ) return false;
 }
 function goBack(){
 	//수입or지출 구분 초기화

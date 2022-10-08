@@ -33,6 +33,7 @@ public class DetailCategoryServlet extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		request.setCharacterEncoding("UTF-8");
 		String cate_code = request.getParameter("CCODE");
+		System.out.println("DetailCategoryServlet 수신 CCODE : "+cate_code);
 		CategoriesDAO dao = new CategoriesDAO();
 		Category c = dao.getThatCategory(cate_code);
 		request.setAttribute("C", c);
