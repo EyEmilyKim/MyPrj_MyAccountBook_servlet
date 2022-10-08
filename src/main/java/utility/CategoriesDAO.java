@@ -15,6 +15,30 @@ public class CategoriesDAO /* extends DAO */{
 	private PreparedStatement pstmt = null;
 	private ResultSet rs = null;
 	
+	//cate_code로 카테고리 수정 메서드
+	public boolean updateCategory(Category c) {
+		boolean flag = false;
+		String update = "update mab_categories set cate_name = ? where cate_code = ? ";
+		try {
+			Class.forName(driver);
+			con = DriverManager.getConnection(url,"hr","hr");
+			pstmt = con.prepareStatement(update);
+			pstmt.setString(1, c.getCate_name());
+			pstmt.setString(2, c.getCate_code());
+			pstmt.executeUpdate();
+			con.commit();
+			flag = true;
+			System.out.println("updateCategory() update done");
+		} catch (Exception e) {
+			// TODO: handle exception
+		} finally {
+			try { pstmt.close(); con.close(); }
+			catch(Exception e) {}
+		}
+		System.out.println("updateCategory() end");
+		return flag;
+	}
+	
 	//cate_code로 특정 카테고리 검색 메서드
 	public Category getCategory(String code) {
 		Category c = null;
