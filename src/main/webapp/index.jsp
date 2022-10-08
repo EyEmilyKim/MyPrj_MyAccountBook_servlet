@@ -27,12 +27,17 @@
             </ul>
 		</li>
 	<c:if test="${sessionScope.USER_ID != null }">
-		<li><a href="">로그아웃</a></li>
+		<li><a href="logout.do">로그아웃</a></li>
 	</c:if>	
 	</ul>
 </header>
 <section>
-	
+	<c:if test="${ empty sessionScope.USER_ID }">
+	<p>로그인해주세요~</p>
+	</c:if>
+	<c:if test="${! empty sessionScope.USER_ID }">
+	<p>반갑습니다 ${USER_ID }님~~</p>
+	</c:if>
 	<p>땡그랑 한푼, 땡그랑 두푼♪</p>
 	<a href="login.jsp">로그인</a>
 	<div>
