@@ -15,6 +15,38 @@ public class CategoriesDAO /* extends DAO */{
 	private PreparedStatement pstmt = null;
 	private ResultSet rs = null;
 	
+	//cate_code로 특정 카테고리 검색 메서드
+	public Category getThatCategory(String code) {
+		Category c = null;
+		String select = "select seqno, inex, cate_name, cate_code from mab_categories where cate_code = ?";
+		try {
+			Class.forName(driver);
+			con = DriverManager.getConnection(url,"hr","hr");
+			pstmt = con.prepareStatement(select);
+			pstmt.setString(1, code);
+			rs = pstmt.executeQuery();
+			System.out.println("getThatCategory() select done");
+			if(rs.next()) {
+				c = new Category();
+				c.setSeqno(rs.getInt(1));
+				c.setInex(rs.getString(2));
+				c.setCate_name(rs.getString(3));
+				c.setCate_code(rs.getString(4));
+				System.out.println(rs.getInt(1));
+				System.out.println(rs.getString(2));
+				System.out.println(rs.getString(3));
+				System.out.println(rs.getString(4));
+			}
+		}catch(Exception e) {
+			e.printStackTrace();
+		}finally {
+			try { rs.close(); pstmt.close(); con.close(); }
+			catch(Exception e) {}
+		}
+		System.out.println("getThatCategory() end");
+		return c;
+	}
+	
 	//전체 카테고리 검색 메서드
 	public ArrayList<Category> listAllCategory() {
 		ArrayList<Category> list = new ArrayList<Category>();
@@ -31,11 +63,11 @@ public class CategoriesDAO /* extends DAO */{
 				c.setCate_name(rs.getString(3));
 				c.setCate_code(rs.getString(4));
 				list.add(c);
-				System.out.println("listAllCategory() rs true");
-				System.out.println(rs.getInt(1));
-				System.out.println(rs.getString(2));
-				System.out.println(rs.getString(3));
-				System.out.println(rs.getString(4));
+//				System.out.println("listAllCategory() rs true");
+//				System.out.println(rs.getInt(1));
+//				System.out.println(rs.getString(2));
+//				System.out.println(rs.getString(3));
+//				System.out.println(rs.getString(4));
 			}
 			System.out.println("listAllCategory() select done");
 		} catch (Exception e) {
