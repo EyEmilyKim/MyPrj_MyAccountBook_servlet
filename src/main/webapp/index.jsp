@@ -11,21 +11,23 @@
 <body>
 <div class="container">
 <header>
-	<p><a href="index.jsp">My 가계부</a></p>
+	<div class="home">
+		<a href="index.jsp">My 가계부</a>
+	</div>
 	<ul class="menu">
-		<li><a href="#">가계부 쓰기</a></li>
-		<li><a href="#">전체내역</a></li>
-		<li><a href="#">지출</a></li>
-		<li><a href="#">수입</a></li>
+		<li><a href="">가계부 쓰기</a></li>
+		<li><a href="">전체내역</a></li>
+		<li><a href="">지출</a></li>
+		<li><a href="">수입</a></li>
 		<li><a href="#">설정</a>
 			<ul class="depth_1">
-                <li><a href="editCategory.do">카테고리 관리</a></li>
+                <li><a href="listCategory.do">카테고리 관리</a></li>
                 <li><a href="#">지출수단 관리(tbu)</a></li>
                 <li><a href="#">즐겨찾기 관리(tbu)</a></li>
             </ul>
 		</li>
 	<c:if test="${sessionScope.USER_ID != null }">
-		<li><a href="#">로그아웃</a></li>
+		<li><a href="">로그아웃</a></li>
 	</c:if>	
 	</ul>
 </header>
