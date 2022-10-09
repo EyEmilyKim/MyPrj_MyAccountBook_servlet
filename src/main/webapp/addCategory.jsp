@@ -17,10 +17,10 @@
 			<input type="button" value="지출" onClick="setEx()" id="btn_ex">
 			</td></tr>
 		<tr><td>
-			<input type="text" placeholder="카테고리명을 입력하세요" name="CNAME"></td></tr>
+			<input type="text" placeholder="카테고리명을 입력하세요" value="" name="CNAME"></td></tr>
 		<tr><td>
 			<input type="submit" value="등록">
-			<input type="reset" value="취소" onClick="goBack()"></td>
+			<input type="reset" value="취소" onClick="backToList()"></td>
 		</table>
 	</form>
 	</div>
@@ -31,7 +31,7 @@ let btn_ex = document.getElementById("btn_ex");
 function setEx(){
 		//수입or지출 구분 : 지출
 		document.fmC.INEX.value = "EX";
-		alert("INEX : "+document.fmC.INEX.value);
+		alert("set INEX : "+document.fmC.INEX.value);
 		//[TBC] 버튼 색 바꾸기
 		btn_ex.style.backgroundColor = "red";
 		btn_in.style.backgroundColor = null;
@@ -39,7 +39,7 @@ function setEx(){
 function setIn(){
 		//수입or지출 구분 : 수입
 		document.fmC.INEX.value = "IN";
-		alert("INEX : "+document.fmC.INEX.value);
+		alert("set INEX : "+document.fmC.INEX.value);
 		//[TBC] 버튼 색 바꾸기
 		btn_in.style.backgroundColor = "blue";
 		btn_ex.style.backgroundColor = null;
@@ -53,14 +53,18 @@ function check(){
 	if(! confirm("등록하시겠습니까?\n\n---\n구분 : "+s_inex+"\n카테고리명 : "+cname) ) return false;
 	if(! confirm("등록될 seqno : "+document.fmC.SEQNO.value) ) return false;
 }
-function goBack(){
-	//수입or지출 구분 초기화
-	document.fmC.INEX.value = null;
-	alert("INEX : "+document.fmC.INEX.value);
-	//버튼색 지우기
-	btn_ex.style.backgroundColor = null;
-	btn_in.style.backgroundColor = null;
-	//[TBU] 페이지 뒤로 가기
+function backToList(){
+	if(confirm("취소하고 목록으로 돌아가시겠습니까?")){
+		opener.location.reload();
+		window.close();
+	}else {
+		//수입or지출 구분 초기화
+		document.fmC.INEX.value = null;
+		alert("clear INEX : "+document.fmC.INEX.value);
+		//수입or지출 버튼색 초기화
+		btn_ex.style.backgroundColor = null;
+		btn_in.style.backgroundColor = null;
+	}
 }
 </script>
 </html>

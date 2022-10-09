@@ -54,8 +54,10 @@ function check(){
 	if(! confirm("수정될 cate_code : "+document.fmC.CCODE.value) ) return false;
 }
 function backToList(){
-	opener.location.reload();
-	window.close();
+	if(confirm("취소하고 목록으로 돌아가시겠습니까?")){
+		opener.location.reload();
+		window.close();
+	}
 }
 </script>
 </html>

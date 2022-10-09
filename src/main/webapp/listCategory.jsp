@@ -38,7 +38,7 @@
 
 <script type="text/javascript">
 function popupUpdate(thisA){
-	alert("jumpUpdate(thisA)호출됨");
+	alert("popupUpdate(thisA)호출됨");
 	let url = thisA.href + 'UPD';
 	alert("url : "+url);
 	window.open(url, '카테고리 수정하기', 'width=450, height=500');
