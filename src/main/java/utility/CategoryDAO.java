@@ -38,7 +38,6 @@ public class CategoryDAO{
 		return flag;
 	}
 	
-	
 	//cate_code로 카테고리 수정 메서드
 	public boolean updateCategory(Category c) {
 		boolean flag = false;
@@ -73,7 +72,7 @@ public class CategoryDAO{
 			pstmt = con.prepareStatement(select);
 			pstmt.setString(1, cate_code);
 			rs = pstmt.executeQuery();
-			System.out.println("getThatCategory() select done");
+			System.out.println("getCategory() select done");
 			if(rs.next()) {
 				c = new Category();
 				c.setSeqno(rs.getInt(1));
@@ -91,7 +90,7 @@ public class CategoryDAO{
 			try { rs.close(); pstmt.close(); con.close(); }
 			catch(Exception e) {}
 		}
-		System.out.println("getThatCategory() end");
+		System.out.println("getCategory() end");
 		return c;
 	}
 	
