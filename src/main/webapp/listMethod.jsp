@@ -25,8 +25,8 @@
 				<td>${m.seqno }</td><td>${m.meth_code }</td>
 				<c:if test="${m.mncrd == 'MN' }"><td id="mn">현금</td><td>${m.meth_name }</td></c:if>
 				<c:if test="${m.mncrd == 'CDR' }"><td id="crd">카드</td><td>${m.meth_name }</td></c:if>
-				<td><a href="#${url }" onClick="popupUpdate(this); return false;">수정</a></td>
-				<td><a href="#${url }" onClick="popupDelete(this); return false;">삭제</a></td>
+				<td><a href="${url }" onClick="popupUpdate(this); return false;">수정</a></td>
+				<td><a href="${url }" onClick="popupDelete(this); return false;">삭제</a></td>
 				<td>url : <c:out value="${url }"></c:out></td>
 			</tr>
 	</c:forEach>
@@ -45,17 +45,19 @@ function popupAdd(thisA){
 	window.open(thisA.href, '결제수단 추가하기', 'width=450, height=500');
 }
 
-// function popupDelete(thisA){
-// 	alert("popupDelete(thisA)호출됨");
-// 	let url = thisA.href + 'DEL';
-// 	alert("url : "+url);
-// 	window.open(url, '카테고리 삭제하기', 'width=450, height=500');
-// }
+function popupUpdate(thisA){
+	alert("popupUpdate(thisA)호출됨");
+	let url = thisA.href + 'UPD';
+	alert("url : "+url);
+	window.open(url, '결제수단 수정하기', 'width=450, height=500');
+}
 
-// function popupAdd(thisA){
-// 	alert("popupAdd(thisA)호출됨");
-// 	alert("url : "+thisA.href);
-// 	window.open(thisA.href, '카테고리 추가하기', 'width=450, height=500');
-// }
+function popupDelete(thisA){
+	alert("popupDelete(thisA)호출됨");
+	let url = thisA.href + 'DEL';
+	alert("url : "+url);
+	window.open(url, '결제수단 삭제하기', 'width=450, height=500');
+}
+
 </script>
 </html>

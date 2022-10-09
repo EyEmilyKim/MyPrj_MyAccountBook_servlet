@@ -15,6 +15,61 @@ public class MethodDAO {
 	private Connection con = null;
 	private PreparedStatement pstmt = null;
 	private ResultSet rs = null;
+
+	//meth_code로 결제수단 삭제 메서드
+	public boolean deleteMethod(String meth_code) {
+		boolean flag = false;
+		String delete = "delete mab_methods where meth_code = ?";
+		try {
+			Class.forName(driver);
+			con = DriverManager.getConnection(url,"hr","hr");
+			pstmt = con.prepareStatement(delete);
+			pstmt.setString(1, meth_code);
+			pstmt.executeUpdate();
+			con.commit();
+			flag = true;
+			System.out.println("deleteMethod() delete done");
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			try { pstmt.close(); con.close(); }
+			catch(Exception e) {}
+		}
+		System.out.println("deleteMethod() end");
+		return flag;
+	}
+
+	//meth_code로 결제수단 검색 메서드
+	public Method getMethod(String meth_code) {
+		Method m = null;
+		String select = "select seqno, mncrd, meth_name, meth_code from mab_methods where meth_code = ?";
+		try {
+			Class.forName(driver);
+			con = DriverManager.getConnection(url,"hr","hr");
+			pstmt = con.prepareStatement(select);
+			pstmt.setString(1, meth_code);
+			rs = pstmt.executeQuery();
+			System.out.println("getMethod() select done");
+			if(rs.next()) {
+				m = new Method();
+				m.setSeqno(rs.getInt(1));
+				m.setMncrd(rs.getString(2));
+				m.setMeth_name(rs.getString(3));
+				m.setMeth_code(rs.getString(4));
+				System.out.println(rs.getInt(1));
+				System.out.println(rs.getString(2));
+				System.out.println(rs.getString(3));
+				System.out.println(rs.getString(4));
+			}
+		}catch(Exception e) {
+			e.printStackTrace();
+		}finally {
+			try { rs.close(); pstmt.close(); con.close(); }
+			catch(Exception e) {}
+		}
+		System.out.println("getMethod() end");
+		return m;
+	}
 	
 	//메서드 삽입 메서드
 	public boolean insertMethod(Method m) {
