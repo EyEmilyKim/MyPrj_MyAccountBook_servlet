@@ -13,7 +13,7 @@
 </div>
 	<div>
 	<p>가계부 쓰기 화면입니다.</p>
-	<form action="#addCategory.do" name="fmC" onSubmit="return check()">
+	<form action="#addCategory.do" name="fm" onSubmit="return check()">
 		<input type="hidden" name="SEQNO" value="${param.MSN +1 }">
 		<table>
 		<tr><td>
@@ -58,8 +58,8 @@ let btn_crd = document.getElementById("btn_crd");
 function setMN(){
 	alert("setMN() 호출됨");
 	//결제수단(METHOD) : 현금(MN)
-	document.fmC.METHOD.value = "MN";
-	alert("set METHOD : "+document.fmC.METHOD.value);
+	document.fm.METHOD.value = "MN";
+	alert("set METHOD : "+document.fm.METHOD.value);
 	//버튼 색 바꾸기
 	btn_mn.style.backgroundColor = "orange";
 	btn_crd.style.backgroundColor = null;
@@ -67,8 +67,8 @@ function setMN(){
 function openCRD(){
 	alert("openCRD() 호출됨");
 // 	//결제수단(METHOD) : 현금(CRD)
-// 	document.fmC.METHOD.value = "MN";
-// 	alert("set METHOD : "+document.fmC.METHOD.value);
+// 	document.fm.METHOD.value = "MN";
+// 	alert("set METHOD : "+document.fm.METHOD.value);
 	//버튼 색 바꾸기
 	btn_mn.style.backgroundColor = null;
 	btn_crd.style.backgroundColor = "orange";
@@ -78,16 +78,16 @@ function openCRD(){
 
 function setIN(){
 	//수입or지출 구분(INEX) : 수입(IN)
-	document.fmC.INEX.value = "IN";
-	alert("set INEX : "+document.fmC.INEX.value);
+	document.fm.INEX.value = "IN";
+	alert("set INEX : "+document.fm.INEX.value);
 	//버튼 색 바꾸기
 	btn_in.style.backgroundColor = "blue";
 	btn_ex.style.backgroundColor = null;
 }
 function setEX(){
 	//수입or지출 구분(INEX) : 지출(EX)
-	document.fmC.INEX.value = "EX";
-	alert("set INEX : "+document.fmC.INEX.value);
+	document.fm.INEX.value = "EX";
+	alert("set INEX : "+document.fm.INEX.value);
 	//버튼 색 바꾸기
 	btn_ex.style.backgroundColor = "red";
 	btn_in.style.backgroundColor = null;
@@ -102,14 +102,14 @@ function backToList(){
 		location.href="index.jsp";
 	}else {
 		//수입or지출 구분(INEX) 초기화
-		document.fmC.INEX.value = null;
-		alert("clear INEX : "+document.fmC.INEX.value);
+		document.fm.INEX.value = null;
+		alert("clear INEX : "+document.fm.INEX.value);
 		//수입or지출 버튼색 초기화
 		btn_ex.style.backgroundColor = null;
 		btn_in.style.backgroundColor = null;
 		//현금or카드 구분(METHOD) 초기화
-		document.fmC.METHOD.value = null;
-		alert("clear METHOD : "+document.fmC.METHOD.value);
+		document.fm.METHOD.value = null;
+		alert("clear METHOD : "+document.fm.METHOD.value);
 		//현금or카드 버튼색 초기화
 		btn_mn.style.backgroundColor = null;
 		btn_crd.style.backgroundColor = null;

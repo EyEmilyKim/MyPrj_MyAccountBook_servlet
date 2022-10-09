@@ -9,7 +9,7 @@
 <body>
 	<div>
 	<p>카테고리 추가 화면입니다.</p>
-	<form action="addCategory.do" name="fmC" onSubmit="return check()">
+	<form action="addCategory.do" name="fm" onSubmit="return check()">
 		<input type="hidden" name="SEQNO" value="${param.MSN +1 }">
 		<table>
 		<tr><td>
@@ -31,28 +31,28 @@ let btn_in = document.getElementById("btn_in");
 let btn_ex = document.getElementById("btn_ex");
 function setIN(){
 		//수입or지출 구분(INEX) : 수입(IN)
-		document.fmC.INEX.value = "IN";
-		alert("set INEX : "+document.fmC.INEX.value);
+		document.fm.INEX.value = "IN";
+		alert("set INEX : "+document.fm.INEX.value);
 		//버튼 색 바꾸기
 		btn_in.style.backgroundColor = "blue";
 		btn_ex.style.backgroundColor = null;
 }
 function setEX(){
 		//수입or지출 구분(INEX) : 지출(EX)
-		document.fmC.INEX.value = "EX";
-		alert("set INEX : "+document.fmC.INEX.value);
+		document.fm.INEX.value = "EX";
+		alert("set INEX : "+document.fm.INEX.value);
 		//버튼 색 바꾸기
 		btn_ex.style.backgroundColor = "red";
 		btn_in.style.backgroundColor = null;
 }
 function check(){
-	let inex = document.fmC.INEX.value;
+	let inex = document.fm.INEX.value;
 	let s_inex = ""; if(inex == "EX") s_inex = "지출"; else s_inex = "수입";
-	let cname = document.fmC.CNAME.value;
+	let cname = document.fm.CNAME.value;
 	if(inex == ''){ alert("지출/소비 구분을 선택해주세요."); return false }
 	if(cname == ''){ alert("카테고리명을 입력해주세요."); return false }
 	if(! confirm("등록하시겠습니까?\n\n---\n구분 : "+s_inex+"\n카테고리명 : "+cname) ) return false;
-	if(! confirm("등록될 seqno : "+document.fmC.SEQNO.value) ) return false;
+	if(! confirm("등록될 seqno : "+document.fm.SEQNO.value) ) return false;
 }
 function backToList(){
 	if(confirm("취소하고 목록으로 돌아가시겠습니까?")){
@@ -60,8 +60,8 @@ function backToList(){
 		window.close();
 	}else {
 		//수입or지출 구분(INEX) 초기화
-		document.fmC.INEX.value = null;
-		alert("clear INEX : "+document.fmC.INEX.value);
+		document.fm.INEX.value = null;
+		alert("clear INEX : "+document.fm.INEX.value);
 		//수입or지출 버튼색 초기화
 		btn_ex.style.backgroundColor = null;
 		btn_in.style.backgroundColor = null;

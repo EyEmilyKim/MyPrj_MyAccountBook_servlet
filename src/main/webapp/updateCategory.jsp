@@ -10,7 +10,7 @@
 <body>
 <div>
 	<p>카테고리 수정 화면입니다.</p>
-	<form action="updateCategory.do" name="fmC" onSubmit="return check()">
+	<form action="updateCategory.do" name="fm" onSubmit="return check()">
 		<input type="hidden" name="CCODE" value="${C.cate_code }">
 		<input type="hidden" name="CNAME" value="${C.cate_name }">
 		<table>
@@ -40,16 +40,16 @@ function guideInex(){
 function check(){
 	alert("check()호출됨");
 	document.getElementById("guide").innerHTML = "";
-	let inex = document.fmC.INEX.value;
+	let inex = document.fm.INEX.value;
 	let s_inex = ""; if(inex == "EX") s_inex = "지출"; else s_inex = "수입";
-	let cname = document.fmC.CNAME.value;
-	let n_cname = document.fmC.N_CNAME.value;
+	let cname = document.fm.CNAME.value;
+	let n_cname = document.fm.N_CNAME.value;
 	let guideConf = "기존에 이 카테고리를 사용해 입력한 가계부 기록에도 변경된 카테고리명이 반영됩니다.";
 	let detailConf = "구분 : "+s_inex+"\n수정 전 : "+cname+"\n수정 후 : "+n_cname;
 	alert("let OK");
 	if(n_cname == ''){ alert("카테고리명을 입력해주세요."); return false }
 	if(! confirm( guideConf+"\n\n저장하시겠습니까?\n\n---\n"+detailConf ) ) return false;
-	if(! confirm("수정될 cate_code : "+document.fmC.CCODE.value) ) return false;
+	if(! confirm("수정될 cate_code : "+document.fm.CCODE.value) ) return false;
 }
 function backToList(){
 	if(confirm("취소하고 목록으로 돌아가시겠습니까?")){
