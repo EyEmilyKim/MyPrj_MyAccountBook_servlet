@@ -18,8 +18,6 @@
 			<input type="hidden" value="${C.inex }" name="INEX">
 			<c:if test="${C.inex == 'IN' }">
 			<input type="button" value="수입" onClick="guideInex()" id="btn_in"></c:if>
-			<c:if test="${C.inex == 'In' }">
-			<input type="button" value="수입" onClick="guideInex()" id="btn_in"></c:if>
 			<c:if test="${C.inex == 'EX' }">
 			<input type="button" value="지출" onClick="guideInex()" id="btn_ex"></c:if>
 			</td></tr>

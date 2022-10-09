@@ -8,13 +8,14 @@
 </head>
 <body>
 	<div>
+	<p>카테고리 추가 화면입니다.</p>
 	<form action="addCategory.do" name="fmC" onSubmit="return check()">
 		<input type="hidden" name="SEQNO" value="${param.MSN +1 }">
 		<table>
 		<tr><td>
 			<input type="hidden" name="INEX">
-			<input type="button" value="수입" onClick="setIn()" id="btn_in">
-			<input type="button" value="지출" onClick="setEx()" id="btn_ex">
+			<input type="button" value="수입" onClick="setIN()" id="btn_in">
+			<input type="button" value="지출" onClick="setEX()" id="btn_ex">
 			</td></tr>
 		<tr><td>
 			<input type="text" placeholder="카테고리명을 입력하세요" value="" name="CNAME"></td></tr>
@@ -28,16 +29,16 @@
 <script type="text/javascript">
 let btn_in = document.getElementById("btn_in");
 let btn_ex = document.getElementById("btn_ex");
-function setEx(){
-		//수입or지출 구분 : 지출
+function setEX(){
+		//수입or지출 구분(INEX) : 지출(EX)
 		document.fmC.INEX.value = "EX";
 		alert("set INEX : "+document.fmC.INEX.value);
 		//[TBC] 버튼 색 바꾸기
 		btn_ex.style.backgroundColor = "red";
 		btn_in.style.backgroundColor = null;
 }
-function setIn(){
-		//수입or지출 구분 : 수입
+function setIN(){
+		//수입or지출 구분(INEX) : 수입(IN)
 		document.fmC.INEX.value = "IN";
 		alert("set INEX : "+document.fmC.INEX.value);
 		//[TBC] 버튼 색 바꾸기
@@ -58,7 +59,7 @@ function backToList(){
 		opener.location.reload();
 		window.close();
 	}else {
-		//수입or지출 구분 초기화
+		//수입or지출 구분(INEX) 초기화
 		document.fmC.INEX.value = null;
 		alert("clear INEX : "+document.fmC.INEX.value);
 		//수입or지출 버튼색 초기화

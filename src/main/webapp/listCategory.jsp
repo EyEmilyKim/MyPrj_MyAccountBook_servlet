@@ -6,6 +6,9 @@
 <head>
 <meta charset="UTF-8">
 <title>listCategory.jsp</title>
+	<style type="text/css">
+	#in { color:blue; } #ex { color:red; }
+	</style>
 </head>
 <body>
 <div class="home">
@@ -20,12 +23,11 @@
 		<c:set var="url" value="detailCategory.do?CCODE=${c.cate_code }&MOD="/>	
 			<tr>
 				<td>${c.seqno }</td><td>${c.cate_code }</td>
-				<c:if test="${c.inex == 'In' }"><td>수입</td><td>${c.cate_name }</td></c:if>
-				<c:if test="${c.inex == 'IN' }"><td>수입</td><td>${c.cate_name }</td></c:if>
-				<c:if test="${c.inex == 'EX' }"><td>지출</td><td>${c.cate_name }</td></c:if>
-				<td><a href="${url }" onClick="popupUpdate(this); return false;">수정하기</a></td>
-				<td><a href="${url }" onClick="popupDelete(this); return false;">삭제하기</a></td>
-				<td>url: <c:out value="${url }"></c:out></td>
+				<c:if test="${c.inex == 'IN' }"><td id="in">수입</td><td>${c.cate_name }</td></c:if>
+				<c:if test="${c.inex == 'EX' }"><td id="ex">지출</td><td>${c.cate_name }</td></c:if>
+				<td><a href="${url }" onClick="popupUpdate(this); return false;">수정</a></td>
+				<td><a href="${url }" onClick="popupDelete(this); return false;">삭제</a></td>
+				<td>url : <c:out value="${url }"></c:out></td>
 			</tr>
 	</c:forEach>
 	</table>

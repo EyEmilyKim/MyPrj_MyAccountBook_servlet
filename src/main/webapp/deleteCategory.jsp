@@ -17,8 +17,6 @@
 		<tr><td>
 			<c:if test="${C.inex == 'IN' }">
 			<input type="button" value="수입" name="S_INEX" id="btn_in"></c:if>
-			<c:if test="${C.inex == 'In' }">
-			<input type="button" value="수입" name="S_INEX" id="btn_in"></c:if>
 			<c:if test="${C.inex == 'EX' }">
 			<input type="button" value="지출" name="S_INEX" id="btn_ex"></c:if>
 			</td>
