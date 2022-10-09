@@ -16,7 +16,7 @@
 </div>
 <div>
 	<p>카테고리 목록</p>
-	총 ${SIZE }건<br>
+	총 ${SIZE } 건<br>
 	<table border="1">
 	<tr><td>seqno</td><td>cate_code</td><td>inex</td><td>cate_name</td>
 	<c:forEach items="${LIST }" var="c">

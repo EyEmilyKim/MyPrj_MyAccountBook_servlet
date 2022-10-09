@@ -22,7 +22,7 @@
 		<li><a href="#">설정</a>
 			<ul class="depth_1">
                 <li><a href="listCategory.do">카테고리 관리</a></li>
-                <li><a href="#">결제수단 관리</a></li>
+                <li><a href="listMethod.do">결제수단 관리</a></li>
                 <li><a href="#">고정금액 관리(tbu)</a></li>
             </ul>
 		</li>
