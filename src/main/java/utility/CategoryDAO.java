@@ -111,13 +111,13 @@ public class CategoryDAO{
 				c.setCate_name(rs.getString(3));
 				c.setCate_code(rs.getString(4));
 				list.add(c);
-//				System.out.println("listAllCategory() rs true");
+//				System.out.println("listCategory() rs true");
 //				System.out.println(rs.getInt(1));
 //				System.out.println(rs.getString(2));
 //				System.out.println(rs.getString(3));
 //				System.out.println(rs.getString(4));
 			}
-			System.out.println("listAllCategory() select done");
+			System.out.println("listCategory() select done");
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
@@ -125,7 +125,7 @@ public class CategoryDAO{
 				rs.close(); pstmt.close(); con.close();
 			} catch (Exception e2) {			}
 		}
-		System.out.println("listAllCategory() end");
+		System.out.println("listCategory() end");
 		return list;
 	}
 	

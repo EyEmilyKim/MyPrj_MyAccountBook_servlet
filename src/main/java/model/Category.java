@@ -5,6 +5,7 @@ public class Category {
 	private String inex;
 	private String cate_name;
 	private String cate_code;
+	
 	public int getSeqno() {
 		return seqno;
 	}

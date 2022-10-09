@@ -29,21 +29,21 @@
 <script type="text/javascript">
 let btn_in = document.getElementById("btn_in");
 let btn_ex = document.getElementById("btn_ex");
-function setEX(){
-		//수입or지출 구분(INEX) : 지출(EX)
-		document.fmC.INEX.value = "EX";
-		alert("set INEX : "+document.fmC.INEX.value);
-		//[TBC] 버튼 색 바꾸기
-		btn_ex.style.backgroundColor = "red";
-		btn_in.style.backgroundColor = null;
-}
 function setIN(){
 		//수입or지출 구분(INEX) : 수입(IN)
 		document.fmC.INEX.value = "IN";
 		alert("set INEX : "+document.fmC.INEX.value);
-		//[TBC] 버튼 색 바꾸기
+		//버튼 색 바꾸기
 		btn_in.style.backgroundColor = "blue";
 		btn_ex.style.backgroundColor = null;
+}
+function setEX(){
+		//수입or지출 구분(INEX) : 지출(EX)
+		document.fmC.INEX.value = "EX";
+		alert("set INEX : "+document.fmC.INEX.value);
+		//버튼 색 바꾸기
+		btn_ex.style.backgroundColor = "red";
+		btn_in.style.backgroundColor = null;
 }
 function check(){
 	let inex = document.fmC.INEX.value;
