@@ -43,20 +43,19 @@ function check(){
 	alert("check()호출됨");
 	document.getElementById("guide").innerHTML = "";
 	let inex = document.fmC.INEX.value;
-	let s_inex = "";
-	if(inex == "EX") s_inex = "지출"; else s_inex = "수입";
+	let s_inex = ""; if(inex == "EX") s_inex = "지출"; else s_inex = "수입";
 	let cname = document.fmC.CNAME.value;
 	let n_cname = document.fmC.N_CNAME.value;
 	let guideConf = "기존에 이 카테고리를 사용해 입력한 가계부 기록에도 변경된 카테고리명이 반영됩니다.";
-	let stringConf = "구분 : "+s_inex+"\n수정 전 : "+cname+"\n수정 후 : "+n_cname;
+	let detailConf = "구분 : "+s_inex+"\n수정 전 : "+cname+"\n수정 후 : "+n_cname;
 	alert("let OK");
-// 	if(inex == ''){ alert("지출/소비 구분을 선택해주세요."); return false }
 	if(n_cname == ''){ alert("카테고리명을 입력해주세요."); return false }
-	if(! confirm( guideConf+"\n저장하시겠습니까?\n\n"+stringConf ) ) return false;
+	if(! confirm( guideConf+"\n\n저장하시겠습니까?\n\n---\n"+detailConf ) ) return false;
 	if(! confirm("수정될 cate_code : "+document.fmC.CCODE.value) ) return false;
 }
 function backToList(){
-	location.href = "listCategory.do";
+	opener.location.reload();
+	window.close();
 }
 </script>
 </html>

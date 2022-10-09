@@ -15,6 +15,30 @@ public class CategoryDAO{
 	private PreparedStatement pstmt = null;
 	private ResultSet rs = null;
 	
+	//cate_code로 카테고리 삭제 메서드
+	public boolean deleteCategory(String cate_code) {
+		boolean flag = false;
+		String delete = "delete mab_categories where cate_code = ?";
+		try {
+			Class.forName(driver);
+			con = DriverManager.getConnection(url,"hr","hr");
+			pstmt = con.prepareStatement(delete);
+			pstmt.setString(1, cate_code);
+			pstmt.executeUpdate();
+			con.commit();
+			flag = true;
+			System.out.println("deleteCategory() delete done");
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			try { pstmt.close(); con.close(); }
+			catch(Exception e) {}
+		}
+		System.out.println("deleteCategory() end");
+		return flag;
+	}
+	
+	
 	//cate_code로 카테고리 수정 메서드
 	public boolean updateCategory(Category c) {
 		boolean flag = false;
@@ -30,7 +54,7 @@ public class CategoryDAO{
 			flag = true;
 			System.out.println("updateCategory() update done");
 		} catch (Exception e) {
-			// TODO: handle exception
+			e.printStackTrace();
 		} finally {
 			try { pstmt.close(); con.close(); }
 			catch(Exception e) {}
@@ -39,15 +63,15 @@ public class CategoryDAO{
 		return flag;
 	}
 	
-	//cate_code로 특정 카테고리 검색 메서드
-	public Category getCategory(String code) {
+	//cate_code로 카테고리 검색 메서드
+	public Category getCategory(String cate_code) {
 		Category c = null;
 		String select = "select seqno, inex, cate_name, cate_code from mab_categories where cate_code = ?";
 		try {
 			Class.forName(driver);
 			con = DriverManager.getConnection(url,"hr","hr");
 			pstmt = con.prepareStatement(select);
-			pstmt.setString(1, code);
+			pstmt.setString(1, cate_code);
 			rs = pstmt.executeQuery();
 			System.out.println("getThatCategory() select done");
 			if(rs.next()) {

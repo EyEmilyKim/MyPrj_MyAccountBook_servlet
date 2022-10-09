@@ -14,14 +14,14 @@ import utility.CategoryDAO;
 /**
  * Servlet implementation class EditCategoryServlet
  */
-@WebServlet("/editCategory.do")
-public class EditCategoryServlet extends HttpServlet {
+@WebServlet("/getCateSeqno.do")
+public class GetCateSeqnoServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public EditCategoryServlet() {
+    public GetCateSeqnoServlet() {
         super();
         // TODO Auto-generated constructor stub
     }

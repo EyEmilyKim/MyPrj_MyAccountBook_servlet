@@ -33,11 +33,15 @@ public class DetailCategoryServlet extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		request.setCharacterEncoding("UTF-8");
 		String cate_code = request.getParameter("CCODE");
+		String mod = request.getParameter("MOD");
 		System.out.println("DetailCategoryServlet 수신 CCODE : "+cate_code);
 		CategoryDAO dao = new CategoryDAO();
 		Category c = dao.getCategory(cate_code);
 		request.setAttribute("C", c);
-		RequestDispatcher rd = request.getRequestDispatcher("updateCategory.jsp");
+		String url = "";
+		if(mod.equals("UPD")) { url = "updateCategory.jsp"; }
+		if(mod.equals("DEL")) { url = "deleteCategory.jsp"; }
+		RequestDispatcher rd = request.getRequestDispatcher(url);
 		rd.forward(request, response);
 	}
 

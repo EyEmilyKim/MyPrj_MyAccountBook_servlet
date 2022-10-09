@@ -42,11 +42,11 @@ public class AddCategoryServlet extends HttpServlet {
 		c.setCate_code(cate_code);
 		CategoryDAO dao = new CategoryDAO();
 		boolean flag = dao.insertCategory(c); 
-		String jumpTo = "addCategoryResult.jsp?R=";
+		String url = "addCategoryResult.jsp?R=";
 		if(flag) {
-			response.sendRedirect(jumpTo + "Y");
+			response.sendRedirect(url + "Y");
 		}else {
-			response.sendRedirect(jumpTo + "N");
+			response.sendRedirect(url + "N");
 		}
 	}
 

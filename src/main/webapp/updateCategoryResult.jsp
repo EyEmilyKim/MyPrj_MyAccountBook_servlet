@@ -20,6 +20,7 @@
 </c:if>
 </body>
 <script type="text/javascript">
-	location.href="listCategory.do";
+	opener.location.reload();
+	window.close();
 </script>
 </html>

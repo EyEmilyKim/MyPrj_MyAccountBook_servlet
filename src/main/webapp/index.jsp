@@ -6,7 +6,7 @@
 <head>
 <meta charset="UTF-8">
 <title>index</title>
-<link rel="stylesheet" href="MyAccBook.css">
+<link rel="stylesheet" href="index.css">
 </head>
 <body>
 <div class="container">
