@@ -29,15 +29,16 @@
 			<input type="button" value="지출" onClick="setEX()" id="btn_ex">
 			</td></tr>
 <!-- 2.거래날짜 -->
-		<tr><td><input type="date" name="DATE"></td></tr>
+		<tr><td><input type="date" name="DATE" id="date">
+<!-- 			<input type="button" value="오늘" onClick="setToday()"></td></tr> -->
 <!-- 3.카테고리 -->
 	<!-- 드롭다운 : 초기화면 -->
-		<tr><td><select name="CCODE" id="slct_nn">
+		<tr><td><input type="hidden" name="CCODE">
+				<select name="CCODE_NN" id="slct_nn">
 					<option value="">--카테고리(미지정)--</option>
-					<option value="">수입/지출을 선택하세요</option>
 				</select>
 	<!-- 드롭다운 : 수입 -->
-				<select name="CCODE" id="slct_in">
+				<select name="CCODE_IN" id="slct_in">
 					<option value="">--카테고리(수입)--</option>
 				<c:forEach items="${CATELIST }" var="c">
 				<c:set var="cate_code" value="${c.cate_code }"/>
@@ -47,7 +48,7 @@
 				</c:if>		
 				</c:forEach></select>
 	<!-- 드롭다운 : 지출 -->
-				<select name="CCODE" id="slct_ex">
+				<select name="CCODE_EX" id="slct_ex">
 					<option value="">--카테고리(지출)--</option>
 				<c:forEach items="${CATELIST }" var="c">
 				<c:set var="cate_code" value="${c.cate_code }"/>
@@ -66,11 +67,13 @@
 <!-- 6.결제수단 -->	
 	<!-- 현금or카드 버튼 -->
 		<tr id="set_meth">
-			<td><input type="hidden" name="SupMETHOD" value="">
+			<td><input type="hidden" name="SupMETHOD">
 				<input type="button" value="현금" onClick="openMN()" id="btn_mn">
-				<input type="button" value="카드" onClick="openCRD()" id="btn_crd"></td>
+				<input type="button" value="카드" onClick="openCRD()" id="btn_crd">
+				<input type="hidden" name="MCODE" >
+				</td>
 	<!-- 드롭다운 : 현금 -->
-			<td><select name="METHOD" id="slct_mn">
+			<td><select name="MCODE_MN" id="slct_mn">
 					<option value="">--결제수단(현금)--</option>
 				<c:forEach items="${METHLIST }" var="m">
 				<c:set var="meth_code" value="${m.meth_code }"/>
@@ -80,7 +83,7 @@
 				</c:if>		
 				</c:forEach></select>
 	<!-- 드롭다운 : 카드 -->
-				<select name="METHOD" id="slct_crd">
+				<select name="MCODE_CRD" id="slct_crd">
 					<option value="">--결제수단(카드)--</option>
 				<c:forEach items="${METHLIST }" var="m">
 				<c:set var="meth_code" value="${m.meth_code }"/>
@@ -90,7 +93,7 @@
 				</c:if>		
 				</c:forEach></select>
 			</td></tr>	
-	<!-- (확인용 hidden) 전체 결제수단	-->
+	<!-- (확인용 hidden) 전체 결제수단 출력-->
 		<tr class="hidden">
 			<td><c:forEach items="${METHLIST }" var="m">
 				<c:set var="meth_code" value="${m.meth_code }"/>
@@ -106,10 +109,12 @@
 	</form>
 	</div>
 </body>
+
 <script type="text/javascript">
-/* 변수 : html 요소 식별 */
+/* 변수 : css 통제를 위한 html 요소 식별 */
 let btn_in = document.getElementById("btn_in");
 let btn_ex = document.getElementById("btn_ex");
+let date = document.getElementById("id");
 let slct_nn = document.getElementById("slct_nn");
 let slct_in = document.getElementById("slct_in");
 let slct_ex = document.getElementById("slct_ex");
@@ -118,6 +123,7 @@ let btn_mn = document.getElementById("btn_mn");
 let btn_crd = document.getElementById("btn_crd");
 let slct_mn = document.getElementById("slct_mn");
 let slct_crd = document.getElementById("slct_crd");
+
 /* 수입 or 지출 선택 */
 function setIN(){ //[수입]
 	//수입or지출 구분(INEX) : 수입(IN)
@@ -132,6 +138,44 @@ function setIN(){ //[수입]
 	slct_nn.style.display = "none";
 	slct_in.style.display = "block";
 	slct_ex.style.display = "none";
+	//카테고리 선택값 초기화
+	alert("여기1");	
+// 	let ccode = document.fm.CCODE.value;
+// 	let ccode_nn = document.fm.CCODE_NN.value;
+// 	let ccode_in = document.fm.CCODE_IN.value;
+// 	let ccode_ex = document.fm.CCODE_EX.value;
+	
+	let ccode = document.getElementById("ccode");
+	let ccode_nn = document.getElementById("ccode_nn");
+	let ccode_in = document.getElementById("ccode_in");
+	let ccode_ex = document.getElementById("ccode_ex");
+	
+	alert("여기2");	
+	alert("bef> ccode_nn: "+ccode_nn.value+" / ccode_in: "+ccode_in+
+			" / ccode_ex: "+ccode_ex+"\n=> ccode: "+ccode);
+	
+	//이건 아예 만먹ㅎ
+// 	ccode.value = "";
+// 	ccode_nn.selectedIndex = 0;
+// 	ccode_in.selectedIndex = 0;
+// 	ccode_ex.selectedIndex = 0;
+	
+	
+	
+	
+	//아래 value = "" 으로는 초기화 안됨 ㅠㅠ
+// 	document.fm.CCODE_NN.value  = "";
+// 	document.fm.CCODE_IN.value  = "";
+// 	document.fm.CCODE_EX.value  = "";
+		//이하 확인용
+	alert("aft> ccode_nn: "+ccode_nn+" / ccode_in: "+ccode_in+" / ccode_ex: "+ccode_ex+"\n=> ccode: "+ccode);
+	
+	
+	//결제수단 선택값 초기화
+	let mcode = document.fm.MCODE.value;/* 	mcode = ""; */
+	let mcode_mn = document.fm.MCODE_MN.value;/* 	mcode_mn = ""; */
+	let mcode_crd = document.fm.MCODE_CRD.value;/* 	mcode_crd = ""; */
+	alert("mcode_mn: "+mcode_mn+" / mcode_crd: "+mcode_crd+"\n=> mcode: "+mcode);
 }
 function setEX(){ //[지출]
 	//수입or지출 구분(INEX) : 지출(EX)
@@ -146,6 +190,24 @@ function setEX(){ //[지출]
 	slct_nn.style.display = "none";
 	slct_in.style.display = "none";
 	slct_ex.style.display = "block";
+	//카테고리 선택값 초기화
+	let ccode = document.fm.CCODE.value;
+	let ccode_nn = document.fm.CCODE_NN.value;
+	let ccode_in = document.fm.CCODE_IN.value;
+	let ccode_ex = document.fm.CCODE_EX.value;
+	alert("before__ ccode_nn: "+ccode_nn+" / ccode_in: "+ccode_in+" / ccode_ex: "+ccode_ex+"\n=> ccode: "+ccode);
+	document.fm.CCODE_NN.value  = "";
+	document.fm.CCODE_IN.value  = "";
+	document.fm.CCODE_EX.value  = "";
+		//이하 확인용
+	
+	alert("after__ ccode_nn: "+ccode_nn+" / ccode_in: "+ccode_in+" / ccode_ex: "+ccode_ex+"\n=> ccode: "+ccode);
+}
+/* 거래날짜 오늘로 설정 */
+function setToday(){
+	alert("setToday() 호출됨 ---작성중---");
+	document.fm.DATE.value = new Date();
+	alert("set DATE : "+document.fm.SupMETHOD.value);
 }
 /* 현금 or 카드 선택 */
 function openMN(){ //[현금]버튼 클릭시
@@ -174,22 +236,54 @@ function openCRD(){ //[카드]버튼 클릭시
 }
 /* form 제출 or 취소 */
 function check(){
-	alert("check() 호출됨. 미구현!!!!!!!!!! [TBC]");
-	if()
+	alert("check() 호출됨. ---작성중---");
+	/* CCODE: 미선택,지출,소비로 나눠져있는 드롭다운에서 최종값을 찾아 form 필드에 전달 */
+	let ccode = document.fm.CCODE.value;
+	let ccode_nn = document.fm.CCODE_NN.value;
+	let ccode_in = document.fm.CCODE_IN.value;
+	let ccode_ex = document.fm.CCODE_EX.value;
+	if(ccode_in != '') ccode = ccode_in; else if(ccode_ex != '') ccode = ccode_ex; else ccode = ''; 
+	alert("\nccode_nn: "+ccode_nn+" / ccode_in: "+ccode_in+" / ccode_ex: "+ccode_ex+"\n=> ccode: "+ccode);
+	/* 카테고리 선택:필수아님 -> 미선택시 서블릿에서 디폴트 값 입력 */
+// 	if(ccode == ''){ alert("카테고리를 선택해주세요."); return false } 
+	/* MCODE: 현금,카드로 나눠져있는 드롭다운에서 최종값을 찾아 form 필드에 전달 */
+	let mcode = document.fm.MCODE.value;
+	let mcode_mn = document.fm.MCODE_MN.value;
+	let mcode_crd = document.fm.MCODE_CRD.value;
+	if(mcode_mn != '') mcode = mcode_mn; else if(mcode_crd != '') mcode = mcode_crd; else mcode = ''; 
+	alert("\nmcode_mn: "+mcode_mn+" / mcode_crd: "+mcode_crd+"\n=> mcode: "+mcode);
+	/* 결제수단 선택:필수아님 -> 수입일 때 결제수단 없음. + 지출이고 미선택시 서블릿에서 디폴트 값 입력 */
+// 	if(mcode == ''){ alert("결제수단을 선택해주세요."); return false }
+	
+	
+	
+	let item = document.fm.ITEM.value;
+	let inex = document.fm.INEX.value;
+	if(inex == ''){ alert("지출/소비 구분을 선택해주세요."); return false }
+	let date = document.fm.DATE.value;
+	if(date == ''){ alert("거래날짜를 선택해주세요."); return false }
+	
+	if(item == ''){ alert("내용을 입력해주세요."); return false }
+	let amount = document.fm.AMOUNT.value;
+	if(amount == ''){ alert("금액을 입력해주세요."); return false }
+	
+	alert("inex: "+inex+"\ndate: "+date+"item: "+item+"\namount: "+amount
+			+"\nccode_nn: "+ccode_nn+" / ccode_in: "+ccode_in+" / ccode_ex: "+ccode_ex+"\n=> ccode: "+ccode
+			+"\nmcode_mn: "+mcode_mn+" / mcode_crd: "+mcode_crd+"\n=> mcode: "+mcode);
+	
+	
+	let detailConf = "구분 : "+inex+"\n거래날짜 : "+date+"\n카테고리 : "+ccode+"\n금액 : "+amount+"원\n";
+	if(! confirm("등록하시겠습니까?\n\n---\n"+detailConf) ) return false;
+	if(! confirm("등록될 seqno : "+document.fm.SEQNO.value) ) return false;	
 }
 function backToList(){
 	if(confirm("취소하고 홈화면으로 돌아가시겠습니까?")){
 		location.href="index.jsp";
 	}else {
-		//수입or지출 구분(INEX) 초기화
-		document.fm.INEX.value = null;
-		alert("clear INEX : "+document.fm.INEX.value);
+	/* reset 시 fm 입력 값은 자동 초기화됨을 확인했음. 단 js css는 수동 초기화 필요. */
 		//수입or지출 버튼색 초기화
 		btn_ex.style.backgroundColor = null;
 		btn_in.style.backgroundColor = null;
-		//현금or카드 대분류(SupMETHOD) 초기화
-		document.fm.SupMETHOD.value = null;
-		alert("clear SupMETHOD : "+document.fm.SupMETHOD.value);
 		//현금or카드 버튼색 초기화
 		btn_mn.style.backgroundColor = null;
 		btn_crd.style.backgroundColor = null;
