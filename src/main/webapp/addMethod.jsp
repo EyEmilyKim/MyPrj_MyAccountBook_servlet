@@ -39,11 +39,11 @@ function setMN(){
 }
 function setCRD(){
 		//현금or카드 구분(MNCRD) : 수입(CRD)
-		document.fm.INEX.value = "EX";
+		document.fm.MNCRD.value = "CRD";
 		alert("set MNCRD : "+document.fm.MNCRD.value);
 		//버튼 색 바꾸기
-		btn_mn.style.backgroundColor = "orange";
-		btn_crd.style.backgroundColor = null;
+		btn_mn.style.backgroundColor = null;
+		btn_crd.style.backgroundColor = "orange";
 }
 function check(){
 	let mncrd = document.fm.MNCRD.value;

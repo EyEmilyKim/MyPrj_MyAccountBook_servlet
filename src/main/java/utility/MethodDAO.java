@@ -144,7 +144,8 @@ public class MethodDAO {
 	//전체 결제수단 검색 메서드
 	public ArrayList<Method> listMethod() {
 		ArrayList<Method> list = new ArrayList<Method>();
-		String select = "select seqno, mncrd, meth_name, meth_code from mab_methods";
+		String select = "select seqno, mncrd, meth_name, meth_code from mab_methods "
+				+ "order by meth_code";
 		try {
 			Class.forName(driver);
 			con = DriverManager.getConnection(url,"hr","hr");
@@ -157,11 +158,11 @@ public class MethodDAO {
 				m.setMeth_name(rs.getString(3));
 				m.setMeth_code(rs.getString(4));
 				list.add(m);
-				System.out.println("listMethod() rs true");
-				System.out.println(rs.getInt(1));
-				System.out.println(rs.getString(2));
-				System.out.println(rs.getString(3));
-				System.out.println(rs.getString(4));
+//				System.out.println("listMethod() rs true");
+//				System.out.println(rs.getInt(1));
+//				System.out.println(rs.getString(2));
+//				System.out.println(rs.getString(3));
+//				System.out.println(rs.getString(4));
 			}
 			System.out.println("listMethod() select done");
 		} catch (Exception e) {

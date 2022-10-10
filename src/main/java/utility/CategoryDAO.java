@@ -97,7 +97,8 @@ public class CategoryDAO{
 	//전체 카테고리 검색 메서드
 	public ArrayList<Category> listCategory() {
 		ArrayList<Category> list = new ArrayList<Category>();
-		String select = "select seqno, inex, cate_name, cate_code from mab_categories";
+		String select = "select seqno, inex, cate_name, cate_code from mab_categories "
+				+ "order by cate_code";
 		try {
 			Class.forName(driver);
 			con = DriverManager.getConnection(url,"hr","hr");

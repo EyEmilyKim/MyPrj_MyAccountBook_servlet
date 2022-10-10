@@ -24,7 +24,7 @@
 			<tr>
 				<td>${m.seqno }</td><td>${m.meth_code }</td>
 				<c:if test="${m.mncrd == 'MN' }"><td id="mn">현금</td><td>${m.meth_name }</td></c:if>
-				<c:if test="${m.mncrd == 'CDR' }"><td id="crd">카드</td><td>${m.meth_name }</td></c:if>
+				<c:if test="${m.mncrd == 'CRD' }"><td id="crd">카드</td><td>${m.meth_name }</td></c:if>
 				<td><a href="${url }" onClick="popupUpdate(this); return false;">수정</a></td>
 				<td><a href="${url }" onClick="popupDelete(this); return false;">삭제</a></td>
 				<td>url : <c:out value="${url }"></c:out></td>
