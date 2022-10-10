@@ -7,7 +7,8 @@
 <meta charset="UTF-8">
 <title>listCategory.jsp</title>
 	<style type="text/css">
-	#in { color:blue; } #ex { color:red; }
+	#in { color:blue; } #ex { color:red; } #sys { background-color:beige; }
+	.hidden { display:none; }
 	</style>
 </head>
 <body>
@@ -21,14 +22,27 @@
 	<tr><td>seqno</td><td>cate_code</td><td>inex</td><td>cate_name</td>
 	<c:forEach items="${LIST }" var="c">
 		<c:set var="url" value="detailCategory.do?CCODE=${c.cate_code }&MOD="/>	
-			<tr>
+	  <!-- choose when: system용 '미지정'은 별도 tr로.   -->
+	  <!-- otherwise: 사용자용 '수입'/'지출'은 같은 tr 내 일부 td만 다르게 처리  -->
+	  <c:choose>
+		<c:when test="${c.inex == 'caNN' }">
+			<tr id="sys">
 				<td>${c.seqno }</td><td>${c.cate_code }</td>
+				<td>sys</td><td>${c.cate_name }</td>
+				<td><a href="${url }" onClick="popupUpdate(this); return false;">수정</a></td>
+				<td><a href="${url }" onClick="popupDelete(this); return false;">삭제</a></td>
+				<td>url : <c:out value="${url }"></c:out></td>
+		</c:when>
+		<c:otherwise>
+			<tr><td>${c.seqno }</td><td>${c.cate_code }</td>
 				<c:if test="${c.inex == 'IN' }"><td id="in">수입</td><td>${c.cate_name }</td></c:if>
 				<c:if test="${c.inex == 'EX' }"><td id="ex">지출</td><td>${c.cate_name }</td></c:if>
 				<td><a href="${url }" onClick="popupUpdate(this); return false;">수정</a></td>
 				<td><a href="${url }" onClick="popupDelete(this); return false;">삭제</a></td>
 				<td>url : <c:out value="${url }"></c:out></td>
 			</tr>
+	    </c:otherwise>
+	  </c:choose>
 	</c:forEach>
 	</table>
 	<br>

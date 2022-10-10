@@ -7,7 +7,8 @@
 <meta charset="UTF-8">
 <title>listMethod.jsp</title>
 	<style type="text/css">
-	#mn { color:blue; } #crd { color:orange; }
+	#mn { color:blue; } #crd { color:orange; } #sys { background-color:beige; }
+	.hidden { display:none; }
 	</style>
 </head>
 <body>
@@ -18,17 +19,29 @@
 	<p>결제수단 목록</p>
 	총 ${SIZE } 건<br>
 	<table border="1">
-	<tr><td>seqno</td><td>meth_code</td><td>mncrd</td><td>meth_name</td>
+		<tr id="title"><td>seqno</td><td>meth_code</td><td>mncrd</td><td>meth_name</td></tr>
 	<c:forEach items="${LIST }" var="m">
 		<c:set var="url" value="detailMethod.do?MCODE=${m.meth_code }&MOD="/>	
-			<tr>
+	  <!-- choose when: system용 '미지정'은 별도 tr로.   -->
+	  <!-- otherwise: 사용자용 '현금'/'카드'는 같은 tr 내 일부 td만 다르게 처리  -->
+	  <c:choose>
+		<c:when test="${m.mncrd == 'meNN' }">
+			<tr id="sys">
 				<td>${m.seqno }</td><td>${m.meth_code }</td>
+				<td>기본</td><td>${m.meth_name }</td>
+				<td><a href="${url }" onClick="popupUpdate(this); return false;">수정</a></td>
+				<td><a href="${url }" onClick="popupDelete(this); return false;">삭제</a></td>
+				<td>url : <c:out value="${url }"></c:out></td>
+			</tr></c:when>
+		<c:otherwise>
+			<tr><td>${m.seqno }</td><td>${m.meth_code }</td>
 				<c:if test="${m.mncrd == 'MN' }"><td id="mn">현금</td><td>${m.meth_name }</td></c:if>
 				<c:if test="${m.mncrd == 'CRD' }"><td id="crd">카드</td><td>${m.meth_name }</td></c:if>
 				<td><a href="${url }" onClick="popupUpdate(this); return false;">수정</a></td>
 				<td><a href="${url }" onClick="popupDelete(this); return false;">삭제</a></td>
 				<td>url : <c:out value="${url }"></c:out></td>
-			</tr>
+			</tr></c:otherwise>
+	  </c:choose>
 	</c:forEach>
 	</table>
 	<br>
