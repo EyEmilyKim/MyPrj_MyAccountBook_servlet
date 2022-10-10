@@ -9,7 +9,7 @@
 </head>
 <body>
 <div>
-	<p>메서드 삭제 화면입니다.</p>
+	<p>결제수단 삭제 화면입니다.</p>
 	<form action="deleteMethod.do" name="fm" onSubmit="return check()">
 		<input type="hidden" name="MCODE" value="${M.meth_code }">
 		<input type="hidden" name="MNAME" value="${M.meth_name }">

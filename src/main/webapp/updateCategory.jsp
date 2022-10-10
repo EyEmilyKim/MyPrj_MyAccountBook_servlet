@@ -55,6 +55,8 @@ function backToList(){
 	if(confirm("취소하고 목록으로 돌아가시겠습니까?")){
 		opener.location.reload();
 		window.close();
+	}else{
+		document.getElementById("guide").innerHTML = "";
 	}
 }
 </script>

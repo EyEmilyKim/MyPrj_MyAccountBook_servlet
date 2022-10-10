@@ -16,6 +16,30 @@ public class MethodDAO {
 	private PreparedStatement pstmt = null;
 	private ResultSet rs = null;
 
+	//meth_code로 결제수단 수정 메서드
+	public boolean updateMethod(Method m) {
+		boolean flag = false;
+		String update = "update mab_methods set meth_name = ? where meth_code = ? ";
+		try {
+			Class.forName(driver);
+			con = DriverManager.getConnection(url,"hr","hr");
+			pstmt = con.prepareStatement(update);
+			pstmt.setString(1, m.getMeth_name());
+			pstmt.setString(2, m.getMeth_code());
+			pstmt.executeUpdate();
+			con.commit();
+			flag = true;
+			System.out.println("updateMethod() update done");
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			try { pstmt.close(); con.close(); }
+			catch(Exception e) {}
+		}
+		System.out.println("updateMethod() end");
+		return flag;
+	}
+		
 	//meth_code로 결제수단 삭제 메서드
 	public boolean deleteMethod(String meth_code) {
 		boolean flag = false;
