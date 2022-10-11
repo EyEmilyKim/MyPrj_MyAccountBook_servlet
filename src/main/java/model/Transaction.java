@@ -7,12 +7,12 @@ public class Transaction {
 	private String cate_code;
 	private String item;
 	private Integer amount;
-	private String method;
+	private String meth_code;
 	
 	public Integer getSeqno() {
 		return seqno;
 	}
-	public void setSeqno(int seqno) {
+	public void setSeqno(Integer seqno) {
 		this.seqno = seqno;
 	}
 	public String getInex() {
@@ -42,14 +42,14 @@ public class Transaction {
 	public Integer getAmount() {
 		return amount;
 	}
-	public void setAmount(int amount) {
+	public void setAmount(Integer amount) {
 		this.amount = amount;
 	}
-	public String getMethod() {
-		return method;
+	public String getMeth_code() {
+		return meth_code;
 	}
-	public void setMethod(String method) {
-		this.method = method;
+	public void setMeth_code(String meth_code) {
+		this.meth_code = meth_code;
 	}
 	
 }
