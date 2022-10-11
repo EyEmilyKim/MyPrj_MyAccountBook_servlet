@@ -25,12 +25,14 @@ public class UserDAO {
 			if(rs.next()) {
 				pwd = rs.getString(1);
 			}
+			System.out.println("getPwd() select done");
 		}catch(Exception e) {
 			e.printStackTrace();
 		}finally {
 			try { rs.close(); pstmt.close(); con.close(); }
 			catch(Exception e) {}
 		}
+		System.out.println("getPwd() end");
 		return pwd;
 	}
 }
