@@ -1,0 +1,19 @@
+■ 2022.10.07금
+
+* 설정 > 드롭다운 메뉴 css
+
+*﻿﻿ 카테 관리 서블릿 ﻿/ EditCategoryServlet
+카테 등록 jsp 로 이동
+response.sendRedirect("addCategory.jsp?MSN="+maxSeqno);
+[TBC] redirect 로 괜찮은가? maxSeqno 다시 안찾아도 되나...?
+
+* 카테 등록 jsp / addCategory.jsp
+//[TBC] 버튼 색 바꾸기
+//[TBU] 페이지 뒤로 가기
+
+* [TBU] 기본 카테고리 제공 (급여, 용돈, 임시수입 / 식비, 교통비, 통신비, 공과금, 기타)
+-> 첫 화면은 카테고리 목록 / 목록 클릭하면 수정, 삭제
+-> 카테고리 추가하기 버튼
+
+﻿*** [TBU] 새로고침 안하고 뒤로가기 페이지에서 잘못 넣은 EX1 deleteCategory 로 지워줄 것 ㅎㅎ
+﻿

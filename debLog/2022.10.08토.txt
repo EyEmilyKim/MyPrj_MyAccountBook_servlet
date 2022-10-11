@@ -1,0 +1,241 @@
+2022.10.08토
+
+■ 카테고리 목록
+-- 11:28 --
+
+* 카테dao 메서드 추가
+//전체 카테고리 검색 메서드
+	public ArrayList<Category> listAllCategory()
+
+쿼리 : 
+select seqno, inex, cate_name, cate_code from mab_categories
+
+
+* 카테고리 목록 서블릿 
+===> ListCategoryServlet / ListCategory.do
+dao.listCategory()
+카테고리 list 객체에 넣어서
+jsp로 전달
+
+* 카테고리 목록 jsp : listCategory.jsp
+목록 출력
++ 카테고리 등록 버튼
+
+* 재매핑
+카테 관리 > listCategory.do
+카테 추가 > editCategory.do
+-- 12:13 -- 
+
+
+...카테 목록이 왜 잘 안나오지 ?
+해결 ! -- 12:31 --
+
+■ 카테고리 수정
+* 클릭하면 수정, 삭제 버튼 뜨도록
+참고 : NavBar css ...> 토글버튼은 onClick 에 fn 기능은 아니었고 css 변화주는거였지만,
+index.jsp html 구조 조금 수정함
+[TBU] 일단은 버튼으로 만들어놓고 css 바꿔서 보여주는 걸로
+
+-- 12:48 --
+
+add : list 전체 건수 수신.
+
+-- 1:55 --
+편집모드 토글 포기.
+그냥 수정, 삭제 버튼 각자 만들고 submit으로
+추가버튼은 한개만 따로 두기
+
+깃 커밋, 시행착오 포스팅
+ㄷㅇ 카톡 -> 자격증보다 포폴과 경험 !! 
+-- 2:10 ---
+
+* js 함수 매개변수 el 로 전달안됨...
+<input type="button" value="수정" onClick="openUpdate(${c.cate_code })">
+는 안되고 
+<input type="button" value="삭제" onClick="openDelete()">
+는 호출됨.
+
+팝업도 일단 포기하고 걍 form 으로 해야겠다 ㅠ
+
+참고 리스트 정리.
+밥 먹고 오자 ! 
+-- 2:22 --
+
+
+
+밥 먹고 sekaowa 충전 >< !ㅋ
+--2:48 --
+■ 카테고리 수정 
+
+<a> 로 팝업띄우기?
+<a href='popup.php' onclick="window.open(this.href, '카테고리 수정', 'width=800, height=800'); return false;">팝업창 열기</a>
+
+function popupOpen(){
+url = "./test.php:'
+name="팝업";
+specs = "width=500, height=400, top=200, left=100, toolbar=no, menubar=no, scrollbars=no, resizable=yes";
+window.open(url, name, specs);
+reutrn false;
+}
+
+http://localhost:8090/MyAccountBook/'detailCategory.do?CCODE=%27+%27EX1%27
+
+* 수정을 위한 카테고리 상세 조회 서블릿: 
+===> detailCategory.do / DetailCategoryServlet
+<a href="'detailCategory.do?CCODE='+'${c.cate_code }' "
+
+파라미터 cate_code 수신, 
+cate_code 로 getThatCategory()
+객체 담아서 수정 폼으로 전환
+
+* DAO 에
+//cate_code로 특정 카테고리 검색 메서드
+	public Category getThatCategory(int code)
+쿼리 : 
+select seqno, inex, cate_name, cate_code from mab_categories where cate_code = ?
+
+-- 4:02 --
+여기까진 했는데, a link el 전달도 안돼...
+개별 폼을 만들어야 하나...?-_-;; 아닌데... 
+
+-- 5:19 --
+아니... 폼 액션에 파람포함한 link 도 만들었는데 
+파람 끼고 점프가 안돼서 껐다 키려는데 요새 왜 서버 실행이 안되는거임???
+에라이 컴 재부팅 휴식~ 
+
+-- 5:51 --
+컴껐다 키니까 순식간에 바로 켜지네 ... -_ -;; 너도 피곤하구나...
+
+select seqno, inex, cate_name, cate_code from mab_categories where cate_code = 
+
+아니 근데 계속 위에 링크로 파라미터가 안넘어가 ;;;
+혹시나 해서 mySweetHome_memberUpdate 확인해봤는데, 얘는 되는데...;; ??
+
+아 ! 그러고보니까 예전에 한줄 한줄 수정 넣으면 안되나요? 블라블라 그런 말이 있었던거 같기도...
+
+그럼 다시 <a> 로 바꿔보자. 된다 !!!ㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠ 겁나 시간 허비했네....ㅠㅠㅠ
+[TBU] 왜 폼 여러개는 안되는걸까 ??? 
+-- 6:43 --
+
+-- 7:30? 밥 먹고 옴 ! 오리고기 !  --
+
+* 카테고리 수정 폼 :
+===> updateCategory.jsp
+Category 객체 정보 받아서 폼에 뿌려줌.
+수정 폼 작성
+submit 
+
+[TBU] 목록 jsp에서 폼 걷어내기.
+
+
+중간 캡쳐 -- 8:16 -- 
+
+* 드디어 수정 서블렛
+===> updateCategory.do / UpdateCategoryServlet
+폼 내용 받아서 (N_CNAME) , (CCODE)
+dao.updateCategory()
+플래그 받아서 결과 jsp
+
+* DAO 에
+//cate_code로 카테고리 수정 메서드
+	public boolean updateCategory(Category c)
+
+쿼리 : 
+update mab_categories set cate_name = ? where cate_code = ? 
+
+update mab_categories set cate_name = '잃어버렸다' where cate_code = 'EX2';
+
+* 결과 jsp
+===> updateCategoryResult.jsp
+
+
+아, 근데 addCategory 서블렛 실행 후 jsp 전환 파라미터를 그냥 boolean 으로 안하고 
+굳이 if 문 돌려서 Y/N 붙여줬네...??ㅎㅎ 
+updateCategory 에서는 그냥 boolean 쓰고, 앞으로도 boolean 써야겠다ㅎ
+
+수업시간에도 이 방법 저 방법 섞어서 썼네... 
+(mySweet 공지 수정은 boolean , 공지 등록은 if문... jsp 파람 수신도 c:choose , c:if )
+
+
+카테고리 수정 완성 !!! 캡쳐 & 커밋 완료 -- 9:12 --
+
+
+* DAO 이름 단수형으로 하자;; -> 완료
+
+
+alt tab 잘 안먹혀서 고침. 작업관리자에서 윈도우 탐색기 재시작. 
+-- 9:20 --
+
+■ 로그아웃
+
+* 로그아웃 서블렛
+===> LogoutServlet / logout.do
+세션 무효화
+결과 화면으로 
+
+* 결과 jsp
+===> logoutResult.jsp
+
+로그아웃은 잘 되는데 
+[TBU]시간 지연 전환이 안된다... 
+걍 alert 보여주고 바로 전환해야지 ㅠ ㅎ
+-- 10:05 --
+
+
+
+
+* 정책 : 
+ok// 1. 수입/지출 구분을 수정 가능하도록 할 것인가?? 
+-->NO
+2. 카테고리를 삭제하면 
+--> on delete set null
+'기존에 이 카테고리를 사용해 입력한 가계부 기록에도 변경된 카테고리명이 반영됩니다.'
+3. 카테고리를 수정하면 
+--> trigger
+'기존에 이 카테고리를 사용해 입력한 가계부 기록에도 변경된 카테고리명이 반영됩니다.'
+
+
+
+
+
+■ 카테고리 삭제
+■ 카테고리 등록할 때, 같은 이름, 같은 순번 안넘어가도록
+■ 가계부 작성
+
+■ 서비스를 이용하려면 로그인해주세요
+
+===================
+참고 : 
+
+버튼 클릭 표시/비표시
+https://suzyalrahala.tistory.com/34
+
+getElementByClass ??
+https://stackoverflow.com/questions/1933602/how-to-getelementbyclass-instead-of-getelementbyid-with-javascript
+https://nowonbun.tistory.com/346
+
+JSTL 변수 선언 등 활용
+https://blog.naver.com/sya6636/222890487689
+https://blog.naver.com/ebcode2021/222502589364
+
+
+EL 문자열 연결 / 삼항연산
+https://congsong.tistory.com/40
+
+서블릿 / EL, JSTL / 커넥션풀(JNDI와 DBCP) / 트랜잭션
+https://blog.naver.com/wool_ly/222427643877
+
+
+ArrayList 길이 및 활용
+https://blog.naver.com/djihyeonab/222876606765
+
+<a> 태그 팝업창 띄우기 / window.open()
+https://heojju.tistory.com/15
+
+ON UPDATE CASCADE 기능 흉내
+https://m.blog.naver.com/growth_s/222886320709
+
+javascript 시간지연 함수 setTimeout() / setInterval()
+
+javascript 콘솔로그 는 브라우저의 콘솔이다 !
+https://stonefree.tistory.com/99

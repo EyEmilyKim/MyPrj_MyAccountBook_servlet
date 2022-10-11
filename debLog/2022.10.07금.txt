@@ -1,0 +1,121 @@
+* 로그인 
+-> 세션에서 닉네임
+- XXXX님~
+- 로그아웃
+
+HttpSession cannot be resolved to a variable
+뭐가 문제였을까... 같은 문장 다시 덮어쓰기 하니까 넘어가짐 ;; ㅎㅎ
+
+- alert 에 ${sessionScope.USER_ID} 는 안먹힘 ^^; ㅋ
+
+- 로그아웃 부분 로그인 안했을때 안보이게 하기
+
+
+-- 8:00 @ my room --
+
+■ 테이블 생성
+
+* 가계부 테이블 (mab_transactions) -> 생성함.
+일련번호(seqno) / 수입.지출(inex) / 날짜(trans_date) / 분류(cate_code) / 내용(item) / 금액(amount)
+number / varchar2(10) / date / varchar2(20) / varchar2(50) / number 
+pk / nn, ck / nn / nn / nn / nn
+
+create table mab_transactions (
+seqno number constraint mab_trans_seqno_pk primary key,
+inex varchar2(10) constraint mab_trans_inex_nn not null 
+constraint mab_trans_inex_ck check(inex in('수입', '지출')),
+trans_date date constraint mab_trans_trnsdate_nn not null,
+cate_code varchar2(20) constraint mab_trans_catecode_nn not null,
+item varchar2(50) constraint mab_trans_item_nn not null,
+amount number constraint mab_trans_amount_nn not null);
+
+
+* 카테고리 테이블 (mab_categories) -> 생성함
+일련번호(seqno) / 수입.지출(inex) / 분류명(cate_name) / 분류코드(cate_code)
+number / varchar2(10) / varchar2(20) / varchar2(10)
+nn / nn / nn / pk
+
+create table mab_categories (
+seqno number constraint mab_cate_seqno_nn not null,
+inex varchar2(10) constraint mab_cate_inex_nn not null,
+cate_name varchar2(20) constraint mab_cate_cname_nn not null,
+cate_code varchar2(10) constraint mab_cate_ccode_pk primary key);
+ 
+-- 8:56 도중 챠챠 sky--
+
+■ 설정 > 카테고리 등록 
+- 지출수단 등록(추가예정) 
+- 즐겨찾기 등록(추가예정)
+- 카테고리 등록
+
+* 서브메뉴 css 찾아보기..
+일단 추가만 해놓고 hober 구현은 나중에><
+css 캐시 지우려면 ctrl+f5 !
+
+■ 카테고리 등록 구현 -- 11:11 --
+
+* DTO Category 작성
+===> Category.java
+
+* DAO 상속? --> 이것도 그냥 복붙하고 제출 후에 refactor 하기로><
+* 기존 DAO는 usersDAO로 변경.
+* ===> CategoriesDAO 작성
+//Categories 테이블의 최신 일련번호 검색
+* int getMaxSeqno() 작성
+
+쿼리 : 
+select max(seqno) from mab_categories;
+
+* 카테 관리 서블릿
+===> editCategory.do / EditCategoryServlet (p: catecory)
+카테 일련번호 자동추가 (max 찾아서 +1)
+카테 등록 jsp 로 이동
+response.sendRedirect("addCategory.jsp?MSN="+maxSeqno); 
+[TBC] redirect 로 괜찮은가? maxSeqno 다시 안찾아도 되나...?
+
+* 카테 등록 jsp
+===> addCategory.jsp
+
+//[TBC] 버튼 색 바꾸기 
+//[TBU] 페이지 뒤로 가기
+
+-- 12:20 --
+http://localhost:8090/MyAccountBook/addCategory.do?SEQNO=1&INEX=In&CNAME=%EB%B3%B5%EA%B6%8C%EB%8B%B9%EC%B2%A8
+
+* 카테 등록 서블릿
+===> addCategory.do / AddCategoryServlet
+파라미터 SEQNO, INEX, CNAME 수신
+String cate_code = inex+seqno;
+DTO 담아서
+DAO 삽입 실행
+플래그 가지고 결과 화면으로 (Redirect)
+
+* DAO 메서드
+//카테고리 삽입 메서드
+	public boolean insertCategory(Category c) 
+쿼리 : 
+insert into mab_categories values(?, ?, ?, ?)
+
+-- 12:48 --
+* 결과화면 
+===> addCategoryResult.jsp
+최종 이동 to 카테고리 목록
+
+* 카테고리 목록 화면 (임시)
+===> listCategory.jsp
+
+-- 12:58 --
+
+* [TBU] 기본 카테고리 제공 (급여, 용돈, 임시수입 / 식비, 교통비, 통신비, 공과금, 기타) 
+-> 첫 화면은 카테고리 목록 / 목록 클릭하면 수정, 삭제 
+-> 카테고리 추가하기 버튼 
+
+
+
+
+=====================
+* 톰캣 css, js 반영 느릴 때, 서버 without publishing 옵션  -- 9:55 --
+https://itmemo.tistory.com/167
+
+* js/css 파일 캐시 방지 처리
+https://yongdev91.tistory.com/1

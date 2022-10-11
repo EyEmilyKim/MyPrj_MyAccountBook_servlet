@@ -1,0 +1,464 @@
+■ 결제수단 수정
+-- 9:57 --
+
+* 수단 수정 폼
+===> updateMethod.jsp
+-- 10:07 Ctrl+F 쓰니까 인용 후 찾아바꾸기가 편하다!! --
+
+폼 작동 확인.
+구분 변경 불가 가이드 표시 후 
+취소 > 초기화 해도 가이드 남아있는 것도 해결 :)
+카테 수정에도 바로 반영해줌.
+-- 10:15 --
+
+* 수단 수정 서블릿
+===> updateMethod.do / UpdateMethodServlet
+-- 10:20 찾아바꾸기! ㅋㅋ --
+
+* DAO updateMethod(m)
+//meth_code로 결제수단 수정 메서드
+	public boolean updateMethod(Method m)
+
+쿼리 : 
+update mab_methods set meth_name = ? where meth_code = ?
+-- 10:24 --
+
+* 결과 화면
+===> updateMethodResult.jsp
+
+작동 확인 OK!
+-- 10:26 이제 기본기능은 20분이면 구현된다 ! ㅋㅋ 커밋 10:30 --
+
+
+■ 결제수단 추가에 카드 버튼 미구현 ! 
+-- 디버깅 완료 10:35 --
+
+* 결제수단 목록에 카드 추가 후 테이블 어그러짐
+> CRD 를 CDR 로 오타냄 ><;; ㅎㅎ 역시 찾아바꿔야...! 
+-- 10:37 --
+
+■ 카테, 수단 목록에 order by XXXX_code !
+
+* 수단 정렬
+쿼리 : 
+select seqno, mncrd, meth_name, meth_code from mab_methods 
+order by meth_code, order by seqno 
+
+* 카테 정렬
+쿼리 : 
+select seqno, inex, cate_name, cate_code from mab_categories 
+order by cate_code
+
+-- 10:59 캡쳐 기록 :) 커밋--
+
+■ 가계부 작성 - 현금, 카드 버튼 > 소분류 !!~
+
+* 일단 현금/카드 선택 따라 드롭다운 보여지고 가려지기 
+아 !! display : none <-> block 알고 있었는데 !!
+js 에서 css 값 조작할 때는 "block" 처럼 " " 감싸줘야하는 거 잊지말긔 !!ㅠㅠㅋ
+- 11:50 -
+
+■ 가계부 작성 - 카데고리 드롭다운
+
+* MakeAddTrans 서블릿 카테고리 리스트 ? "CATELIST"
+<c:forEach > 로 list 돌리면서
+
+ok 이건 금방 했어. -- 12:05 --
+
+■ 가계부 작성 - 상세 현금/카드 별 드롭다운 내용
+
+* MakeAddTrans 서블릿에서 결제수단 리스트도 가져와야되네 ! "METHLIST"
+
+* 카드 선택시 
+<c:forEach > 로 list 돌리면서
+<c:if test=" ${ fn: startsWith( ${meth_code}변수 , 'crd') "> 출력 ${meth_name}
+
+c:if fn 을 재워노면 현금+카드 모든 수단 드롭다운은 뜨고 있음 -- 12:23 --
+c:if true 줘도 똑같이 뜸. 문제는 fn !
+
+<c:forEach items="${METHLIST }" var="m">
+<c:set var="meth_code" value="m.meth_code"/>
+<c:set var="meth_name" value="m.meth_name"/>
+
+<c:if test="${ fn:startsWith(meth_code, 'MN') }">
+   <option>${m.meth_name }</option>
+</c:if>		
+​
+<c:set var="text" value="Hello Java" />
+<c:if test="${fn:contains(text, 'Java')}">  존재 </c:if>
+<c:if test=${fn:contains(text, 'C')}">  미존재  </c:if>
+// 결과 : 존재
+
+<c:set var="str1" value="Hello Java!" />
+<td>[HE]로 시작되었나요?</td>
+<td>${fn: startsWith(str1, "He")}</td>
+<td>문자열.startsWithd("He")</td>
+// 결과 : true
+
+음... fn 문법은 맞는데 안걸리는 것 같아서 <c:out> meth_code / meth_name 하니까 
+변수 값 세팅이 안되고 있네 !! 
+--> 고쳤어 ! 이제 out 잘되고.... 잘되는데? 아. 잘된다 !ㅋ -- 12:42 --
+
+html 조금 정리 ... -- 1:00 배고퐈 !!--
+
+
+-- 1:19 점심 밥이 찔끔 밖에 없었어... ㅇㅅㅇ... 된장찌개 맛났는데... --
+■ 가계부 작성 - 결제수단은 지출일 때만 뜨도록 !
+-- 1:25 -- 
+
+* 카테고리도 option 지출/수입 걸러서 보여주기
+//slct_non --미지정-- 만 기본으로 일단 보여줌.
+//slct_in , slct_ex 두개로 나눠주고, 기본:가리기
+//setIN , setEX 에서 보여주기
+
+* 폼에 카테고리 - 미지정(-- --) value=""
+* 폼에 결제수단 - 미지정(-- --) value=""
+
+여기까지 기능 ok.
+html 정리. 주석 정리.
+form check 구현하려다가..
+-- 2:55 --
+
+
+■ 가계부 mab_Transactions 테이블 cate_code 에 디폴트 : 미지정('NONE') 
+(입력 form 에서는 필수입력 체크 안 함)
+
+* 칼럼명 method 를 meth_code 로 수정 -> 완료.
+alter table mab_transactions rename column method to meth_code;
+-- 3:08 --
+
+-- 3:28 이 아래 테이블 내용들 생각정리 @,@--
+■ 테이블 mab_methods 에 0/meNN/미지정/meNN0 추가 ! 
+(기존 0번 현금 날리고 다시 insert ... ㄱㅊㄱㅊ) (ok)
+-> 그러려면 ck 조건 수정. (ok)
+* seqno UK 조건 확인. 돼있음 :) (ok)
+
+* ck 수정 쿼리 : 
+select constraint_name from user_constraints where table_name='MAB_METHODS';
+
+alter table mab_methods drop constraints mab_meth_mncrd_ck;
+
+alter table mab_methods add constraints mab_meth_mncrd_ck 
+check(mncrd in('MN', 'CRD', 'meNN'));
+
+SQL> select constraint_name from user_constraints where table_name='MAB_METHODS';
+
+
+CONSTRAINT_NAME
+------------------------------------------------------------
+MAB_METH_SEQNO_NN
+MAB_METH_MNCRD_NN
+MAB_METH_NAME_NN
+MAB_METH_MNCRD_CK
+MAB_METH_MCODE_PK
+MAB_METH_SEQNO_UK
+
+6 rows selected.
+
+* 결제수단 mab_methods 최신 구조 : 
+일련번호(seqno) / 현금or카드(mncrd) / 수단이름(meth_name)  / 수단코드(meth_code)
+number / varchar2(10) / varvhar2(20)  / varchar2(10)
+nn, uk / nn, ck('MN', 'CRD', 'meNN') / nn / pk 
+
+* 최신 쿼리 : 
+create table mab_methods (
+seqno number constraint mab_meth_seqno_nn not null 
+constraint mab_meth_seqno_uk unique,  
+mncrd varchar2(10) constraint mab_meth_mncrd_nn not null 
+constraint mab_meth_mncrd_ck check(mncrd in ('MN', 'CRD', 'meNN')), 
+meth_name varchar2(20) constraint mab_meth_name_nn not null, 
+meth_code varchar2(10) constraint mab_meth_mcode_pk primary key);
+-- 3:43 --
+
+
+■ 테이블 mab_categories 에 0/caNN/미지정/caNN0 추가 ! 
+(기존 0번 날리고 다시 insert ... 0번 비어있음 !)  (ok)
+-> 그러려면 ck 조건 수정.... ck 가 없었네?? (ok)
+* seqno UK 조건 확인. 돼있음. (ok)
+
+* ck 부여 쿼리 : 
+select constraint_name from user_constraints where table_name='MAB_CATEGORIES';
+
+alter table mab_categories add constraints mab_cate_inex_ck 
+check(inex in('IN', 'EX', 'caNN'));
+
+SQL> select constraint_name from user_constraints where table_name='MAB_CATEGORIES';
+
+CONSTRAINT_NAME
+------------------------------------------------------------
+MAB_CATE_SEQNO_NN
+MAB_CATE_INEX_NN
+MAB_CATE_CNAME_NN
+MAB_CATE_CCODE_PK
+MAB_CATE_SEQNO_UK
+MAB_CATE_INEX_CK
+
+6 rows selected.
+
+
+* 카테고리 테이블 (mab_categories) 최신 구조
+일련번호(seqno) / 수입.지출(inex) / 분류명(cate_name) / 분류코드(cate_code)
+number / varchar2(10) / varchar2(20) / varchar2(10) 
+nn , uk / nn,ck('IN', 'EX', 'caNN') / nn / pk 
+
+* 최신 쿼리
+create table mab_categories (
+seqno number constraint mab_cate_seqno_nn not null,
+constraint mab_cate_seqno_uk unique,
+inex varchar2(10) constraint mab_cate_inex_nn not null 
+constraint mab_cate_inex_ck check(inex in ('IN', 'EX', 'caNN')), 
+cate_name varchar2(20) constraint mab_cate_cname_nn not null,
+cate_code varchar2(10) constraint mab_cate_ccode_pk primary key);
+
+-- 3:59 테이블 수정 --
+이제 카테, 수단 NN0 등록하고, 목록에 잘 걸러지는지 확인 !
+
+
+
+■ 결제수단, 카테고리 목록 sys row 개편
+
+* 결제수단
+insert into mab_methods values(0, 'meNN', '미지정', 'meNN0');
+commit; 
+삽입은 됐는데 목록에 걸리네 ? ;;
+
+* 카테고리
+insert into mab_categories values(0, 'caNN', '미지정', 'caNN0');
+commit; 
+여기도... 삽입은 됐는데 목록에 걸려버림;;ㅎ
+-- 4:06 --
+
+폼에서 sys row 를 가리거나 수정/삭제 막아버릴라 했는데 
+c:if 를 tr 이 아니라 td 에만 주고 있어서 선택이 안됨..
+
+폼 구조를 뜯어 고치자니 귀찮고 코드 더러워질 꺼 같아서... ; 
+걍 get 쿼리에 조건 걸어서 안보여주는 방식으로 .. ?? 
+하려니깐 그러면 또 기본 전체조회 쿼리가 없어지는데?? 
+오라클에도 부하가 걸리겠는데 ... jsp에 부담지우는게 나을꺼 같은데...  
+
+아 ! if else 처럼 c : choose 로 1차로 덜어내서 구조 달리주면 되겠구나 ! 
+작동 확인, html 구조 정리, 주석 정리 
+-- 4:57 --
+
+결제수단에도 적용... 완료 !
+-- 5:07 --
+-- 5:16 캡쳐, 커밋. --
+
+-- 5:35 중간저녁 먹음! 키위 마시쪄. 오렌지 마시쪄  --
+
+-- 6:35 스프링이 뭔가여 ? ~~ NCS 외평 실기 이야기. sky on  -- 
+
+
+■ 가계부 mab_transactions 테이블 수정
+
+2.* 칼럼 meth_code 에 default : '미지정' 을 'meNN0' 으로 수정(name 아니고 code니까!)
+3.* 칼럼 meth_code 에 fk 조건 부여
+1.* 칼럼명 method > meth_code 맞춰서 nn 조건명 변경.
+
+쿼리 : 
+0. 제약조건 조회
+select constraint_name from user_constraints where table_name='MAB_TRANSACTIONS';
+1. 완료
+alter table mab_transactions drop constraint mab_trans_method_nn;
+alter table mab_transactions modify meth_code constraint mab_trans_methcode_nn not null;
+2. 완료
+alter table mab_transactions modify meth_code default 'meNN0';
+3. 완료
+alter table mab_transactions add constraint mab_trans_methcode_fk foreign key(meth_code) references mab_methods(meth_code);
+
+4.* 칼럼 cate_code 에도 default : '미지정' 을 'caNN0' 으로.
+5.* 칼럼 cate_code 에 fk 조건 부여
+
+쿼리 : 
+4. 완료.
+alter table mab_transactions modify cate_code default 'caNN0';
+5. 완료.
+alter table mab_transactions add constraint mab_trans_catecode_fk foreign key(cate_code) references mab_categories(cate_code);
+
+
+* 가계부 테이블 (mab_transactions) 최신 구조
+일련번호(seqno) / 수입.지출(inex) / 날짜(trans_date) / 카테고리(cate_code) / 내용(item) / 금액(amount) / 결제수단(meth_code)
+number / varchar2(10) / date / varchar2(20) / varchar2(50) / number / varchar2(20)
+pk / nn, ck / nn / nn(default : 'caNN0'), fk(mab_categories) / - / nn / nn(default : 'meNN0'),  fk(mab_methods)
+
+* 최신 쿼리 --> 지우고 재생성 OK !
+create table mab_transactions (
+seqno number constraint mab_trans_seqno_pk primary key,
+inex varchar2(10) constraint mab_trans_inex_nn not null 
+constraint mab_trans_inex_ck check(inex in('IN', 'EX')),
+trans_date date constraint mab_trans_trnsdate_nn not null,
+cate_code varchar2(20) default 'caNN0' 
+constraint mab_trans_catecode_nn not null, 
+item varchar2(50), 
+amount number constraint mab_trans_amount_nn not null, 
+meth_code varchar2(20) default 'meNN0' 
+constraint mab_trans_methcode_nn not null
+ );
++
+alter table mab_transactions add constraint mab_trans_catecode_fk foreign key(cate_code) references mab_categories(cate_code);
++
+alter table mab_transactions add constraint mab_trans_methcode_fk foreign key(meth_code) references mab_methods(meth_code);
+
+* 지우고 위 쿼리 다시 넣어봄. -> OK
+* 테이블 구조 확인 -> ok
+* 제약조건 확인 ->
+SQL> select constraint_name from user_constraints where table_name='MAB_TRANSACTIONS';
+
+CONSTRAINT_NAME
+------------------------------------------------------------
+MAB_TRANS_INEX_CK
+MAB_TRANS_SEQNO_PK
+MAB_TRANS_CATECODE_FK
+MAB_TRANS_METHCODE_FK
+MAB_TRANS_INEX_NN
+MAB_TRANS_TRNSDATE_NN
+MAB_TRANS_CATECODE_NN
+MAB_TRANS_ITEM_NN
+MAB_TRANS_AMOUNT_NN
+MAB_TRANS_METHCODE_NN
+
+10 rows selected.
+
+--  7:14 --
+
+... 가계부 작성 폼 check 짜다가...
+* 아, 가계부 작성에 내용은 null 허용 하자. 
+1. 제약조건 삭제 -> ok. 바로 위에 최신구조/쿼리도 업뎃완료.
+쿼리 :
+alter table mab_transactions drop constraint mab_trans_item_nn;
+
+SQL> select constraint_name from user_constraints where table_name='MAB_TRANSACTIONS';
+
+CONSTRAINT_NAME
+------------------------------------------------------------
+MAB_TRANS_INEX_CK
+MAB_TRANS_SEQNO_PK
+MAB_TRANS_CATECODE_FK
+MAB_TRANS_METHCODE_FK
+MAB_TRANS_INEX_NN
+MAB_TRANS_TRNSDATE_NN
+MAB_TRANS_CATECODE_NN
+MAB_TRANS_AMOUNT_NN
+MAB_TRANS_METHCODE_NN
+
+9 rows selected.
+
+-- 7:31 --
+
+■ 가계부 작성 페이지 폼체크 check() 추가 !!~
+
+(SEQNO)
+INEX
+DATE
+CCODE
+ITEM
+AMOUNT
+MCODE
+
+-- 8:08 --
+* select 는 라디오버튼처럼 같은 이름 못 줘요 ><;;
+카테고리 옵션 나눠 보고 값 몰아 전달하기. ok
+-- 8:35 --
+결제수단 옵션 나눠 보고 값 몰아 전달하기. ok
+
+...
+alert("ccode_nn: "+ccode_nn+" / ccode_in: "+ccode_in+" / ccode_ex: "+ccode_ex+"\n=> ccode: "+ccode);
+아, 해결 ! 
+...
+
+-- 9:40 -- 
+체크... 
+지출 골라 결제수단 넣었다가 수입으로 고쳐쓸 때
+결제수단 값 남아있음.
+> 수입 선택시 결제수단 값 지워줘야 함.
+
+
+아니 잠만... fn 에서 select 초기화 안되잖아 !?!?!?
+text는 잘 초기화가 됐지만 select나 radio같은 요소들은 저 방법으로 초기화 되지 않았다.
+출처: https://gomgomkim.tistory.com/25 [곰의 끄덕끄덕:티스토리]
+
+
+
+......
+커밋. 로그 냅다 올려두고 퇴근해야지..
+-- 12:15 오늘은 이성이 안먹힌다 ㅋ select 에 꽂혀서 한참 애먹...ㅎ --
+ 
+
+* [오늘] 버튼 ??
+
+
+■ 카테고리 - 미지정 value=null, default='미지정/none' 추가
+■ 결제수단 - 미지정 value=null, default='미지정/none' 추가
+
+■ 그리고 또 가계부 테이블에 method nn조건 지워야 디폴트 들어가는건가..?
+이건 DAO insert 돌아갈떄 확인해서 고치는걸로 하쟈 ㅠ
+
+■ Categories 테이블에 미지정('NONE') 추가
+■ 카테고리 등록할 때, 같은 이름, 같은 순번 안넘어가도록
+
+
+* 정책 : 
+2. 카테고리를 삭제하면 
+--> on delete set null
+'기존에 이 카테고리를 사용해 입력한 가계부 기록의 카테고리 정보가 사라집니다.'
+3. 카테고리를 수정하면 
+--> trigger
+'기존에 이 카테고리를 사용해 입력한 가계부 기록에도 변경된 카테고리명이 반영됩니다.'
+
+
+■ 서비스를 이용하려면 로그인해주세요
+■ 회원가입
+
+■ 전체내역
+
+■ 지출보기
+■ 수입보기
+
+■ 결제수단 분류별 보기
+■ 카테고리 분류별 보기
+
+■ 로그인에 pwd 타입 잊지 말 것!
+■ 가계부 금액에 frm 포맷 적용시켜주기
+===================
+
+javascript 대분류에 의한 동적 셀렉트 
+기정 대분류별 소분류 배열을 js에 담아두고, 대분류 셀렉 후 소분류 옵션 바꾸는 케이스
+(대분류, 소분류 드롭다운은 처음부터 표시)
+https://blog.naver.com/ad70770/221711357676
+
+대분류 > 중분류 > 소분류 onChange 선행 박스 사라지게
+(질문) https://phpschool.com/gnuboard4/bbs/board.php?bo_table=qna_html&wr_id=257235
+(예제) http://jsfiddle.net/Lfgwhz5j/
+
+html - display : block / inline 엘리먼트들
+https://blog.naver.com/codbs7/221677787580
+
+오늘 버튼?? js 에서 날짜 얻기
+input 이나 alert 출력으로는 못봤지만 ㅠㅠ
+https://gent.tistory.com/413
+
+html form 요소 접근 (초기화는 없엉 ㅠㅠ) / 폼검증 ..
+https://pridiot.tistory.com/166
+
+ㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠselect 옵션 초기화.... << 엄청 애먹음 ;;;
+
+대분류에 의한 동적 셀렉트(대분류가 고정인 경우) select onchange
+https://blog.naver.com/ad70770/221711357676
+
+셀렉트 옵션 없애버리기 options.remove(0) 방식
+https://kin.naver.com/qna/detail.naver?d1id=1&dirId=1040202&docId=72986135&qb=Zm9ybSBzZWxlY3Qgb3B0aW9u6rCSIOy0iOq4sO2ZlCDtlajsiJg=&enc=utf8&section=kin.ext&rank=5&search_sort=0&spq=0
+
+동적 셀렉트 박스 options.remove(0) why??
+https://kin.naver.com/qna/detail.naver?d1id=1&dirId=1040202&docId=68342731&qb=b3B0aW9uLnJlbW92ZSgwKQ==&enc=utf8&section=kin.ext&rank=14&search_sort=0&spq=0
+
+리액트에서 select 옵션 초기화 ㅠㅠ
+https://gomgomkim.tistory.com/25
+
+JQuery select option 값 선택/변경하기 < 이거다! 싶었는데 라이브러리..
+https://zxchsr.tistory.com/99
+https://zxchsr.tistory.com/183
+
+jQuery 사용법. < 지금은 아니지만... 궁금했던 부분 keep
+https://blog.naver.com/dlgkstoa415/222653895730
+https://blog.naver.com/wnsghks1017/222180337758
+https://ffoorreeuunn.tistory.com/126

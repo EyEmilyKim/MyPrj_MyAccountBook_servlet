@@ -1,0 +1,78 @@
+2022.10.6(목) 개발 시작 !
+
+​
+
+@ㅍㅅㅋㅊ  6:40~
+
+​
+
+* 준비 작업
+
+ - app 기능, 화면, DB 구상
+
+- 오라클 설치 7:29~ ... 돼있네? @.@ㅋㅋ
+
+​
+
+* index.jsp
+
+* MAB.css
+
+​
+
+* login.jsp -- 9:12
+
+* login.do -- 9:33
+
+​
+
+* mab_users
+
+​
+
+create table mab_users (
+
+id varchar2(30) constraint mab_users_id_pk primary key,
+
+pwd varchar2(30) constraint mab_users_pwd_nn not null,
+
+nickname varchar2(30) constraint mab_users_nname_nn not null );
+
+​
+
+insert into mab_users values ('master', 'master', '마스터'); 
+
+​
+
+-- 9:43
+
+​
+
+* DAO getPwd
+
+​
+
+pascucci / 6cfaheg374
+
+​
+
+-- 10:09
+
+* loginResult.jsp
+
+​
+
+-- 10:30
+
+​
+
+중간에
+
+챠챠 1차함수, 히카리 라인, ㄷㅇ 카톡, ㅇㅁ 전화 
+
+​
+
+
+
+
+​

@@ -1,0 +1,102 @@
+■ MyAccountBook 테이블 정보
+-- update 2022.10.11 @kosea3 --
+
+1.* mab_users
+2.* mab_categories
+3.* mab_methods
+4.* mab_transactions
+
+1.* mab_users 회원 테이블
+
+* 회원 테이블 mab_users 최신 구조
+아이디(id) / 비밀번호(pwd) / 닉네임(nickname)
+varchar2(30) / varchar2(30) / varchar2(30)
+pk / nn / nn
+
+* 최신 쿼리
+create table mab_users (
+id varchar2(30) constraint mab_users_id_pk primary key, 
+pwd varchar2(30) constraint mab_users_pwd_nn not null, 
+nickname varchar2(30) constraint mab_users_nname_nn not null );
+
+insert into mab_users values ('master', 'master', '마스터'); 
+commit;
+
+2.* mab_categories 카테고리 테이블
+
+* 카테고리 테이블 (mab_categories) 최신 구조
+일련번호(seqno) / 수입.지출(inex) / 분류명(cate_name) / 분류코드(cate_code)
+number(10) / varchar2(10) / varchar2(20) / varchar2(10) 
+nn , uk / nn,ck('IN', 'EX', 'caNN') / nn / pk 
+★surf 테이블에 number(10) 주기!
+
+create table mab_categories ( 
+seqno number(10) constraint mab_cate_seqno_nn not null, 
+constraint mab_cate_seqno_uk unique(seqno), 
+inex varchar2(10) constraint mab_cate_inex_nn not null 
+constraint mab_cate_inex_ck check(inex in ('IN', 'EX', 'caNN')), 
+cate_name varchar2(20) constraint mab_cate_cname_nn not null, 
+cate_code varchar2(10) constraint mab_cate_ccode_pk primary key);
+
+
+3.* mab_methods 결제수단 테이블
+
+* 결제수단 mab_methods 최신 구조 : 
+
+일련번호(seqno) / 현금or카드(mncrd) / 수단이름(meth_name)  / 수단코드(meth_code)
+number(10) / varchar2(10) / varvhar2(20)  / varchar2(10)
+nn, uk / nn, ck('MN', 'CRD', 'meNN') / nn / pk 
+★surf 테이블에 number(10) 주기!
+​
+
+* 최신 쿼리 : 
+
+create table mab_methods (
+seqno number(10) constraint mab_meth_seqno_nn not null 
+constraint mab_meth_seqno_uk unique,  
+mncrd varchar2(10) constraint mab_meth_mncrd_nn not null 
+constraint mab_meth_mncrd_ck check(mncrd in ('MN', 'CRD', 'meNN')), 
+meth_name varchar2(20) constraint mab_meth_name_nn not null, 
+meth_code varchar2(10) constraint mab_meth_mcode_pk primary key);
+
+
+4.* mab_transactions 가계부 테이블
+
+* 가계부 테이블 (mab_transactions) 최신 구조
+일련번호(seqno) / 수입.지출(inex) / 날짜(trans_date) / 카테고리(cate_code) / 내용(item) / 금액(amount) / 결제수단(meth_code)
+number / varchar2(10) / date / varchar2(20) / varchar2(50) / number / varchar2(20)
+pk / nn, ck / nn / nn(default : 'caNN0'), fk(mab_categories) / - / nn / nn(default : 'meNN0'),  fk(mab_methods)
+
+* 최신 쿼리
+create table mab_transactions (
+seqno number constraint mab_trans_seqno_pk primary key,
+inex varchar2(10) constraint mab_trans_inex_nn not null 
+constraint mab_trans_inex_ck check(inex in('IN', 'EX')),
+trans_date date constraint mab_trans_trnsdate_nn not null,
+cate_code varchar2(20) default 'caNN0' 
+constraint mab_trans_catecode_nn not null, 
+item varchar2(50), 
+amount number constraint mab_trans_amount_nn not null, 
+meth_code varchar2(20) default 'meNN0' 
+constraint mab_trans_methcode_nn not null
+ );
++
+alter table mab_transactions add constraint mab_trans_catecode_fk foreign key(cate_code) references mab_categories(cate_code);
++
+alter table mab_transactions add constraint mab_trans_methcode_fk foreign key(meth_code) references mab_methods(meth_code);
+
+
+
+============================
+!@ sys 데이터
+
+insert into mab_users values ('master', 'master', '마스터'); 
+commit;
+
+insert into mab_methods values(0, 'meNN', '미지정', 'meNN0');
+commit; 
+insert into mab_methods values (1, 'meNN', '해당없음', 'meNN1');
+commit;
+
+insert into mab_categories values(0, 'caNN', '미지정', 'caNN0');
+commit; 

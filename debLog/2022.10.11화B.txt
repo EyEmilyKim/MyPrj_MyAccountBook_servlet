@@ -1,0 +1,192 @@
+2022.10.11화 @ my room
+
+어후 오늘은 어수선하다 어수선해...
+
+■ 가계부 작성 jsp
+
+-- 6:18 스타트 ! --
+
+SEQNO vv
+INEX* vv
+DATE* vv
+CCODE vv
+ITEM vv
+AMOUNT* vv
+MCODE vv
+(안내문구) vv
+(컨펌준비) vv
+_ INEX , CCODE, ITEM(미입력: - ), MCODE
+(최종컨펌) vv
+
+
+* 폼 체크 hidden 코드 -> 컨펌에 이름으로 나오도록 
+
+_구분 : (inex) -> if  ㅇㅇ
+_카테고리code_ : (ccode) -> slct 단계 if / option value 말고 text ㅇㅇ
+_결제수단code_ : (mcode)-> slct 단계 if / option value 말고 text 
+
+---- select 의 value 값 , text 값
+var target = document.getElementById("selectBox");
+    alert('선택된 옵션 text 값=' + 
+target.options[target.selectedIndex].text );     // 옵션 text 값
+       alert('선택된 옵션 value 값=' + 
+target.options[target.selectedIndex].value );     // 옵션 value 값
+-------
+
+let ccode_txt = "";
+switch(document.fm.INEX.value) {
+case "IN" : ccode_txt = document.getElementByID("SLCT_IN").options[selectedIndex].text; break; 
+case "EX" : ccode_txt = document.getElementByID("SLCT_EX").options[selectedIndex].text; break; 
+case "" : ccode_txt = "미지정";
+}
+
+-- 8:20 거실에서 다같이 회 먹구 옴 ㅎㅎ 웰컴백 패밀리~! --
+
+폼체크 컨펌 완성. 
+(중간에 fm.value 를 전역변수화 해보려 했는데 안됐다.)
+
+가계부 작성 jsp 에서 js 파일 따로 빼기
+
+챠챠가 응원 이미지 보내줬어 >< 아잉... SO SWEET ! ♡
+-- 11:11 캡쳐, 커밋 --
+
+
+■ 가계부 작성 구현
+
+* 가계부 작성 서블릿 (post)
+===> addTransaction.do / AddTransactionServlet
+파라미터 수신
+미선택 디폴트값 넣어주고
+Trans객체에 담아서
+DAO.insertTrans()
+결과 받아서 전환( 결과 끝에서 confirm 이어서? 목록? )
+
+* 잠깐, 지난 DTO, DAO 에 int -> Integer 로..
+(String 과 맞춰서 객체 타입으로 바꿔주자..)
+DTO - get , set 모두 Integer.
+DAO - return 으로 뱉을 때는 Integer, 매개변수에 받을 때는 int.
+---DTO / DAO / 서블릿도 확인해야됨
+Category - seqno / ok / 
+Method - seqno / ok / 
+User - 없음 / ok / 
+Transaction - seqno, amount / ok / 
+-- 12:24 가족모임 sky >< 으으 --
+
+-- 1:10 거실에서 간만의 회포 ㅎ 이것만 끝내고 자야지 --
+
+* int -> Integer 서블릿도 확인해야됨 (Search 캡쳐 유)
+MySweetHome 에서도 DAO, DTO 는 Integer 지만, 
+DAO.get~~ Integer 를 받는 변수는 int seqno 로 하고 있었다.
+현재 MyAccBook에서도 똑같이 정리돼있는 상태 :) 
+-- 1:29 --
+
+* 카테고리 미선택시 서블릿에서 디폴트(미지정)
+* 결제수단 미선택시 서블릿에서 디폴트(수입:미지정,지출:해당없음)
+* 내용 미입력시 서블릿에서 디폴트(미지정)???
+SEQNO+
+INEX*
+DATE*
+CCODE^
+ITEM^
+AMOUNT*
+MCODE^
+
+* Transactions 테이블에 ITEM 디폴트값+nn : '내용없음' 추가
+(현재는 null ok 라 일단 pass)
+* Methods 테이블에 meth_code '해당없음(meNN1)' 추가
+기존 1번 결제수단 지우고
+쿼리 : 
+insert into mab_methods values (1, 'meNN', '해당없음', 'meNN1');
+
+엥...? 왜 갑자기 카테 목록, 수단 목록에 오라클 접속 에러가 뜨지...??;;
+잘 모르겠지만 컴 껐다 키니까 됨.
+-- 2:23 --
+
+* TransactionDAO
+//거래 삽입 메서드
+	public boolean insertTransaction(Transaction t)
+쿼리:
+insert into mab_transactions values(?, ?, to_date(?, 'YYYY-MM-DD'), ?, ?, ?, ?);
+
+* 서블릿 마저 채우고
+
+* 결과 화면
+===> addTransactionResult.jsp
+이어서 작성 or 가계부 목록으로.
+
+* 가계부 목록 jsp <p> 만.
+===> listTransaction.jsp
+
+
+작성 후 다음 작성 화면까지 잘 넘어오는데 쿼리 실행은 안됨.
+안되는 이유 : meth_code 가 빈칸이라서. 
+
+왜 빈칸이 되는지는 내일 마저 찾는걸로.
+-- 3:22 --
+
+이제 블로그 복붙 올려두고 
+txt 담아 커밋하고 자자
+
+
+
+
+■ 가계부 목록
+
+* Transactions 테이블에 ITEM 디폴트값+nn : '내용없음' 추가
+
+* [오늘] 버튼 ??
+* 금액 1000 단위 컴마 포맷
+​
+★surf 테이블에 number(10) 주기!
+■ 카테고리 - 미지정 value=null, default='미지정/none' 추가
+■ 결제수단 - 미지정 value=null, default='미지정/none' 추가
+
+■ 그리고 또 가계부 테이블에 method nn조건 지워야 디폴트 들어가는건가..?
+이건 DAO insert 돌아갈떄 확인해서 고치는걸로 하쟈 ㅠ
+
+■ Categories 테이블에 미지정('NONE') 추가
+■ 카테고리 등록할 때, 같은 이름, 같은 순번 안넘어가도록
+
+* 정책 : 
+2. 카테고리를 삭제하면 
+--> on delete set null
+'기존에 이 카테고리를 사용해 입력한 가계부 기록의 카테고리 정보가 사라집니다.'
+3. 카테고리를 수정하면 
+--> trigger
+'기존에 이 카테고리를 사용해 입력한 가계부 기록에도 변경된 카테고리명이 반영됩니다.'
+
+■ 서비스를 이용하려면 로그인해주세요
+■ 회원가입 ( 중복검사 )
+■ 로그인 폼체크
+■ 전체내역
+
+■ 지출보기
+■ 수입보기
+​
+■ 결제수단 분류별 보기
+■ 카테고리 분류별 보기
+
+■ 로그인에 pwd 타입 잊지 말 것!
+■ 가계부 금액에 frm 포맷 적용시켜주기
+
+============
+select 박스의 value , text 가져오기
+https://gocoder.tistory.com/51
+
+javascript 문자열 자르기 substring 과 substr 차이
+https://blog.naver.com/kkh0977/222863665135
+let subString_Data = strData.substring(1, 5); // 1 ~ 4 인덱스 출력
+let subStr_Data = strData.substr(1, 5); // 1 부터 5개 문자 출력
+
+switch & if 중첩 조건문 사용
+https://colossus-java-practice.tistory.com/34
+
+html/css & javascript 연결 - DOM , Event
+https://velog.io/@breeeeze/TIL-htmlcss-javascript-%EC%97%B0%EA%B2%B0
+
+javascript 파일 연결
+https://lol-y.com/entry/JS-%EC%9E%90%EB%B0%94%EC%8A%A4%ED%81%AC%EB%A6%BD%ED%8A%B8-%ED%8C%8C%EC%9D%BC-%EC%99%B8%EB%B6%80%EC%97%90%EC%84%9C-%EC%97%B0%EA%B2%B0%ED%95%98%EA%B8%B0-%ED%86%A0%EB%81%BC%EB%8A%94-%EA%B0%9C%EB%B0%9C%EC%9E%90
+
+이클립스로 javascript 파일 생성
+https://blog.naver.com/gmlwls8809/222140874229
+

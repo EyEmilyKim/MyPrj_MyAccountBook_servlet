@@ -1,0 +1,215 @@
+2022.10.11화 @kosea
+
+* 금액 1000 단위 컴마 포맷
+* 조건 조회는 매니저가 보는 메뉴 그런거 아니고 
+날짜로 이때 부터 이때까지 글만 조회. 뭐 이런거 !
+* 중복검사 -> 카테고리 등록, 결제수단 등록 시. 
+
+~ 워크스페이스 2개 열기는 뇌리소스 넉넉한 날 다시 시도하기로. #.#ㅋ ~
+~ 이제 kosea에서도 코딩하니 log.txt 도 깃 공유 해야겠군;;ㅎㅎ
+
+-----------------
+어제한거 // 2022.10.10월 / day5.
+결제수단 수정 /수단추가 debug /목록 정렬, 개편 /가계부 작성 detail /테이블 점검 / 가계부 작성 폼체크
+-----------------
+
+-- 1:51 --
+
+# kosea3 에 테이블 만들기 ㅎ
+-> 만들면서 최신구조, 쿼리 확인
+
+1.* mab_users
+2.* mab_categories
+3.* mab_methods
+4.* mab_transactions
+
+1.* mab_users
+
+* 회원 테이블 mab_users 최신 구조
+아이디(id) / 비밀번호(pwd) / 닉네임(nickname)
+varchar2(30) / varchar2(30) / varchar2(30)
+pk / nn / nn
+
+* 최신 쿼리
+create table mab_users (
+id varchar2(30) constraint mab_users_id_pk primary key, 
+pwd varchar2(30) constraint mab_users_pwd_nn not null, 
+nickname varchar2(30) constraint mab_users_nname_nn not null );
+
+* 기본 데이터
+insert into mab_users values ('master', 'master', '마스터'); 
+commit;
+
+master 로그인 됨. 
+-- 2:06 --
+
+2.* mab_categories 카테고리 테이블
+
+* 카테고리 테이블 (mab_categories) 최신 구조
+일련번호(seqno) / 수입.지출(inex) / 분류명(cate_name) / 분류코드(cate_code)
+number(10) / varchar2(10) / varchar2(20) / varchar2(10) 
+nn , uk / nn,ck('IN', 'EX', 'caNN') / nn / pk 
+★surf 테이블에 number(10) 주기!
+
+create table mab_categories ( 
+seqno number(10) constraint mab_cate_seqno_nn not null, 
+constraint mab_cate_seqno_uk unique(seqno), 
+inex varchar2(10) constraint mab_cate_inex_nn not null 
+constraint mab_cate_inex_ck check(inex in ('IN', 'EX', 'caNN')), 
+cate_name varchar2(20) constraint mab_cate_cname_nn not null, 
+cate_code varchar2(10) constraint mab_cate_ccode_pk primary key);
+
+-- 2:13 --
+
+3.* mab_methods 결제수단 테이블
+
+* 결제수단 mab_methods 최신 구조 : 
+
+일련번호(seqno) / 현금or카드(mncrd) / 수단이름(meth_name)  / 수단코드(meth_code)
+number(10) / varchar2(10) / varvhar2(20)  / varchar2(10)
+nn, uk / nn, ck('MN', 'CRD', 'meNN') / nn / pk 
+★surf 테이블에 number(10) 주기!
+​
+
+* 최신 쿼리 : 
+
+create table mab_methods (
+seqno number(10) constraint mab_meth_seqno_nn not null 
+constraint mab_meth_seqno_uk unique,  
+mncrd varchar2(10) constraint mab_meth_mncrd_nn not null 
+constraint mab_meth_mncrd_ck check(mncrd in ('MN', 'CRD', 'meNN')), 
+meth_name varchar2(20) constraint mab_meth_name_nn not null, 
+meth_code varchar2(10) constraint mab_meth_mcode_pk primary key);
+
+
+4.* mab_transactions 가계부 테이블
+
+* 가계부 테이블 (mab_transactions) 최신 구조
+일련번호(seqno) / 수입.지출(inex) / 날짜(trans_date) / 카테고리(cate_code) / 내용(item) / 금액(amount) / 결제수단(meth_code)
+number / varchar2(10) / date / varchar2(20) / varchar2(50) / number / varchar2(20)
+pk / nn, ck / nn / nn(default : 'caNN0'), fk(mab_categories) / - / nn / nn(default : 'meNN0'),  fk(mab_methods)
+
+* 최신 쿼리
+create table mab_transactions (
+seqno number constraint mab_trans_seqno_pk primary key,
+inex varchar2(10) constraint mab_trans_inex_nn not null 
+constraint mab_trans_inex_ck check(inex in('IN', 'EX')),
+trans_date date constraint mab_trans_trnsdate_nn not null,
+cate_code varchar2(20) default 'caNN0' 
+constraint mab_trans_catecode_nn not null, 
+item varchar2(50), 
+amount number constraint mab_trans_amount_nn not null, 
+meth_code varchar2(20) default 'meNN0' 
+constraint mab_trans_methcode_nn not null
+ );
++
+alter table mab_transactions add constraint mab_trans_catecode_fk foreign key(cate_code) references mab_categories(cate_code);
++
+alter table mab_transactions add constraint mab_trans_methcode_fk foreign key(meth_code) references mab_methods(meth_code);
+
+-- 2:20 --
+desc 로 4개 테이블 확인 완료 :) !
+
++ sys 데이터 -> 입력완료 
+
+insert into mab_users values ('master', 'master', '마스터'); 
+commit;
+
+insert into mab_methods values(0, 'meNN', '미지정', 'meNN0');
+commit; 
+
+insert into mab_categories values(0, 'caNN', '미지정', 'caNN0');
+commit; 
+
+-- 2:26 --
+카테, 수단 데이터 넣어놓고.
+목록 화면 모두 확인 :) 
+
+
+■ 가계부 작성 폼체크 완성하기.
+
+setIN() 카테셀렉 초기화, 수단셀렉 초기화 된듯 !
+
+* 함수를 따로 빼자 ! 멍충아 ! -- 3:15 --
+
+setINEX(INorEX){ //수입or지출 구분(INEX) 매개변수 받아 설정
+clearValCCODE(){ //카테고리 선택값 초기화
+clearVarMCODE(){ //결제수단 선택값 초기화
+setSupMETHOD(MNorCRD){ //현금or카드 대분류(SupMETHOD) 매개변수 받아 설정
+-- 3:31 일단 만듬--
+
+onoffSET_METH(ONorOFF){ ////결제수단 row 표시,비표시 (기본:가려짐)
+showSLCT_XX(NNINEX){ //카테고리(XX)만 남기고 가리기
+colorBtnINEX(INorEX){ //버튼 색 바꾸기 - 수입or지출
+colorBtnMNCRD(MNorCRD){ //버튼 색 바꾸기 - 현금or카드
+clearBtnAll(){ //버튼 색 all초기화 - 수입,지출,현금,카드
+openSlct(MNorCRD){ //결제수단 드롭다운(현금or카드) 보여주기
+
+setIN(), setEX() -  완료
+setMN(), setCRD() - 완료
+-- 4:32--
+
+check() 확인완료 !
+backToList() 확인완료 !
+
+SEQNO
+INEX*
+DATE*
+CCODE
+ITEM
+AMOUNT*
+MCODE
+
+-- 5:10 -- 
+
+* guide (red)
+내용이 비어있습니다.
+카테고리가 선택되지 않았습니다.
+지출 > 결제수단이 선택되지 않았습니다.
+
+가계부 작성 폼 드디어 완성 ! 
+
+-- 5:29 --
+
+
+
+
+* 카테고리 미선택시 서블릿에서 디폴트 값 입력
+* 결제수단 미선택시 서블릿에서 디폴트(수입:미지정,지출:해당무) 값 입력
+
+* [오늘] 버튼 ??
+
+​
+★surf 테이블에 number(10) 주기!
+■ 카테고리 - 미지정 value=null, default='미지정/none' 추가
+■ 결제수단 - 미지정 value=null, default='미지정/none' 추가
+
+■ 그리고 또 가계부 테이블에 method nn조건 지워야 디폴트 들어가는건가..?
+이건 DAO insert 돌아갈떄 확인해서 고치는걸로 하쟈 ㅠ
+
+■ Categories 테이블에 미지정('NONE') 추가
+■ 카테고리 등록할 때, 같은 이름, 같은 순번 안넘어가도록
+
+* 정책 : 
+2. 카테고리를 삭제하면 
+--> on delete set null
+'기존에 이 카테고리를 사용해 입력한 가계부 기록의 카테고리 정보가 사라집니다.'
+3. 카테고리를 수정하면 
+--> trigger
+'기존에 이 카테고리를 사용해 입력한 가계부 기록에도 변경된 카테고리명이 반영됩니다.'
+
+■ 서비스를 이용하려면 로그인해주세요
+■ 회원가입 ( 중복검사 )
+■ 로그인 폼체크
+■ 전체내역
+
+■ 지출보기
+■ 수입보기
+​
+■ 결제수단 분류별 보기
+■ 카테고리 분류별 보기
+
+■ 로그인에 pwd 타입 잊지 말 것!
+■ 가계부 금액에 frm 포맷 적용시켜주기
+
+============
