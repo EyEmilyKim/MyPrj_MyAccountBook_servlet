@@ -1,15 +1,15 @@
 package model;
 
 public class Category {
-	private int seqno;
+	private Integer seqno;
 	private String inex;
 	private String cate_name;
 	private String cate_code;
 	
-	public int getSeqno() {
+	public Integer getSeqno() {
 		return seqno;
 	}
-	public void setSeqno(int seqno) {
+	public void setSeqno(Integer seqno) {
 		this.seqno = seqno;
 	}
 	public String getInex() {

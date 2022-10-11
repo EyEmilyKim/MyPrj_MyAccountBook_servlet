@@ -1,15 +1,15 @@
 package model;
 
 public class Transaction {
-	private int seqno;
+	private Integer seqno;
 	private String inex;
 	private String trans_date;
 	private String cate_code;
 	private String item;
-	private int amount;
+	private Integer amount;
 	private String method;
 	
-	public int getSeqno() {
+	public Integer getSeqno() {
 		return seqno;
 	}
 	public void setSeqno(int seqno) {
@@ -39,7 +39,7 @@ public class Transaction {
 	public void setItem(String item) {
 		this.item = item;
 	}
-	public int getAmount() {
+	public Integer getAmount() {
 		return amount;
 	}
 	public void setAmount(int amount) {

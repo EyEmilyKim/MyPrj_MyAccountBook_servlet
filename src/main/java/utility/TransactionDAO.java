@@ -13,7 +13,7 @@ public class TransactionDAO {
 	private ResultSet rs = null;
 	
 	//Transactions 테이블의 최신 일련번호 검색
-	public int getTransSeqno() {
+	public Integer getTransSeqno() {
 		String select = "select max(seqno) from mab_transactions";
 		int max = 0;
 		try {

@@ -155,7 +155,7 @@ public class CategoryDAO{
 	}
 	
 	//Categories 테이블의 최신 일련번호 검색
-	public int getCateSeqno() {
+	public Integer getCateSeqno() {
 		String select = "select max(seqno) from mab_categories";
 		int max = 0;
 		try {

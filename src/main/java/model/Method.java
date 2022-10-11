@@ -1,15 +1,15 @@
 package model;
 
 public class Method {
-	private int seqno;
+	private Integer seqno;
 	private String mncrd;
 	private String meth_name;
 	private String meth_code;
 	
-	public int getSeqno() {
+	public Integer getSeqno() {
 		return seqno;
 	}
-	public void setSeqno(int seqno) {
+	public void setSeqno(Integer seqno) {
 		this.seqno = seqno;
 	}
 	public String getMncrd() {

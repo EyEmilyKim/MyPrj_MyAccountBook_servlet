@@ -121,7 +121,7 @@ public class MethodDAO {
 	}
 		
 	//Methods 테이블의 최신 일련번호 검색
-		public int getMethSeqno() {
+		public Integer getMethSeqno() {
 			String select = "select max(seqno) from mab_methods";
 			int max = 0;
 			try {
