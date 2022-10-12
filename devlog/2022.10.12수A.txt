@@ -1,0 +1,150 @@
+2022.10.12수 @ kosea
+
+* 어제 개발노트 제목. 커밋 history / 마일스톤 업뎃.
+-----------------------
+
+* 5줄 보기, 10줄 보기, 11줄 보기 form > select 
+onchange 에 location.reload (listTransaction.do?PV=선택한 줄 수)?
+서블릿에서 int PV 받아서 페이지당 pv(* 몇/ + 몇) -> start , end 값 계산 후 
+셀렉트 쿼리 start , end 는 그대로니까 DAO는 안바꿔두 됨.
+
+* 페이지 버튼  
+1 .... 10 다음
+이전 11 .... 20 다음
+페이지가 몇개 필요한지 계산해서 반복 출력.
+
+
+5. 만약 기본이 최근 10건 보여주기 + 10건 더 보기 구현하고 싶으면...??
+
+-----------------------
+■ 가계부 작성 후 다음 작성 화면까지 잘 넘어오는데 쿼리 실행은 안됨.
+안되는 이유 : meth_code 가 빈칸이라서. 
+
+-- 2:40 --
+
+서블렛에서 MCODE 수신이 안되고 있음
+> 서블릿에서 String 조건 걸 때 
+if(mcode == "IN") 이렇게 말고 
+if(mcode.equals("IN")) 이렇게 줘야 함 !
+
++ kosea3 에 meNN1 '해당없음' 등록 insert 완료.
+정상 등록 확인 !
+
+-- 3:05 --
+
+■ 가계부 목록 = 전체내역
+
+* 첫 시작 : 서블릿
+===> listTransaction.do / ListTransactionServlet
+dao.listTransaction() 수신해서 
+내역 목록 jsp 로 전환
+
+(정렬 기본: 최신거래순 -> 선택: 거래날짜순)
+
+* DAO
+//전체 가계부내역 검색 메서드
+	public ArrayList<Transaction> listTransaction()
+쿼리 : 
+select seqno, inex, to_char(trans_date, 'YYYY-MM-DD'), 
+cate_code, item, amount, meth_code 
+from mab_transactions 
+order by trans_date desc 
+
+* 내역목록 jsp : listTransaction.jsp
+
+목록 골조를 테이블이 아닌 <div> 구조로. 
+
+meth_code / cate_code 일단은 code 출력.
+>나중에 trans DTO 에 name 필드 추가, DAO 에 조인 조회 추가하기.
+-- 3:52 --
+
++ 목록 블럭 형식으로 출력 OK. 당장 보이는 간단한 디자인만.
+
++ 내용에 <a> href: modifyTransaction.do?SN=${trans.seqno} 
+-- 4:26 --
+
+
+■ 가계부 상세 -> 수정, 삭제
+
+* 서블렛 
+===> detailTransaction.do / DetailTransactionServlet
+파라미터 SN ( seqno ) 수신
+DAO.getTransaction 
+결과 객체 받아 상세 페이지로
+
+* DAO
+
+쿼리 : 
+select seqno, inex, to_char(trans_date, 'YYYY-MM-DD'), 
+cate_code, item, amount, meth_code 
+from mab_transactions 
+where seqno = ?
+
+
+* 가계부 상세 화면 
+===> detailTransaction.jsp
+-- 연결까지 4:50 --
+
+
+에잇 휴식~~~ :) 
+동현이 만드는거 구경 ... alert 로 로그인 요청 급조 ! ㅋ
+-- 5:20 -- 
+
+ 
+
+◈>>>지금 여기<<<<
+
+
+
+
+
+* (정렬 기본: 최신거래순 -> 선택: 거래날짜순)
+
+★(kosea/surf) Transactions 테이블에 ITEM 디폴트값+nn : '내용없음' 추가
+★(surf) 테이블에 number(10) 주기!
+■ 카테고리 - 미지정 value=null, default='미지정/none' 추가
+■ 결제수단 - 미지정 value=null, default='미지정/none' 추가
+
+* 나중에 trans DTO 에 name 필드 추가, DAO 에 조인 조회 추가하기.
+
+■ 그리고 또 가계부 테이블에 method nn조건 지워야 디폴트 들어가는건가..?
+이건 DAO insert 돌아갈떄 확인해서 고치는걸로 하쟈 ㅠ
+
+■ Categories 테이블에 미지정('NONE') 추가
+■ 카테고리 등록할 때, 같은 이름, 같은 순번 안넘어가도록
+
+* 정책 : 
+2. 카테고리를 삭제하면 
+--> on delete set null
+'기존에 이 카테고리를 사용해 입력한 가계부 기록의 카테고리 정보가 사라집니다.'
+3. 카테고리를 수정하면 
+--> trigger
+'기존에 이 카테고리를 사용해 입력한 가계부 기록에도 변경된 카테고리명이 반영됩니다.'
+
+■ 서비스를 이용하려면 로그인해주세요
+■ 회원가입 ( 중복검사 )
+■ 로그인 폼체크
+
+■ doGet / doPost 정리
+
+* [오늘] 버튼 ??
+* 금액 1000 단위 컴마 포맷
+​
+■ 지출보기
+■ 수입보기
+​
+■ 결제수단 분류별 보기
+■ 카테고리 분류별 보기
+
+■ 로그인에 pwd 타입 잊지 말 것!
+■ 가계부 금액에 frm 포맷 적용시켜주기
+
+============
+
+jstl - fmt: currency / groupingUsed 관련
+https://blog.naver.com/choongchoongchoong/222597500036
+
+판매글 수정/삭제 / form 에서 가격 부분 fmt 관련
+https://cafe.naver.com/fordeveloper/33319
+https://cafe.naver.com/fordeveloper/33319?art=ZXh0ZXJuYWwtc2VydmljZS1uYXZlci1zZWFyY2gtY2FmZS1wcg.eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjYWZlVHlwZSI6IkNBRkVfVVJMIiwiY2FmZVVybCI6ImZvcmRldmVsb3BlciIsImFydGljbGVJZCI6MzMzMTksImlzc3VlZEF0IjoxNjY1NTQ1Njg5MDA5fQ.YXsB-rcl3vlzn8eNoR5bn8y5heY6f6YxWixxjiKVl9Y
+
