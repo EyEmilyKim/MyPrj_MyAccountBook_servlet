@@ -16,7 +16,7 @@
 	</div>
 	<ul class="menu">
 		<li><a href="makeAddTrans.do">가계부 쓰기</a></li>
-		<li><a href="">전체내역</a></li>
+		<li><a href=listTransaction.do>전체내역</a></li>
 		<li><a href="">지출</a></li>
 		<li><a href="">수입</a></li>
 		<li><a href="#">설정</a>

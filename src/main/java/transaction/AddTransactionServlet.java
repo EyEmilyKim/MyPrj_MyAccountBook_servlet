@@ -46,10 +46,10 @@ public class AddTransactionServlet extends HttpServlet {
 		String item = request.getParameter("ITEM");
 		String amount = request.getParameter("AMOUNT");
 		String mcode = request.getParameter("MCODE");
-		if(ccode == "") ccode = "caNN0";//카테고리 미선택 디폴트: '미지정'
-		if(mcode == "") { //결제수단 미선택 디폴트:
-			if(inex == "EX") mcode = "meNN0";  //지출이면 '미지정'
-			else if(inex == "IN") mcode = "meNN1";//수입이면 '해당없음' 
+		if(ccode.equals("")) ccode = "caNN0";//카테고리 미선택 디폴트: '미지정'
+		if(mcode.equals("")) { //결제수단 미선택 디폴트:
+			if(inex.equals("EX")) mcode = "meNN0";  //지출이면 '미지정'
+			else if(inex.equals("IN")) mcode = "meNN1";//수입이면 '해당없음' 
 		}
 		System.out.println("서블렛 MCODE : "+mcode);
 		if(item == "") item = "내용없음"; //내용 미입력 디폴트: '내용없음'
@@ -62,8 +62,8 @@ public class AddTransactionServlet extends HttpServlet {
 		t.setAmount(Integer.parseInt(amount));
 		t.setMeth_code(mcode);
 		TransactionDAO dao = new TransactionDAO();
-		boolean r = dao.insertTransaction(t);
-		response.sendRedirect("addTransactionResult.jsp?R="+r);
+		boolean flag = dao.insertTransaction(t);
+		response.sendRedirect("addTransactionResult.jsp?R="+flag);
 		System.out.println("서블렛 끝");
 	}
 

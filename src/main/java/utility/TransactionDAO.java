@@ -4,7 +4,10 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.util.ArrayList;
 
+import model.Transaction;
+import model.Transaction;
 import model.Transaction;
 
 public class TransactionDAO {
@@ -13,6 +16,90 @@ public class TransactionDAO {
 	private Connection con = null;
 	private PreparedStatement pstmt = null;
 	private ResultSet rs = null;
+	
+	//seqno로 가계부내역 검색 메서드
+	public Transaction getTransaction(Integer seqno) {
+		Transaction t = null;
+		String select = "select seqno, inex, to_char(trans_date, 'YYYY-MM-DD'), "
+				+ "cate_code, item, amount, meth_code "
+				+ "from mab_transactions where seqno = ?";
+		try {
+			Class.forName(driver);
+			con = DriverManager.getConnection(url,"hr","hr");
+			pstmt = con.prepareStatement(select);
+			pstmt.setInt(1, seqno);
+			rs = pstmt.executeQuery();
+			System.out.println("getTransaction() select done");
+			System.out.println("seqno :"+seqno);
+			if(rs.next()) {
+				t = new Transaction();
+				t.setSeqno(rs.getInt(1));
+				t.setInex(rs.getString(2));
+				t.setTrans_date(rs.getString(3));
+				t.setCate_code(rs.getString(4));
+				t.setItem(rs.getString(5));
+				t.setAmount(rs.getInt(6));
+				t.setMeth_code(rs.getString(7));
+				System.out.println("getTransaction() rs true");
+				System.out.println(rs.getInt(1));
+				System.out.println(rs.getString(2));
+				System.out.println(rs.getString(3));
+				System.out.println(rs.getString(4));
+				System.out.println(rs.getString(5));
+				System.out.println(rs.getInt(6));
+				System.out.println(rs.getString(7));
+			}
+		}catch(Exception e) {
+			e.printStackTrace();
+		}finally {
+			try { rs.close(); pstmt.close(); con.close(); }
+			catch(Exception e) {}
+		}
+		System.out.println("getTransaction() end");
+		return t;
+	}	
+	
+	//전체 가계부내역 검색 메서드
+	public ArrayList<Transaction> listTransaction() {
+		ArrayList<Transaction> list = new ArrayList<Transaction>();
+		String select = "select seqno, inex, to_char(trans_date, 'YYYY-MM-DD'), "
+				+ "cate_code, item, amount, meth_code "
+				+ "from mab_transactions order by trans_date desc";
+		try {
+			Class.forName(driver);
+			con = DriverManager.getConnection(url,"hr","hr");
+			pstmt = con.prepareStatement(select);
+			rs = pstmt.executeQuery();
+			while(rs.next()) {
+				Transaction t = new Transaction();
+				t.setSeqno(rs.getInt(1));
+				t.setInex(rs.getString(2));
+				t.setTrans_date(rs.getString(3));
+				t.setCate_code(rs.getString(4));
+				t.setItem(rs.getString(5));
+				t.setAmount(rs.getInt(6));
+				t.setMeth_code(rs.getString(7));
+				list.add(t);
+				System.out.println("listTransaction() rs true");
+				System.out.println(rs.getInt(1));
+				System.out.println(rs.getString(2));
+				System.out.println(rs.getString(3));
+				System.out.println(rs.getString(4));
+				System.out.println(rs.getString(5));
+				System.out.println(rs.getInt(6));
+				System.out.println(rs.getString(7));
+			}
+			System.out.println("listTransaction() select done");
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				rs.close(); pstmt.close(); con.close();
+			} catch (Exception e2) {			}
+		}
+		System.out.println("listTransaction() end");
+		return list;
+	}
 	
 	//거래 삽입 메서드
 	public boolean insertTransaction(Transaction t) {
@@ -39,6 +126,7 @@ public class TransactionDAO {
 			System.out.println("7 Meth_code : "+t.getMeth_code());
 			pstmt.executeUpdate();
 			con.commit();
+			System.out.println("insertTransaction() insert done");
 			flag = true;
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -47,6 +135,7 @@ public class TransactionDAO {
 				pstmt.close(); con.close();
 			} catch (Exception e2) {			}
 		}
+		System.out.println("insertTransaction() end");
 		return flag;
 	}
 	
@@ -61,6 +150,7 @@ public class TransactionDAO {
 			rs = pstmt.executeQuery();
 			if(rs.next()) {
 				max = rs.getInt(1);
+				System.out.println("getTransSeqno() max:"+rs.getInt(1));
 			}
 		}catch(Exception e) {
 			e.printStackTrace();
@@ -68,6 +158,7 @@ public class TransactionDAO {
 			try { rs.close(); pstmt.close(); con.close(); }
 			catch(Exception e) {}
 		}
+		System.out.println("getTransSeqno() end");
 		return max;
 	}
 }

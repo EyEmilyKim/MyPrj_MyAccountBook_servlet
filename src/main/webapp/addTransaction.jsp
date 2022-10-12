@@ -22,7 +22,7 @@
 	
 	<form action="addTransaction.do" method = "post" name="fm" onSubmit="return check()">
 <!-- 0.일련번호(hidden)-->
-		<input type="hidden" name="SEQNO" value="${param.MSN +1 }">
+		<input type="hidden" name="SEQNO" value="${requestScope.MSN +1 }">
 		<table>
 <!-- 1.수입or지출 구분 -->
 		<tr><td><input type="hidden" name="INEX">
