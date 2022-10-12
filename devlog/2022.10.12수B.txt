@@ -1,0 +1,178 @@
+2022.10.12수 @ my room
+
+■ 가계부 상세 -> 수정, 삭제
+
+-- 7:54 sky on --
+
+★ 집에 왔는데 가계부 기록이 없어서 .. 
+데이터 다시 넣었는데 카테, 수단 선택했는데 왜 다 디폴트지??;;
+음... 일단 작동 구현을 먼저 하고, 내일 kosea 가서 같이 확인하자..
+
+-- 8:56 --
+* 가계부 상세 화면 
+
+골조, css 잠깐. border color...
+
+* 수정, 삭제 버튼 onClick > alert ,  location
+
+deleteTransaction.do /
+updateTransaction.do / 
+
+■ 거래내역 삭제
+
+* 서블릿 : 
+===> deleteTransaction.do / DeleteTransactionServlet
+파람 SN 수신
+DAO.deleteTransaction()
+결과 받아서 jsp로 
+
+* DAO
+//seqno로 거래내역 삭제 메서드
+	public boolean deleteTransaction(Integer seqno)
+
+쿼리 : 
+delete mab_transactions where seqno = ?
+
+* 결과 화면
+===> deleteTransactionResult.jsp
+
+삭제 성공 확인 ! :) 
+-- 10:07 --
+
+■ 거래내역 수정
+
+* detailTrans.jsp 에서 
+[수정] 누르면 수정용 frm 열리도록.
+
+.... 하려고 했는데, 카테&수단 목록 불러와야 해서 
+jsp 에서 눈가리고 아웅 안되고 수정.do 로 이동 ><;;하는 걸로...
+그래도 get목록만 없었다면 충분히 유효한 좋은 시도였다!
+-- 10:40--
+
+* 편집 서블렛 
+===> modifyTransaction.do / ModifyTransactionServlet
+파람 SN 으로 getTrans,
+ListCate , ListMeth 얻어오고 (MakeAddTransServlet 참고)
+수정 JSP 로 (addTrans JSP 인용)
+Trans . inex, cate_code, meth_code 파람전달....
+
+* 편집 jsp : 
+===> updateTransaction.jsp
+
+* addTrans 에 걸려있던 js 는 makeTrans.js 로 바꿔서
+addTrans.jsp & updateTrans.jsp 양쪽에서 이용할 수 있게 함.
+
+* 단 ! Trans . inex, cate_code, meth_code 선택돼있어야 해....
+서블릿에서 파라미터 수신, 
+html 설정용 hidden <form>
+
+까지 만들고 잘 넘어오나보려 했는데
+왜또 상세에서 수정/삭제 클릭이 안되니..?
+-- 11:30 --
+해결
+
+updateTrans.jsp 골조. 파람 수신 확인
+-- 11:40 --
+
+아... 파람 가지고 preset 주고 있는데 
+doIN, doEX는 성공,
+카테, 수단 select preset 주는거는 addTrans에서 미지정으로 등록되는 문제 때문에 지금 확인 불가 ㅠㅠ
+
+....가 아니고 mysql에서 직접 수정해서 보자.
+
+쿼리 : 
+update mab_transactions set cate_code = 'EX5', meth_code = 'MN5' where seqno = 5;
+commit;
+
+거래목록에서 반영 확인.
+편집화면 가면? preset 잘 들어가있다 !
+-- 12:27 --
+
+* 취소 버튼 수정 OK.
+-- 12:20 --
+
+* DB데이터 폼에 반영 OK.
+
+오늘은 여기까지 ! 
+내일은 거래 수정 작동 구현~~
+-- 12:51 --
+
+마일스톤, 캡쳐, 깃 커밋. 
+-- 1:06 --
+
+
+◈>>>지금 여기<<<<
+
+
+
+
+*수정 서블렛 
+===> updateTransaction.do / UpdateTransactionServlet
+DAO.updateTransaction()
+결과 받아서 jsp로 
+
+* DAO 에 수정 메서드
+
+
+쿼리 : 
+update mab_transactions set inex=?, trans_date=to_date(?, 'YYYY-MM-DD'), cate_code, item=?, amount=?, meth_code where seqno = ?
+
+
+
+
+
+★ 10/13수 집에 왔는데 가계부 기록이 없어서 .. 
+데이터 다시 넣었는데 카테, 수단 선택했는데 왜 다 디폴트지??;;
+음... 일단 작동 구현을 먼저 하고, 내일 kosea 가서 같이 확인하자..
+
+* (정렬 기본: 최신거래순 -> 선택: 거래날짜순)
+
+★(kosea/surf) Transactions 테이블에 ITEM 디폴트값+nn : '내용없음' 추가
+★(surf) 테이블에 number(10) 주기!
+■ 카테고리 - 미지정 value=null, default='미지정/none' 추가
+■ 결제수단 - 미지정 value=null, default='미지정/none' 추가
+
+* 나중에 trans DTO 에 name 필드 추가, DAO 에 조인 조회 추가하기.
+
+■ 그리고 또 가계부 테이블에 method nn조건 지워야 디폴트 들어가는건가..?
+이건 DAO insert 돌아갈떄 확인해서 고치는걸로 하쟈 ㅠ
+
+■ Categories 테이블에 미지정('NONE') 추가
+■ 카테고리 등록할 때, 같은 이름, 같은 순번 안넘어가도록
+
+* 정책 : 
+2. 카테고리를 삭제하면 
+--> on delete set null
+'기존에 이 카테고리를 사용해 입력한 가계부 기록의 카테고리 정보가 사라집니다.'
+3. 카테고리를 수정하면 
+--> trigger
+'기존에 이 카테고리를 사용해 입력한 가계부 기록에도 변경된 카테고리명이 반영됩니다.'
+4. 거래상세 수정에서 수입/지출은 못바꿈. 필요시 삭제 후 재등록!
+
+
+■ 서비스를 이용하려면 로그인해주세요
+■ 회원가입 ( 중복검사 )
+■ 로그인 폼체크
+
+■ doGet / doPost 정리
+
+* [오늘] 버튼 ??
+* 금액 1000 단위 컴마 포맷
+​
+■ 지출보기
+■ 수입보기
+​
+■ 결제수단 분류별 보기
+■ 카테고리 분류별 보기
+
+■ 로그인에 pwd 타입 잊지 말 것!
+■ 가계부 금액에 frm 포맷 적용시켜주기
+
+============
+
+css - flex 요소 간격 justify-content 
+space-between / space-around / space-evenly
+https://rgy0409.tistory.com/4820
+
+css - 가상클래스 hover, first&last child, nth-of-type, focus, placeholder, input, radio, hamberger
+https://blog.naver.com/jan9239/222812347252

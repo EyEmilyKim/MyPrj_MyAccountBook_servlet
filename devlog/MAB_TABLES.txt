@@ -1,5 +1,5 @@
 ■ MyAccountBook 테이블 정보
--- update 2022.10.11 @kosea3 --
+
 
 1.* mab_users
 2.* mab_categories
