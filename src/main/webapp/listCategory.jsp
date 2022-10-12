@@ -28,7 +28,7 @@
 		<c:when test="${c.inex == 'caNN' }">
 			<tr id="sys">
 				<td>${c.seqno }</td><td>${c.cate_code }</td>
-				<td>sys</td><td>${c.cate_name }</td>
+				<td>기본</td><td>${c.cate_name }</td>
 				<td><a href="${url }" onClick="popupUpdate(this); return false;">수정</a></td>
 				<td><a href="${url }" onClick="popupDelete(this); return false;">삭제</a></td>
 				<td>url : <c:out value="${url }"></c:out></td>

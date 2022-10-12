@@ -8,7 +8,8 @@
 <meta charset="UTF-8">
 <title>listTransaction.jsp</title>
 	<style type="text/css">
-		.oneTrans { width:350px;  }
+		.contMain { border: 1px skyblue solid; max-width: 400px;}
+		.oneTrans { border: 1px gray solid; margin: 5px 10px; }
 		.upper, .lower { display:flex; justify-content: space-between; text-align:center; }	
 		.inner { margin:0 auto; }
 		.in { color:blue; } .ex { color:red; }
@@ -22,13 +23,12 @@
 <div class="home">
 	<a href="index.jsp">My 가계부</a>
 </div>
-<div>
+<div class="contMain">
 	<p>가계부 목록 화면입니다.</p>
 	총 ${SIZE } 건<br>
-	<table border="1" class="table">
 	
 	<c:forEach items="${LIST }" var="trans">
-	<tr><td><div class="oneTrans">
+	<div class="oneTrans">
 	<div class="upper">
 		<div class="inner date">${trans.trans_date }</div>
 		<c:if test="${trans.inex == 'IN' }">
@@ -46,9 +46,8 @@
 		<div class="inner cate">카테고리: ${trans.cate_code }</div>
 		<div class="inner meth">결제수단: ${trans.meth_code }</div>
 	</div>
-	</div></td></tr>
+	</div>
 	</c:forEach>
-	</table>
 </div>
 </body>
 </html>

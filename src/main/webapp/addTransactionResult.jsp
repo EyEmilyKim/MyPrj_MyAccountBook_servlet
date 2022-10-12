@@ -22,7 +22,7 @@
 	if(confirm("이어서 가계부를 작성하시겠습니까?")){
 		location.href = "makeAddTrans.do"
 	}else{
-		location.href = "listTransaction.jsp"
+		location.href = "listTransaction.do"
 	}
 </script>
 </body>

@@ -7,8 +7,6 @@ import java.sql.ResultSet;
 import java.util.ArrayList;
 
 import model.Transaction;
-import model.Transaction;
-import model.Transaction;
 
 public class TransactionDAO {
 	private String driver = "oracle.jdbc.OracleDriver";
@@ -16,6 +14,53 @@ public class TransactionDAO {
 	private Connection con = null;
 	private PreparedStatement pstmt = null;
 	private ResultSet rs = null;
+	
+	//seqno로 거래내역 수정 메서드
+	public boolean updateTransaction(Transaction t) {
+		boolean flag = false;
+		String update = "update mab_categories set cate_name = ? where cate_code = ? ";
+		try {
+			Class.forName(driver);
+			con = DriverManager.getConnection(url,"hr","hr");
+			pstmt = con.prepareStatement(update);
+//			pstmt.setString(1, t.getCate_name());
+//			pstmt.setString(2, t.getCate_code());
+			pstmt.executeUpdate();
+			con.commit();
+			flag = true;
+			System.out.println("updateTransaction() update done");
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			try { pstmt.close(); con.close(); }
+			catch(Exception e) {}
+		}
+		System.out.println("updateTransaction() end");
+		return flag;
+	}
+		
+	//seqno로 거래내역 삭제 메서드
+	public boolean deleteTransaction(Integer seqno) {
+		boolean flag = false;
+		String delete = "delete mab_transactions where seqno = ?";
+		try {
+			Class.forName(driver);
+			con = DriverManager.getConnection(url,"hr","hr");
+			pstmt = con.prepareStatement(delete);
+			pstmt.setInt(1, seqno);
+			pstmt.executeUpdate();
+			con.commit();
+			flag = true;
+			System.out.println("deleteTransaction() delete done");
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			try { pstmt.close(); con.close(); }
+			catch(Exception e) {}
+		}
+		System.out.println("deleteTransaction() end");
+		return flag;
+	}
 	
 	//seqno로 가계부내역 검색 메서드
 	public Transaction getTransaction(Integer seqno) {

@@ -6,7 +6,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>addTransaction.jsp</title>
+<title>updateTransaction.jsp</title>
 <style type="text/css">
 	.contMain { border: 1px skyblue solid; max-width: 400px;}
 	#slct_in, #slct_ex, #row_meth, #slct_mn, #slct_crd { display:none; } 
@@ -14,16 +14,22 @@
 	.hidden { display:none; }
 </style>
 </head>
-<body>
+<body onLoad="preset()">
 <div class="home">
 	<a href="index.jsp">My 가계부</a>
 </div>
-	<div class="contMain">
-	<p>가계부 쓰기 화면입니다.</p>
+<div class="contMain">
+	<p>가계부 수정 화면입니다.</p>
+	<c:set value="${TRANS }" var="t"/>
+	<form class="hidden" name="preset">
+		<input type="text" name="PRE_INEX" value="${t.inex }">
+		<input type="text" name="PRE_CCODE" value="${t.cate_code }">
+		<input type="text" name="PRE_MCODE" value="${t.meth_code }">
+	</form>
 	
-	<form action="addTransaction.do" method = "post" name="fm" onSubmit="return check()">
+	<form action="updateTransaction.do" method = "post" name="fm" onSubmit="return check()">
 <!-- 0.일련번호(hidden)-->
-		<input type="hidden" name="SEQNO" value="${requestScope.MSN +1 }">
+		<input type="hidden" name="SEQNO" value="${t.seqno }">
 		<table>
 <!-- 1.수입or지출 구분 -->
 		<tr><td><input type="hidden" name="INEX">
@@ -31,11 +37,11 @@
 			<input type="button" value="지출" onClick="doEX()" id="btn_ex">
 			</td></tr>
 <!-- 2.거래날짜 -->
-		<tr><td><input type="date" name="DATE" id="date">
-<!--  버려둔 버튼	<input type="button" value="오늘" onClick="setToday()"></td></tr> -->
+		<tr><td><input type="date" name="DATE" id="date" value="${t.trans_date }">
+<!-- 버려둔 버튼	<input type="button" value="오늘" onClick="setToday()"></td></tr> -->
 <!-- 3.카테고리 -->
 	<!-- 드롭다운 : 초기화면 -->
-		<tr><td><input type="hidden" name="CCODE" id="ccode">
+		<tr><td><input type="hidden" name="CCODE" id="ccode" value="${t.cate_code }">
 				<select name="SLCT_NN" id="slct_nn">
 					<option value="">--카테고리(미지정)--</option>
 				</select>
@@ -62,15 +68,16 @@
 			</td></tr>	
 <!-- 4.거래내용 -->
 		<tr><td><textarea name="ITEM" placeholder="내용을 입력하세요"
-		 			cols="40" rows="5"></textarea></td></tr>
+		 			cols="40" rows="5">${t.item }</textarea></td></tr>
 <!-- 5.거래금액 -->
 		<tr><td>
-			<input type="text" placeholder="금액을 입력하세요" name="AMOUNT"></td></tr>
+			<input type="text" placeholder="금액을 입력하세요" name="AMOUNT" value="${t.amount }">
+			</td></tr>
 <!-- 6.결제수단 -->	
 	<!-- 현금or카드 버튼 -->
 		<tr id="row_meth">
 			<td><input type="hidden" name="SupMETHOD">
-				<input type="hidden" name="MCODE" id="mcode">
+				<input type="hidden" name="MCODE" id="mcode" value="meth_code">
 				<input type="button" value="현금" onClick="doMN()" id="btn_mn">
 				<input type="button" value="카드" onClick="doCRD()" id="btn_crd">
 				</td>
@@ -108,10 +115,49 @@
 <!-- 8.form 등록/취소 -->			
 		<tr><td><br>
 			<input type="submit" value="등록">
-			<input type="reset" value="취소" onClick="backToList()"></td></tr>
+			<input type="reset" value="취소" onClick="backToDetail(${t.seqno})"></td></tr>
 		</table>
 	</form>
-	</div>
+</div>	<!-- contMain 끝 -->
 </body>
-<script src="makeTransaction.js"></script>
+<script src="makeTransaction.js">
+/* 가계부 쓰기와 공통되는 기능들 ↑ 외부 js파일로 */
+</script>
+<script type="text/javascript">
+/* 취소 버튼 클릭 시 */
+function backToDetail(seqno){
+	alert("backToDetail(seqno) 호출됨.");
+	if(confirm("취소하고 상세화면으로 돌아가시겠습니까?")){
+		location.href = "detailTransaction.do?SN="+seqno;
+	}
+	preset();
+	alert("끝");
+}
+/* 수정 전 데이터에 따라 미리 html 요소 반영 */
+function preset(){ 
+	const pre_inex = document.preset.PRE_INEX.value;
+	const pre_ccode = document.preset.PRE_CCODE.value;
+	const pre_mcode = document.preset.PRE_MCODE.value;
+	alert("preset() 호출됨");
+	const pre_SupCate = pre_ccode.substring(0,2);
+	const pre_SupMeth = pre_mcode.substring(0,2);
+// 	alert("pre_inex : "+pre_inex+" /pre_ccode : "+pre_ccode+" /pre_mcode : "+pre_mcode
+// 			+"\n=> pre_SupCate : "+pre_SupCate+" /pre_SupMeth : "+pre_SupMeth);
+	switch(pre_inex){ // 수입or지출
+	case "IN" : doIN(); break;
+	case "EX" : doEX(); break;
+	}
+	switch(pre_SupCate){ //카테고리
+	case "ca" : break; 
+	case "IN" : document.fm.SLCT_IN.value = pre_ccode; break;
+	case "EX" : document.fm.SLCT_EX.value = pre_ccode; break;
+	}
+	switch(pre_SupMeth){ //결제수단
+	case "me" : break; 
+	case "MN" : doMN(); document.fm.SLCT_MN.value = pre_mcode; break;
+	case "CR" : doCRD(); document.fm.SLCT_CRD.value = pre_mcode; break;
+	}
+	alert("끝");
+}
+</script>
 </html>
