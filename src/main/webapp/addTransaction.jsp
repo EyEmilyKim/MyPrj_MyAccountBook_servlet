@@ -10,7 +10,7 @@
 <style type="text/css">
 	.contMain { border: 1px skyblue solid; max-width: 400px;}
 	#slct_in, #slct_ex, #row_meth, #slct_mn, #slct_crd { display:none; } 
-	#guide { color:red; }
+	#guide { color:red; } #ccode, #mcode { border:orange solid 1px;}
 	.hidden { display:none; }
 </style>
 </head>
@@ -35,28 +35,28 @@
 <!--  버려둔 버튼	<input type="button" value="오늘" onClick="setToday()"></td></tr> -->
 <!-- 3.카테고리 -->
 	<!-- 드롭다운 : 초기화면 -->
-		<tr><td><input type="hidden" name="CCODE" id="ccode">
+		<tr><td><input type="text" name="CCODE" id="ccode" placeholder="ccode 넣어줘ㅠㅠ">
 				<select name="SLCT_NN" id="slct_nn">
 					<option value="">--카테고리(미지정)--</option>
 				</select>
 	<!-- 드롭다운 : 수입 -->
-				<select name="SLCT_IN" id="slct_in">
+				<select name="SLCT_IN" id="slct_in" onChange="setCCODE(this)">
 					<option value="">--카테고리(수입)--</option>
 				<c:forEach items="${CATELIST }" var="c">
 				<c:set var="cate_code" value="${c.cate_code }"/>
 				<c:set var="cate_name" value="${c.cate_name }"/>
 				<c:if test="${ fn:startsWith(cate_code,'IN') }">
-					<option value="${c.cate_code }">${c.cate_name }</option>
+					<option value="${c.cate_code }">${c.cate_code } / ${c.cate_name }</option>
 				</c:if>		
 				</c:forEach></select>
 	<!-- 드롭다운 : 지출 -->
-				<select name="SLCT_EX" id="slct_ex">
+				<select name="SLCT_EX" id="slct_ex" onChange="setCCODE(this)">
 					<option value="">--카테고리(지출)--</option>
 				<c:forEach items="${CATELIST }" var="c">
 				<c:set var="cate_code" value="${c.cate_code }"/>
 				<c:set var="cate_name" value="${c.cate_name }"/>
 				<c:if test="${ fn:startsWith(cate_code,'EX') }">
-					<option value="${c.cate_code }">${c.cate_name }</option>
+					<option value="${c.cate_code }">${c.cate_code } / ${c.cate_name }</option>
 				</c:if>		
 				</c:forEach></select>
 			</td></tr>	
@@ -70,28 +70,28 @@
 	<!-- 현금or카드 버튼 -->
 		<tr id="row_meth">
 			<td><input type="hidden" name="SupMETHOD">
-				<input type="hidden" name="MCODE" id="mcode">
+				<input type="text" name="MCODE" id="mcode"  placeholder="mcode 넣어줘ㅠㅠ">
 				<input type="button" value="현금" onClick="doMN()" id="btn_mn">
 				<input type="button" value="카드" onClick="doCRD()" id="btn_crd">
 				</td>
 	<!-- 드롭다운 : 현금 -->
-			<td><select name="SLCT_MN" id="slct_mn">
+			<td><select name="SLCT_MN" id="slct_mn" onChange="setMCODE(this)">
 					<option value="">--결제수단(현금)--</option>
 				<c:forEach items="${METHLIST }" var="m">
 				<c:set var="meth_code" value="${m.meth_code }"/>
 				<c:set var="meth_name" value="${m.meth_name }"/>
 				<c:if test="${ fn:startsWith(meth_code,'MN') }">
-					<option value="${m.meth_code }">${m.meth_name }</option>
+					<option value="${m.meth_code }">${m.meth_code } / ${m.meth_name }</option>
 				</c:if>		
 				</c:forEach></select>
 	<!-- 드롭다운 : 카드 -->
-				<select name="SLCT_CRD" id="slct_crd">
+				<select name="SLCT_CRD" id="slct_crd" onChange="setMCODE(this.value)">
 					<option value="">--결제수단(카드)--</option>
 				<c:forEach items="${METHLIST }" var="m">
 				<c:set var="meth_code" value="${m.meth_code }"/>
 				<c:set var="meth_name" value="${m.meth_name }"/>
 				<c:if test="${ fn:startsWith(meth_code,'CRD') }">
-					<option value="${m.meth_code }">${m.meth_name }</option>
+					<option value="${m.meth_code }">${m.meth_code } / ${m.meth_name }</option>
 				</c:if>		
 				</c:forEach></select>
 			</td></tr>	

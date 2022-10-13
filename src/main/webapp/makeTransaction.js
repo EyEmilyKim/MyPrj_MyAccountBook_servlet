@@ -17,9 +17,19 @@ const slct_mn = document.getElementById("slct_mn");
 const slct_crd = document.getElementById("slct_crd");
 
 /* --- form 제출 or 취소 --- */
-function makeSubmit(){
-	
-	
+function setCCODE(thisS){
+	alert("setCCODE() 호출됨");
+	alert("arg : ["+thisS+"]");
+	alert("this.options[this.selectedIndex].value : "+thisS.options[thisS.selectedIndex].value);
+	document.fm.CCODE.value = thisS.options[thisS.selectedIndex].value;
+	alert("setCCODE() 끝");
+}
+function setMCODE(thisV){
+	alert("setMCODE() 호출됨");
+	alert("arg : ["+thisV+"]");
+	alert("thisV : "+thisV);
+	document.fm.MCODE.value = thisV;
+	alert("setMCODE() 끝");
 }
 
 function check(){
