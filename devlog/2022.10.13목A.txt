@@ -1,0 +1,158 @@
+2022.10.13목 @ kosea3
+
+-- 2:00 --
+listTrans~ updateTrans 까지 흐름 점검 @.@;;
+
+-- 2:20 --
+
+*수정 서블렛 
+===> updateTransaction.do / UpdateTransactionServlet
+fm 파람들 수신해서 Trans 객체 담고 (addTrans.do 인용)
+DAO.updateTransaction()
+결과 받아서 jsp로 
+
+■ addTrans.do 카테, 수단 확인 !!
+jsp form 값 전달은 되고 있음!
+서블릿이 문젠가...?? 
+> 비어있군 ! 
+값 넣어주고 다시 submit 으로 넘어가야되는구나 !
+
+* makeTrans.js 수정 2단계로 나눔. (개편전 커밋ok)
+
+catchSub 는 fm.~~.value 밖에 빼주면 안돌아감 !
+check 여기1 까지밖에 안옴
+-- 3:55 -- 
+
+-- 4:10 -- 히비스커스tea ♪
+catchSub OK ! check() 호출하면서 fm값 다시 읽고 있음 !
+
+check() 확인
+아냐 근데... catchsubmit에 fm값 안읽고 있는데 !?...
+1차 접근법 실패 -- 스태시 -- 
+
+접근법을 달리하자 ㅠㅠ
+* select 에 onChange 로 값 넣어주는건 어떄??
+그리구 catchSub는 guide 문 만들어서 String 넘겨주는걸로 하자 ㅠ
+
+-- 4:34 log.txt 백업 -- 
+
+select onChange 성공 !!!
+
+캡쳐, 커밋
+-- 5:30 --
+
+* 검색창 정리 했음.
+
+
+■ catchSub() 에 
+* makeGuide() - guide 문 String 만들어 check()로 전달
+-- 6:09 --
+... 해주기 전에 
+
+* makeTxt() - 컨펌용 String 만들어 check()로 전달
+
+쌤이 정리하래 ㅠ -- 6:15 --
+
+◈>>>지금 여기<<<< 
+
+
+
+
+
+■ updateTrans.jsp 에도 적용
+■ Transaction 에 기록시간 항목 추가 !!
+
+==================== 4:37 서버 재시작 ====
+최종 커밋 상태로 되돌림 ㅎㅎ
+JS 돌아가고 있음
+select 에 onChange 다시 처음부터 적용....
+
+이 방법이 맞았어 !! 
+카테, 수단 드디어 고침 ! 
+
+끝에 선생님 도움도 조금 받음 >< 힛
+-- 5:30 -- 
+
+
+
+* guide fnc 따로...? 
+
+* XX_txt 따로...?
+
+
+
+* DAO 에 수정 메서드
+
+
+쿼리 : 
+update mab_transactions set inex=?, trans_date=to_date(?, 'YYYY-MM-DD'), cate_code, item=?, amount=?, meth_code where seqno = ?
+
+
+
+
+
+★ 10/13수 집에 왔는데 가계부 기록이 없어서 .. 
+데이터 다시 넣었는데 카테, 수단 선택했는데 왜 다 디폴트지??;;
+음... 일단 작동 구현을 먼저 하고, 내일 kosea 가서 같이 확인하자..
+
+* (정렬 기본: 최신거래순 -> 선택: 거래날짜순)
+
+★(kosea/surf) Transactions 테이블에 ITEM 디폴트값+nn : '내용없음' 추가
+★(surf) 테이블에 number(10) 주기!
+■ 카테고리 - 미지정 value=null, default='미지정/none' 추가
+■ 결제수단 - 미지정 value=null, default='미지정/none' 추가
+
+* 나중에 trans DTO 에 name 필드 추가, DAO 에 조인 조회 추가하기.
+
+■ 그리고 또 가계부 테이블에 method nn조건 지워야 디폴트 들어가는건가..?
+이건 DAO insert 돌아갈떄 확인해서 고치는걸로 하쟈 ㅠ
+
+■ Categories 테이블에 미지정('NONE') 추가
+■ 카테고리 등록할 때, 같은 이름, 같은 순번 안넘어가도록
+
+* 정책 : 
+2. 카테고리를 삭제하면 
+--> on delete set null
+'기존에 이 카테고리를 사용해 입력한 가계부 기록의 카테고리 정보가 사라집니다.'
+3. 카테고리를 수정하면 
+--> trigger
+'기존에 이 카테고리를 사용해 입력한 가계부 기록에도 변경된 카테고리명이 반영됩니다.'
+4. 거래상세 수정에서 수입/지출은 못바꿈. 필요시 삭제 후 재등록!
+
+
+■ 서비스를 이용하려면 로그인해주세요
+■ 회원가입 ( 중복검사 )
+■ 로그인 폼체크
+
+■ doGet / doPost 정리
+■ css 따로 빼기
+
+* [오늘] 버튼 ??
+* 금액 1000 단위 컴마 포맷
+​
+■ 지출보기
+■ 수입보기
+​
+■ 결제수단 분류별 보기
+■ 카테고리 분류별 보기
+
+■ 로그인에 pwd 타입 잊지 말 것!
+■ 가계부 금액에 frm 포맷 적용시켜주기
+
+============
+
+onChange 에 자동 submit
+https://xe1.xpressengine.com/qna/1531923
+
+selectbox onchange 의 value와 text 이용하기
+https://blog.naver.com/zij08209712/222227606784
+
+select box에서 this.value 사용하기 (onchange)
+https://blog.naver.com/parkuid/222822940772
+
+select box - this.value (with jQuery)
+https://taesikman1.tistory.com/86
+https://coding-restaurant.tistory.com/317
+
+
+
