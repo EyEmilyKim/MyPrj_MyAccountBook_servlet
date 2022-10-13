@@ -21,7 +21,7 @@
 	<div class="contMain">
 	<p>가계부 쓰기 화면입니다.</p>
 	
-	<form action="addTransaction.do" method = "post" name="fm" onSubmit="return check()">
+	<form action="addTransaction.do" method = "post" name="fm" onSubmit="return catchSub()">
 <!-- 0.일련번호(hidden)-->
 		<input type="hidden" name="SEQNO" value="${requestScope.MSN +1 }">
 		<table>

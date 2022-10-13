@@ -17,55 +17,59 @@ const slct_mn = document.getElementById("slct_mn");
 const slct_crd = document.getElementById("slct_crd");
 
 /* --- form 제출 or 취소 --- */
-function setCCODE(thisS){
-	alert("setCCODE() 호출됨");
-	alert("arg : ["+thisS+"]");
-	alert("this.options[this.selectedIndex].value : "+thisS.options[thisS.selectedIndex].value);
-	document.fm.CCODE.value = thisS.options[thisS.selectedIndex].value;
-	alert("setCCODE() 끝");
+function catchSub(){
+	alert("catchSub() 호출됨. ");
+	return makeGuide();
 }
-function setMCODE(thisV){
-	alert("setMCODE() 호출됨");
-	alert("arg : ["+thisV+"]");
-	alert("thisV : "+thisV);
-	document.fm.MCODE.value = thisV;
-	alert("setMCODE() 끝");
-}
-
-function check(){
-// 	alert("check() 호출됨. ");
-	/* 안내문 출력해주기 위한 문자열 변수 선언 */
+function makeGuide(){
+	alert("makeGuide() 호출됨. ");
+	// 안내문 출력해주기 위한 문자열 변수 선언
 	let guide = "";
-	/* CCODE: 미선택,지출,소비로 나눠져있는 드롭다운에서 최종값을 찾아 form 필드에 전달 */
-	let ccode_val = document.fm.CCODE.value;
-	let slct_nn_val = document.fm.SLCT_NN.value;
-	let slct_in_val = document.fm.SLCT_IN.value;
-	let slct_ex_val = document.fm.SLCT_EX.value;
-	if(slct_in_val != '') ccode_val = slct_in_val; 
-	else if(slct_ex_val != '') ccode_val = slct_ex_val; 
-	else ccode_val = ""; 
-// 	alert("\nslct_nn_val: "+slct_nn_val+" / slct_in_val: "+slct_in_val+" / slct_ex_val: "+slct_ex_val+"\n=> CCODE_val: "+ccode_val);
 	/* CHECK> 카테고리 선택:필수no!(안내문) -> 미선택시 서블릿에서 디폴트 값 입력 */
+	let ccode_val = document.fm.CCODE.value;
 	//	if(ccode_val == ''){ alert("카테고리를 선택해주세요."); return false } 
 		if(ccode_val == ''){ guide = guide+"카테고리가 선택되지 않았습니다.<br/>"; }
-	/* MCODE: 현금,카드로 나눠져있는 드롭다운에서 최종값을 찾아 form 필드에 전달 */
-	let mcode_val = document.fm.MCODE.value;
-	let slct_mn_val = document.fm.SLCT_MN.value;
-	let slct_crd_val = document.fm.SLCT_CRD.value;
-	if(slct_mn_val != '') mcode_val = slct_mn_val; else if(slct_crd_val != '') mcode_val = slct_crd_val; else mcode_val = ''; 
-// 	alert("\nslct_mn_val: "+slct_mn_val+" / slct_crd_val: "+slct_crd_val+"\n=> MCODE_val: "+mcode_val);
 	/* CHECK> 내용 입력:필수no!(안내문) -> 미입력시 서블릿에서 디폴트 값 입력 */
 	let item_val = document.fm.ITEM.value;
 	//	if(item_val == ''){ alert("내용을 입력해주세요."); return false }
-		if(item_val == ''){ guide = guide+"내용이 비어있습니다.<br/>"; }
-	/* CHECK> 지출/소비 구분:필수 */	
-	let inex_val = document.fm.INEX.value;
-	if(inex_val == ''){ alert("지출/소비 구분을 선택해주세요."); return false }
+		if(item_val == ''){ guide = guide+"내용이 비어있습니다.<br/>"; }	
 	/* CHECK> 결제수단 선택:필수no!(안내문) -> 미선택시 서블릿에서 디폴트(수입:미지정,지출:해당없음) 값 입력 */
+	let mcode_val = document.fm.MCODE.value;
+	let inex_val = document.fm.INEX.value;
 	//	if(mcode_val == ''){ alert("결제수단을 선택해주세요."); return false }
 		if(inex_val == "EX"){
 			if(mcode_val == ''){ guide = guide+"결제수단이 선택되지 않았습니다.<br/>"; }
 		}	
+	alert(guide);
+	alert("makeGuide() 끝 ")	
+	return check(guide);
+}
+
+function check(guide){
+ 	alert("check() 호출됨. ");
+	/* 안내문 출력해주기 위한 문자열 변수 선언 */
+//	let guide = "";
+	/* CCODE: 미선택,지출,소비로 나눠져있는 드롭다운에서 최종값을 찾아 form 필드에 전달 */
+	let ccode_val = document.fm.CCODE.value;
+//	let slct_nn_val = document.fm.SLCT_NN.value;
+//	let slct_in_val = document.fm.SLCT_IN.value;
+//	let slct_ex_val = document.fm.SLCT_EX.value;
+//	if(slct_in_val != '') ccode_val = slct_in_val; 
+//	else if(slct_ex_val != '') ccode_val = slct_ex_val; 
+//	else ccode_val = ""; 
+// 	alert("\nslct_nn_val: "+slct_nn_val+" / slct_in_val: "+slct_in_val+" / slct_ex_val: "+slct_ex_val+"\n=> CCODE_val: "+ccode_val);
+	
+	/* MCODE: 현금,카드로 나눠져있는 드롭다운에서 최종값을 찾아 form 필드에 전달 */
+	let mcode_val = document.fm.MCODE.value;
+//	let slct_mn_val = document.fm.SLCT_MN.value;
+//	let slct_crd_val = document.fm.SLCT_CRD.value;
+//	if(slct_mn_val != '') mcode_val = slct_mn_val; else if(slct_crd_val != '') mcode_val = slct_crd_val; else mcode_val = ''; 
+// 	alert("\nslct_mn_val: "+slct_mn_val+" / slct_crd_val: "+slct_crd_val+"\n=> MCODE_val: "+mcode_val);
+	
+	/* CHECK> 지출/소비 구분:필수 */	
+	let inex_val = document.fm.INEX.value;
+	if(inex_val == ''){ alert("지출/소비 구분을 선택해주세요."); return false }
+	
 	/* CHECK> 거래날짜:필수 */
 	let date_val = document.fm.DATE.value;
 	if(date_val == ''){ alert("거래날짜를 선택해주세요."); return false }
@@ -74,7 +78,7 @@ function check(){
 	/* CHECK> 금액 */
 	let amount_val = document.fm.AMOUNT.value;
 	if(amount_val == ''){ alert("금액을 입력해주세요."); return false }
-// 	alert("여기1");
+ 	alert("여기1");
 	/* 최종 컨펌을 위한 txt 출력값 생성 */
 	let inex_txt = ""; //선택한 수입or지출 구분의 txt명 
 	if(inex_val == "IN") inex_txt = "수입"; else if(inex_val == "EX") inex_txt = "지출";
@@ -129,7 +133,7 @@ function backToList(){
 /* --- form 제출 or 취소 끝--- */
 
 /* --- form 입력 과정 func --- */
-/* 수입 or 지출 선택 */
+/* 수입 or 지출 버튼 */
 function doIN(){ //[수입]
 // 	alert("doIN() 호출됨");
 	setINEX("IN"); //수입or지출 구분(INEX) : 수입(IN)
@@ -149,7 +153,7 @@ function doEX(){ //[지출]
 	clearValCCODE(); //카테고리 선택값 초기화
 // 	alert("끝");
 }
-/* 현금 or 카드 선택 */
+/* 현금 or 카드 버튼 */
 function doMN(){ //[현금]버튼 클릭시
 // 	alert("doMN() 호출됨");
 	setSupMETHOD("MN"); //현금or카드 대분류(SupMETHOD) : 현금(MN)
@@ -163,6 +167,22 @@ function doCRD(){ //[카드]버튼 클릭시
 	colorBtnMNCRD("CRD"); //버튼 색 바꾸기
 	openSlct("CRD"); //결제수단 드롭다운 보여주기 : 카드
 // 	alert("끝");
+}
+/*[수입/지출] 드롭다운 선택 시 form 의 CCODE 값 자동 입력  */  
+function setCCODE(thisS){ //인자: html의 select 요소 자체
+//	alert("setCCODE() 호출됨");
+//	alert("arg : ["+thisS+"]");
+//	alert("this.options[this.selectedIndex].value : "+thisS.options[thisS.selectedIndex].value);
+	document.fm.CCODE.value = thisS.options[thisS.selectedIndex].value;
+//	alert("setCCODE() 끝");
+}
+/*[현금/카드] 드롭다운 선택 시 form 의 MCODE 값 자동 입력*/
+function setMCODE(thisV){ //인자: html select요소의 this.value
+//	alert("setMCODE() 호출됨");
+//	alert("arg : ["+thisV+"]");
+//	alert("thisV : "+thisV);
+	document.fm.MCODE.value = thisV;
+//	alert("setMCODE() 끝");
 }
 /* 거래날짜 오늘로 설정 <- 잘안됨 일단 버려둠..*/
 //function setToday(){
