@@ -1,0 +1,191 @@
+2022.10.13목 @ my room
+
+-- kosea서... -- 
+
+■ catchSub() 에 
+* makeGuide() - guide 문 String 만들어 check()로 전달
+-- 6:09 --
+... 해주기 전에 
+* makeTxt() - 컨펌용 String 만들어 check()로 전달
+
+쌤이 정리하래 ㅠ -- 6:15 --
+
+-- 7:40 이어서 --
+
+오.. 엄청 몰입해서 했네... 
+js가 너무 지저분해져서 한번에 다 캐치해서 공유하는 방법이 없나 했더니
+json 으로 넘겨주면 되자나.. !? ㅋㅋ 
+makeGuide() 완성됐고 
+makeDetail() 정리하는 중... 
+-- 9:56 --
+
+-- 10:48 --
+addTrans.jsp 에 makeDetail() 확인중
+
+카테고리는 OK
+결제수단 - 현금에 문제가 있다 ... [htmlObject]
+> 해결 : setMCODE(this.value) 로 줘야되는데 현금만 this 였다.ㅋ
+﻿
+* 현금/카드 버튼 클릭시 MCODE.value 도 지워줘야 해 !! -> 완료
+(카테고리는 버튼 스위치 시 CCODE 초기화가 되고 있음.)
+
+-- 11:05 --
+makeGuide() , makeDetail() 완성 ! 
+이제 check() 정리만 하면 됨 ㅠㅠㅠ
+
+-- 11: 54 --
+함수들 정리, 주석처리 완료 ! 
+
+
+■ updateTrans.jsp 에도 적용
+했고, 
+updateTrans.do로 넘어왔어 !!
+-- 12:18 --
+
+-- 1: 20 --
+■ Transaction 에 기록시간 항목 추가 !!
+
+쿼리 : 
+alter table mab_transactions add reg_date date ;
+
+( constraint mab_trans_regdate_nn not null )
+nn 제약조건은 이전 data 땜에 지금 안됨;; 
+
+* 가계부 테이블 (mab_transactions) 최신 구조
+일련번호(seqno) / 수입.지출(inex) / 거래날짜(trans_date) / 카테고리(cate_code) / 내용(item) / 금액(amount) / 결제수단(meth_code) / 등록일시(reg_date)
+number / varchar2(10) / date / varchar2(20) / varchar2(50) / number / varchar2(20) / date
+pk / nn, ck / nn / nn(default : 'caNN0'), fk(mab_categories) / - / nn / nn(default : 'meNN0'),  fk(mab_methods) / nn 
+
+* 최신 쿼리
+create table mab_transactions (
+seqno number constraint mab_trans_seqno_pk primary key,
+inex varchar2(10) constraint mab_trans_inex_nn not null 
+constraint mab_trans_inex_ck check(inex in('IN', 'EX')),
+trans_date date constraint mab_trans_trnsdate_nn not null,
+cate_code varchar2(20) default 'caNN0' 
+constraint mab_trans_catecode_nn not null, 
+item varchar2(50), 
+amount number constraint mab_trans_amount_nn not null, 
+meth_code varchar2(20) default 'meNN0' 
+constraint mab_trans_methcode_nn not null,
+reg_date date constraint mab_trans_regdate_nn not null
+ );
++
+alter table mab_transactions add constraint mab_trans_catecode_fk foreign key(cate_code) references mab_categories(cate_code);
++
+alter table mab_transactions add constraint mab_trans_methcode_fk foreign key(meth_code) references mab_methods(meth_code);
+
+* model Transaction 수정 (reg_date 추가) > ㅇㅇ
+* DAO 쿼리 수정 (sysdate 추가)
+addㅇㅇ , update , get ㅇㅇ / list ㅇㅇ(select & order by desc)
+-- 1:46 -- 
+
+■ 가계부 수정
+
+* updateTrans.do
+파람 수신, (addTrans 참고)
+
+
+* DAO 에 수정 메서드
+//seqno로 거래내역 수정 메서드
+	public boolean updateTransaction(Transaction t)
+
+쿼리 : 
+update mab_transactions set inex=?, trans_date=to_date(?, 'YYYY-MM-DD'), cate_code=?, item=?, amount=?, meth_code=?, reg_date=sysdate where seqno = ?
+
+
+* 결과화면
+===> updateTransactionResult
+
+수정 성공 :) 
+-- 2:14 --
+
+
+남은 To do 정리
+-- 2:33 --
+
+◈>>>지금 여기<<<< 
+
+
+
+
+
+​■ 가계부 목록 - 페이지 / N줄 보기 추가 
+
+■ 가계부 목록 - 조건 조회 (월별, 기간_yymmdd~yymmdd : 최대3M)
+
+
+* (정렬 기본: 최신거래순 -> 선택: 거래날짜순)
+
+
+■ 카테, 수단 등록할 때, 같은 이름, 같은 순번 안넘어가도록
+
+
+
+
+■ 지출보기
+■ 수입보기
+
+■ 수입 / 지출 - 조건 조회
+(월별, 기간, 카테고리별, 결제수단별)
+
+
+■ 서비스를 이용하려면 로그인해주세요
+■ 로그인 폼체크
+■ 로그인에 pwd 타입 잊지 말 것!
+■ 회원가입 ( 중복검사 )
+
+* 나중에 trans DTO 에 name 필드 추가, DAO 에 조인 조회 추가하기.
+(유저 여러명일 때 누구의 거래내역인지 ...? 였나..? )
+
+★(kosea/surf) Transactions 테이블에 ITEM 디폴트값+nn : '내용없음' 추가
+★(kosea/surf) Transaction 에 아래 추가
+( constraint mab_trans_regdate_nn not null )
+★(surf) 테이블에 number(10) 주기!
+
+■ 카테고리 - 미지정 value=null, default='미지정/none' 추가
+■ 결제수단 - 미지정 value=null, default='미지정/none' 추가
+■ 그리고 또 가계부 테이블에 method nn조건 지워야 디폴트 들어가는건가..?
+이건 DAO insert 돌아갈떄 확인해서 고치는걸로 하쟈 ㅠ
+
+* 정책 : 
+2. 카테고리를 삭제하면 
+--> on delete set null
+'기존에 이 카테고리를 사용해 입력한 가계부 기록의 카테고리 정보가 사라집니다.'
+3. 카테고리를 수정하면 
+--> trigger
+'기존에 이 카테고리를 사용해 입력한 가계부 기록에도 변경된 카테고리명이 반영됩니다.'
+4. 거래상세 수정에서 수입/지출은 못바꿈. 필요시 삭제 후 재등록!
+
+
+■ doGet / doPost 정리
+■ css 정리, 따로 빼기
+■ 반응형
+
+
+● PPT 
+
+
+* [오늘] 버튼 ??
+
+
+============
+
+onChange 에 자동 submit
+https://xe1.xpressengine.com/qna/1531923
+
+selectbox onchange 의 value와 text 이용하기
+https://blog.naver.com/zij08209712/222227606784
+
+select box에서 this.value 사용하기 (onchange)
+https://blog.naver.com/parkuid/222822940772
+
+select box - this.value (with jQuery)
+https://taesikman1.tistory.com/86
+https://coding-restaurant.tistory.com/317
+
+JavaScript - 함수의 매개변수(Parameter), 전역변수, 지역변수
+https://jenny-daru.tistory.com/13
+
+JSON이란?
+https://blog.naver.com/rodpold/222755536654

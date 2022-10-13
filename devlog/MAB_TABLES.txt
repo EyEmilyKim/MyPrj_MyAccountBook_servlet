@@ -63,9 +63,9 @@ meth_code varchar2(10) constraint mab_meth_mcode_pk primary key);
 4.* mab_transactions 가계부 테이블
 
 * 가계부 테이블 (mab_transactions) 최신 구조
-일련번호(seqno) / 수입.지출(inex) / 날짜(trans_date) / 카테고리(cate_code) / 내용(item) / 금액(amount) / 결제수단(meth_code)
-number / varchar2(10) / date / varchar2(20) / varchar2(50) / number / varchar2(20)
-pk / nn, ck / nn / nn(default : 'caNN0'), fk(mab_categories) / - / nn / nn(default : 'meNN0'),  fk(mab_methods)
+일련번호(seqno) / 수입.지출(inex) / 거래날짜(trans_date) / 카테고리(cate_code) / 내용(item) / 금액(amount) / 결제수단(meth_code) / 등록일시(reg_date)
+number / varchar2(10) / date / varchar2(20) / varchar2(50) / number / varchar2(20) / date
+pk / nn, ck / nn / nn(default : 'caNN0'), fk(mab_categories) / - / nn / nn(default : 'meNN0'),  fk(mab_methods) / nn 
 
 * 최신 쿼리
 create table mab_transactions (
@@ -78,7 +78,8 @@ constraint mab_trans_catecode_nn not null,
 item varchar2(50), 
 amount number constraint mab_trans_amount_nn not null, 
 meth_code varchar2(20) default 'meNN0' 
-constraint mab_trans_methcode_nn not null
+constraint mab_trans_methcode_nn not null,
+reg_date date constraint mab_trans_regdate_nn not null
  );
 +
 alter table mab_transactions add constraint mab_trans_catecode_fk foreign key(cate_code) references mab_categories(cate_code);
