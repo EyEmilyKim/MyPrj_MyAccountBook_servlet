@@ -10,8 +10,8 @@
 <style type="text/css">
 	.contMain { border: 1px skyblue solid; max-width: 400px;}
 	#slct_in, #slct_ex, #row_meth, #slct_mn, #slct_crd { display:none; } 
-	#guide { color:red; } #ccode, #mcode { border:orange solid 1px;}
-	.hidden { display:none; }
+	#guide { color:red; } #ccode, #mcode { border:orange solid 1px;  display:none; }
+	.hidden { display:none; } .test {border:red solid 1px;}
 </style>
 </head>
 <body>
@@ -26,7 +26,7 @@
 		<input type="hidden" name="SEQNO" value="${requestScope.MSN +1 }">
 		<table>
 <!-- 1.수입or지출 구분 -->
-		<tr><td><input type="hidden" name="INEX">
+		<tr><td><input type="hidden" name="INEX" id="inex">
 			<input type="button" value="수입" onClick="doIN()" id="btn_in">
 			<input type="button" value="지출" onClick="doEX()" id="btn_ex">
 			</td></tr>
@@ -35,7 +35,7 @@
 <!--  버려둔 버튼	<input type="button" value="오늘" onClick="setToday()"></td></tr> -->
 <!-- 3.카테고리 -->
 	<!-- 드롭다운 : 초기화면 -->
-		<tr><td><input type="text" name="CCODE" id="ccode" placeholder="ccode 넣어줘ㅠㅠ">
+		<tr><td><input type="text" name="CCODE" id="ccode" placeholder="ccode 자동수신">
 				<select name="SLCT_NN" id="slct_nn">
 					<option value="">--카테고리(미지정)--</option>
 				</select>
@@ -46,7 +46,7 @@
 				<c:set var="cate_code" value="${c.cate_code }"/>
 				<c:set var="cate_name" value="${c.cate_name }"/>
 				<c:if test="${ fn:startsWith(cate_code,'IN') }">
-					<option value="${c.cate_code }">${c.cate_code } / ${c.cate_name }</option>
+					<option value="${c.cate_code }">${c.cate_name }</option>
 				</c:if>		
 				</c:forEach></select>
 	<!-- 드롭다운 : 지출 -->
@@ -56,7 +56,7 @@
 				<c:set var="cate_code" value="${c.cate_code }"/>
 				<c:set var="cate_name" value="${c.cate_name }"/>
 				<c:if test="${ fn:startsWith(cate_code,'EX') }">
-					<option value="${c.cate_code }">${c.cate_code } / ${c.cate_name }</option>
+					<option value="${c.cate_code }">${c.cate_name }</option>
 				</c:if>		
 				</c:forEach></select>
 			</td></tr>	
@@ -70,18 +70,18 @@
 	<!-- 현금or카드 버튼 -->
 		<tr id="row_meth">
 			<td><input type="hidden" name="SupMETHOD">
-				<input type="text" name="MCODE" id="mcode"  placeholder="mcode 넣어줘ㅠㅠ">
+				<input type="text" name="MCODE" id="mcode"  placeholder="mcode 자동수신">
 				<input type="button" value="현금" onClick="doMN()" id="btn_mn">
 				<input type="button" value="카드" onClick="doCRD()" id="btn_crd">
 				</td>
 	<!-- 드롭다운 : 현금 -->
-			<td><select name="SLCT_MN" id="slct_mn" onChange="setMCODE(this)">
+			<td><select name="SLCT_MN" id="slct_mn" onChange="setMCODE(this.value)">
 					<option value="">--결제수단(현금)--</option>
 				<c:forEach items="${METHLIST }" var="m">
 				<c:set var="meth_code" value="${m.meth_code }"/>
 				<c:set var="meth_name" value="${m.meth_name }"/>
 				<c:if test="${ fn:startsWith(meth_code,'MN') }">
-					<option value="${m.meth_code }">${m.meth_code } / ${m.meth_name }</option>
+					<option value="${m.meth_code }">${m.meth_name }</option>
 				</c:if>		
 				</c:forEach></select>
 	<!-- 드롭다운 : 카드 -->
@@ -91,7 +91,7 @@
 				<c:set var="meth_code" value="${m.meth_code }"/>
 				<c:set var="meth_name" value="${m.meth_name }"/>
 				<c:if test="${ fn:startsWith(meth_code,'CRD') }">
-					<option value="${m.meth_code }">${m.meth_code } / ${m.meth_name }</option>
+					<option value="${m.meth_code }">${m.meth_name }</option>
 				</c:if>		
 				</c:forEach></select>
 			</td></tr>	
@@ -103,6 +103,9 @@
 				<c:out value="${meth_code }"/> / <c:out value="${meth_name }"/><br>
 				</c:forEach>
 			</td></tr>
+		<tr class="test hidden"><td><input type="text" name="TEST1"></td></tr>	
+		<tr class="test hidden"><td><input type="text" name="TEST2"></td></tr>	
+		<tr class="test hidden"><td><input type="text" name="TEST3"></td></tr>	
 <!-- 7.안내문구 출력row -->			
 		<tr><td id="guide"></td></tr>	
 <!-- 8.form 등록/취소 -->			
