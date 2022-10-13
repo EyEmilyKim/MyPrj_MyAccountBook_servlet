@@ -14,7 +14,7 @@
 		.inner { margin:0 auto; }
 		.in { color:blue; } .ex { color:red; }
 		.cate, .meth { color: skyblue; }
-		
+		.hidden { display: ; }
 		
 		
 	</style>
@@ -43,6 +43,7 @@
 		${trans.amount }</fmt:formatNumber>원</div>
 	</div>
 	<div class="lower">
+		<div class="hidden inner seqno">${trans.seqno }</div>
 		<div class="inner cate">카테고리: ${trans.cate_code }</div>
 		<div class="inner meth">결제수단: ${trans.meth_code }</div>
 	</div>

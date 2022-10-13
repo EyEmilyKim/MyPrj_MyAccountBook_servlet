@@ -10,8 +10,11 @@
 	<style type="text/css">
 		.contMain { border: 1px skyblue solid; max-width: 400px;}
 		.oneTrans { border: 1px gray solid; margin: 5px 10px; }
+		.in { color:blue; } .ex { color:red; }
 		.btns { display:flex;  justify-content: space-evenly;  } 
 		.btn { width: 100px; }
+		.cate, .meth { color: skyblue; }
+		.hidden { display: ; }
 	</style>
 </head>
 <body>
@@ -23,6 +26,7 @@
 <!-- 거래내역 상세 정보 -->
 	<div class="oneTrans">	
 		<div class="upper">
+			<div class="hidden inner seqno">${TRANS.seqno }</div>
 			<div class="inner date">${TRANS.trans_date }</div>
 			<c:if test="${TRANS.inex == 'IN' }">
 			<div class="inner in">${TRANS.inex }</div>
@@ -52,13 +56,14 @@ function backToList(){
 	location.href = "listTransaction.do";
 }
 function updateTrans(seqno){
-	alert("updateTrans(seqno) 호출됨");
+	alert("updateTrans(seqno) 호출됨"+
+		"\n url: modifyTransaction.do?SN=[seqno] ");
 	location.href = "modifyTransaction.do?SN="+seqno;
 }
 function deleteTrans(seqno){
-	alert("deleteTrans(seqno) 호출됨");
+	alert("deleteTrans(seqno) 호출됨"+
+		"\n url: deleteTransaction.do?SN=[seqno] ");
 	if( confirm("삭제 하시겠습니까?") ){
-		alert("url: deleteTransaction.do?SN=[seqno] ");		
 		location.href = "deleteTransaction.do?SN="+seqno;
 	}
 }

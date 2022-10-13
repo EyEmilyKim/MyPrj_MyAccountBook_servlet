@@ -31,7 +31,7 @@
 			<input type="button" value="지출" onClick="doEX()" id="btn_ex">
 			</td></tr>
 <!-- 2.거래날짜 -->
-		<tr><td><input type="date" name="DATE" id="date">
+		<tr><td><input type="date" name="DATE" id="date"></td></tr>
 <!--  버려둔 버튼	<input type="button" value="오늘" onClick="setToday()"></td></tr> -->
 <!-- 3.카테고리 -->
 	<!-- 드롭다운 : 초기화면 -->

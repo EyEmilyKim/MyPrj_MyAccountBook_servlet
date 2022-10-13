@@ -15,19 +15,19 @@
 		<a href="index.jsp">My 가계부</a>
 	</div>
 	<ul class="menu">
-		<li><a href="makeAddTrans.do">가계부 쓰기</a></li>
-		<li><a href=listTransaction.do>전체내역</a></li>
-		<li><a href="">지출</a></li>
-		<li><a href="">수입</a></li>
-		<li><a href="#">설정</a>
+		<li id="add"><a href="makeAddTrans.do">가계부 쓰기</a></li>
+		<li id="list"><a href=listTransaction.do>전체내역</a></li>
+		<li id="ex"><a href="">지출</a></li>
+		<li id="in"><a href="">수입</a></li>
+		<li id="set"><a href="#">설정</a>
 			<ul class="depth_1">
                 <li><a href="listCategory.do">카테고리 관리</a></li>
                 <li><a href="listMethod.do">결제수단 관리</a></li>
                 <li><a href="#">고정금액 관리(tbu)</a></li>
             </ul>
-		</li>
+		</li id="">
 	<c:if test="${sessionScope.USER_ID != null }">
-		<li><a href="logout.do">로그아웃</a></li>
+		<li id="logout"><a href="logout.do">로그아웃</a></li>
 	</c:if>	
 	</ul>
 </header>

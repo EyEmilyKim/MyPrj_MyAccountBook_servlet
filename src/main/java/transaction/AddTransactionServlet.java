@@ -46,6 +46,7 @@ public class AddTransactionServlet extends HttpServlet {
 		String item = request.getParameter("ITEM");
 		String amount = request.getParameter("AMOUNT");
 		String mcode = request.getParameter("MCODE");
+	System.out.println("form수신> ccode: "+ccode+" / mcode: "+mcode);
 		if(ccode.equals("")) ccode = "caNN0";//카테고리 미선택 디폴트: '미지정'
 		if(mcode.equals("")) { //결제수단 미선택 디폴트:
 			if(inex.equals("EX")) mcode = "meNN0";  //지출이면 '미지정'

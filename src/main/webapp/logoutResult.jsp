@@ -5,7 +5,7 @@
 <head>
 <meta charset="UTF-8">
 <!-- 3초 후 홈화면으로 이동 -->
-<meta http-equiv="refresh" content="3; url=index.jsp">
+<meta http-equiv="refresh" content="2; url=index.jsp">
 <title>logoutResult.jsp</title>
 </head>
 <!-- 시간지연 전환 효과 주려다 실패  -->

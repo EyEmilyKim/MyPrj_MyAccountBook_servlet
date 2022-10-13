@@ -17,6 +17,11 @@ const slct_mn = document.getElementById("slct_mn");
 const slct_crd = document.getElementById("slct_crd");
 
 /* --- form 제출 or 취소 --- */
+function makeSubmit(){
+	
+	
+}
+
 function check(){
 // 	alert("check() 호출됨. ");
 	/* 안내문 출력해주기 위한 문자열 변수 선언 */
@@ -26,7 +31,8 @@ function check(){
 	let slct_nn_val = document.fm.SLCT_NN.value;
 	let slct_in_val = document.fm.SLCT_IN.value;
 	let slct_ex_val = document.fm.SLCT_EX.value;
-	if(slct_in_val != '') ccode_val = slct_in_val; else if(slct_ex_val != '') ccode_val = slct_ex_val; 
+	if(slct_in_val != '') ccode_val = slct_in_val; 
+	else if(slct_ex_val != '') ccode_val = slct_ex_val; 
 	else ccode_val = ""; 
 // 	alert("\nslct_nn_val: "+slct_nn_val+" / slct_in_val: "+slct_in_val+" / slct_ex_val: "+slct_ex_val+"\n=> CCODE_val: "+ccode_val);
 	/* CHECK> 카테고리 선택:필수no!(안내문) -> 미선택시 서블릿에서 디폴트 값 입력 */
