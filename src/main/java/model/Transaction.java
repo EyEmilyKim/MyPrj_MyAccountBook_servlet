@@ -8,6 +8,7 @@ public class Transaction {
 	private String item;
 	private Integer amount;
 	private String meth_code;
+	private String reg_date;
 	
 	public Integer getSeqno() {
 		return seqno;
@@ -50,6 +51,12 @@ public class Transaction {
 	}
 	public void setMeth_code(String meth_code) {
 		this.meth_code = meth_code;
+	}
+	public String getReg_date() {
+		return reg_date;
+	}
+	public void setReg_date(String reg_date) {
+		this.reg_date = reg_date;
 	}
 	
 }

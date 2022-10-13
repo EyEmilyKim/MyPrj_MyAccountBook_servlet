@@ -11,7 +11,7 @@
 	.contMain { border: 1px skyblue solid; max-width: 400px;}
 	#slct_in, #slct_ex, #row_meth, #slct_mn, #slct_crd { display:none; } 
 	#guide { color:red; } #ccode, #mcode { border:orange solid 1px;  display:none; }
-	.hidden { display:none; } .test {border:red solid 1px;}
+	.hidden { display:none; } .test {border:red solid 1px; color:orange; }
 </style>
 </head>
 <body>
@@ -103,9 +103,9 @@
 				<c:out value="${meth_code }"/> / <c:out value="${meth_name }"/><br>
 				</c:forEach>
 			</td></tr>
-		<tr class="test hidden"><td><input type="text" name="TEST1"></td></tr>	
-		<tr class="test hidden"><td><input type="text" name="TEST2"></td></tr>	
-		<tr class="test hidden"><td><input type="text" name="TEST3"></td></tr>	
+		<tr class="hidden test"><td><input type="text" name="TEST1"></td></tr>	
+		<tr class="hidden test"><td><input type="text" name="TEST2"></td></tr>	
+		<tr class="hidden test"><td><input type="text" name="TEST3"></td></tr>	
 <!-- 7.안내문구 출력row -->			
 		<tr><td id="guide"></td></tr>	
 <!-- 8.form 등록/취소 -->			

@@ -18,13 +18,19 @@ public class TransactionDAO {
 	//seqno로 거래내역 수정 메서드
 	public boolean updateTransaction(Transaction t) {
 		boolean flag = false;
-		String update = "update mab_categories set cate_name = ? where cate_code = ? ";
+		String update = "update mab_transactions set inex=?, trans_date=to_date(?, 'YYYY-MM-DD'), "
+				+ "cate_code=?, item=?, amount=?, meth_code=?, reg_date=sysdate where seqno = ?";
 		try {
 			Class.forName(driver);
 			con = DriverManager.getConnection(url,"hr","hr");
 			pstmt = con.prepareStatement(update);
-//			pstmt.setString(1, t.getCate_name());
-//			pstmt.setString(2, t.getCate_code());
+			pstmt.setString(1, t.getInex());
+			pstmt.setString(2, t.getTrans_date());
+			pstmt.setString(3, t.getCate_code());
+			pstmt.setString(4, t.getItem());
+			pstmt.setInt(5, t.getAmount());
+			pstmt.setString(6, t.getMeth_code());
+			pstmt.setInt(7, t.getSeqno());
 			pstmt.executeUpdate();
 			con.commit();
 			flag = true;
@@ -66,7 +72,8 @@ public class TransactionDAO {
 	public Transaction getTransaction(Integer seqno) {
 		Transaction t = null;
 		String select = "select seqno, inex, to_char(trans_date, 'YYYY-MM-DD'), "
-				+ "cate_code, item, amount, meth_code "
+				+ "cate_code, item, amount, meth_code, "
+				+ "to_char(reg_date, 'YYYY-MM-DD HH24:MI:SS')  "
 				+ "from mab_transactions where seqno = ?";
 		try {
 			Class.forName(driver);
@@ -85,14 +92,16 @@ public class TransactionDAO {
 				t.setItem(rs.getString(5));
 				t.setAmount(rs.getInt(6));
 				t.setMeth_code(rs.getString(7));
+				t.setReg_date(rs.getString(8));
 				System.out.println("getTransaction() rs true");
-				System.out.println(rs.getInt(1));
-				System.out.println(rs.getString(2));
-				System.out.println(rs.getString(3));
-				System.out.println(rs.getString(4));
-				System.out.println(rs.getString(5));
-				System.out.println(rs.getInt(6));
-				System.out.println(rs.getString(7));
+				System.out.println("seqno : "+rs.getInt(1));
+//				System.out.println(rs.getString(2));
+//				System.out.println(rs.getString(3));
+//				System.out.println(rs.getString(4));
+//				System.out.println(rs.getString(5));
+//				System.out.println(rs.getInt(6));
+//				System.out.println(rs.getString(7));
+				System.out.println("reg_date : "+rs.getString(8));
 			}
 		}catch(Exception e) {
 			e.printStackTrace();
@@ -108,8 +117,9 @@ public class TransactionDAO {
 	public ArrayList<Transaction> listTransaction() {
 		ArrayList<Transaction> list = new ArrayList<Transaction>();
 		String select = "select seqno, inex, to_char(trans_date, 'YYYY-MM-DD'), "
-				+ "cate_code, item, amount, meth_code "
-				+ "from mab_transactions order by trans_date desc";
+				+ "cate_code, item, amount, meth_code, "
+				+ "to_char(reg_date, 'YYYY-MM-DD HH24:MI:SS')  "
+				+ "from mab_transactions order by trans_date desc, reg_date desc";
 		try {
 			Class.forName(driver);
 			con = DriverManager.getConnection(url,"hr","hr");
@@ -124,15 +134,17 @@ public class TransactionDAO {
 				t.setItem(rs.getString(5));
 				t.setAmount(rs.getInt(6));
 				t.setMeth_code(rs.getString(7));
+				t.setReg_date(rs.getString(8));
 				list.add(t);
 				System.out.println("listTransaction() rs true");
-				System.out.println(rs.getInt(1));
-				System.out.println(rs.getString(2));
-				System.out.println(rs.getString(3));
-				System.out.println(rs.getString(4));
-				System.out.println(rs.getString(5));
-				System.out.println(rs.getInt(6));
-				System.out.println(rs.getString(7));
+				System.out.println("seqno : "+rs.getInt(1));
+//				System.out.println(rs.getString(2));
+//				System.out.println(rs.getString(3));
+//				System.out.println(rs.getString(4));
+//				System.out.println(rs.getString(5));
+//				System.out.println(rs.getInt(6));
+//				System.out.println(rs.getString(7));
+				System.out.println("reg_date : "+rs.getString(8));
 			}
 			System.out.println("listTransaction() select done");
 		} catch (Exception e) {
@@ -150,7 +162,7 @@ public class TransactionDAO {
 	public boolean insertTransaction(Transaction t) {
 		boolean flag = false;
 		String insert = "insert into mab_transactions values(?,?,"
-				+ "to_date(?,'YYYY-MM-DD'),?,?,?,?)";
+				+ "to_date(?,'YYYY-MM-DD'),?,?,?,?,sysdate)";
 		try {
 			Class.forName(driver);
 			con = DriverManager.getConnection(url,"hr","hr");
