@@ -1,0 +1,221 @@
+2022.10.13목 @ my room
+
+너무 졸립다... 내일... 어후... 부담스러...​​
+-- 7:40 --
+
+slcParam 적용.
+-- 7:54 --
+
+■ 가계부 목록 - 페이지 처리 & N~N / Total 
+
+* jsp
+
+페이지 번호 ??? ( 밑으로 더 보기 하고 싶은데... 일단 재쳐두고)
+pageParam 적용....
+
+SLC / PAGE / LIST / PAGES / TOTAL / STARTRN / ENDRN
+ 
+#1 ~ 5 / 10건
+
+-- 8:40 캡쳐, 커밋 완료 --
+
+
+■ 가계부 목록 - 조건 조회 (기간_yymmdd~yymmdd : 최대3M)
+기간별 ? ~ ? 
+내용
+
+* jsp
+set_search 설계 
+-- 9:59 --
+
+조건조회 쿼리 ok
+-- 10:24 --
+
+* jsp
+
+날짜 바꿔서 전달해줘야됨.
+
+...어후... 지금까지 js 에서 submit 날짜 값 캐치해서
+바꿔서 넣어주려고 별 공리를 다 하다가
+
+걍 to_date() 후에 +1/-1 하는 걸로 ㅠㅠ
+ select to_date('2022-10-14', 'yyyy-mm-dd')+1 from dual ;
+
+TO_DATE(
+--------
+22/10/15
+-- 12:05 --
+
+<form fmSRCH>
+D_FROM / D_TO / ITEM / 
+
+조건검색 은 서블릿 & 결과 jsp 따로 만들...까...?
+결과 jsp 에는 전체 보기를 넣어주고.
+
+listTrans 랑 searchTrans 로 구분.
+서블릿, jsp 모두 listTrans 인용해서 ...
+-- 12:16 --
+
+OK 페이지 연결은 다 됐어
+( jsp : ===> searchTransactionResult.jsp )
+-- 12:32 --
+
+* form 액션 = 서블릿 : 
+===> searchTransaction.do / SearchTransactionServlet
+파람 수신 ( D_FROM / D_TO / ITEM / ( SLC ) )
+dao.조건검색 ( N건 으로 )
+나머지는 listTrans 와 같음
+
+* DAO 에 
+1. searchAllTrans(d_from, d_to, item) (OK)
+dao 수행 -> jsp 전달 성공 ! 
+//조건에 맞는 모든 거래내역 검색 메서드
+	public ArrayList<Transaction> searchAllTrans(String from, String to, String item)
+
+jsp 설계 복붙. 
+-- 1:36 --
+
+2. searchCountedTrans(start, end) (OK)
+dao 수행 -> jsp 전달 성공 !
+//지정된 '건수'의 거래내역 '조건'검색 메서드
+	public ArrayList<Transaction> searchCountedTrans(String fr, String to, String it, int start, int end)
+
+
+조건검색 쿼리 :
+
+where t_date between d_from -1 and d_to +1
+and item in '%item%'
+
+sqlplus 확인
+
+(OK)
+select rn, seqno, inex, t_date, cate_code, item, amount, meth_code  
+from ( 
+select rownum rn, seqno, inex, t_date, cate_code, item, amount, meth_code 
+from (
+select seqno, inex, to_char(trans_date, 'YYYY-MM-DD') t_date, cate_code, item, amount, meth_code  
+from mab_transactions 
+order by trans_date desc, seqno desc ) 
+where t_date between '2022-11-01' and '2022-11-30' 
+and item like '%test%' ) 
+where rn > 0 and rn < 6 
+
+(OK)
+select seqno, inex, trans_date from mab_transactions 
+where item like '%test%' 
+
+-------------------------------------------
+
+-- 2:04 커밋, 기록 --
+
+◈>>>지금 여기<<<< 
+
+
+
+* 여기도 페이지 a 에 파람 다 넣어줘야됨! (PAGE, SLC ok)
+
+
+
+
+
+■ list 에 코드 -> txt (INEX, CCODE, MCODE)
+INEX 는 c:if
+CCODE, MCODE 는 쿼리 수정 ;;
+Trans model 에 cate_name, meth_name 추가 아예 set 해버려.
+
+■ 카테, 수단 등록할 때, 같은 이름, 같은 순번 안넘어가도록
+
+■ check()에 inNaN 조건 추가
+■ 지출보기
+■ 수입보기
+
+■ 수입 / 지출 - 조건 조회
+(월별, 기간, 카테고리별, 결제수단별)
+
+
+
+■ 서비스를 이용하려면 로그인해주세요
+■ 로그인 폼체크
+■ 로그인에 pwd 타입 잊지 말 것!
+■ 회원가입 ( 중복검사 )
+
+* 나중에 trans DTO 에 name 필드 추가, DAO 에 조인 조회 추가하기.
+(유저 여러명일 때 누구의 거래내역인지 ...? 였나..? )
+
+★(kosea/surf) Transactions 테이블에 ITEM 디폴트값+nn : '내용없음' 추가
+★(kosea/surf) Transaction 에 reg_date + 아래 추가
+( constraint mab_trans_regdate_nn not null )
+★(surf) 테이블에 number(10) 주기!
+
+■ 카테고리 - 미지정 value=null, default='미지정/none' 추가
+■ 결제수단 - 미지정 value=null, default='미지정/none' 추가
+■ 그리고 또 가계부 테이블에 method nn조건 지워야 디폴트 들어가는건가..?
+이건 DAO insert 돌아갈떄 확인해서 고치는걸로 하쟈 ㅠ
+
+* 정책 : 
+2. 카테고리를 삭제하면 
+--> on delete set null
+'기존에 이 카테고리를 사용해 입력한 가계부 기록의 카테고리 정보가 사라집니다.'
+3. 카테고리를 수정하면 
+--> trigger
+'기존에 이 카테고리를 사용해 입력한 가계부 기록에도 변경된 카테고리명이 반영됩니다.'
+4. 거래상세 수정에서 수입/지출은 못바꿈. 필요시 삭제 후 재등록!
+
+* 가계부 목록 - (정렬 기본: 최신거래순 -> 선택: 거래날짜순)
+order by ( desc / asc ) 를 매개변수로 받아서 dao.~~(desc) 
+
+■ doGet / doPost 정리
+■ css 정리, 따로 빼기
+■ 반응형
+
+
+● PPT 
+
+
+* [오늘] 버튼 ??
+
+
+
+============
+
+* js 에서 date control
+
+alert("dateControl() called.");
+
+const d_from = document.fm.D_FROM.value;
+const d_to = document.fm.D_TO.value;
+
+dd_from = new Date(d_from);
+dd_to = new Date(d_to);
+
+let d1 = new Date();
+let d2 = new Date();
+
+d1.setDate(dd_from.getDate()-1);
+d2.setDate(dd_to.getDate()+1);
+
+---------------------------
+
+select sysdate from dual ; 
+//ok
+
+select sysdate+1 from dual ; 
+//ok
+
+select to_date('2022-10-14', 'yyyy-mm-dd')+1 from dual ; 
+//ok
+
+============
+
+html 공란 &nbsp 와 &#32 차이
+https://aboooks.tistory.com/109
+
+javascript 자바스크립트 하루 전/후 날짜 구하기 다음달 이전달 구하기 내년 작년 날짜 구하기
+https://lifefun.tistory.com/30
+
+JavaScript 기간 날짜 자동 구하기 기능 (함수)(당일)(전월)(3개월)
+https://blog.naver.com/yf2121/222721059870
+
+JavaScript 날짜, 시간 / Date 객체 활용
+https://programmers-sosin.tistory.com/entry/JavaScript-Date-%EC%9E%90%EB%B0%94%EC%8A%A4%ED%81%AC%EB%A6%BD%ED%8A%B8-%EB%82%A0%EC%A7%9C-%EC%8B%9C%EA%B0%84-Date-%EA%B0%9D%EC%B2%B4
+
