@@ -38,7 +38,7 @@ public class ListTransactionServlet extends HttpServlet {
 		if(slcParam != null) slc = Integer.parseInt(slcParam);
 		//page 파라미터 수신
 		int pageNo = 1;
-		String pageParam = request.getParameter("PAGE");
+		String pageParam = (String)request.getParameter("PAGE");
 		if(pageParam != null) pageNo = Integer.parseInt(pageParam);
 		//조회할 거래내역 덩어리 계산
 		int start = (pageNo -1)* slc;
