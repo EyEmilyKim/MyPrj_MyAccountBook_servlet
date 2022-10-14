@@ -46,8 +46,8 @@ public class TransactionDAO {
 				t.setReg_date(rs.getString(8));
 				t.setRownum(rs.getInt(9));
 				list.add(t);
-				System.out.println("listCountedTrans() rs true");
-				System.out.println("seqno : "+rs.getInt(1));
+//				System.out.println("listCountedTrans() rs true");
+//				System.out.println("seqno : "+rs.getInt(1));
 //				System.out.println(rs.getString(2));
 //				System.out.println(rs.getString(3));
 //				System.out.println(rs.getString(4));
@@ -55,7 +55,7 @@ public class TransactionDAO {
 //				System.out.println(rs.getInt(6));
 //				System.out.println(rs.getString(7));
 //				System.out.println(rs.getString(8));
-				System.out.println("rownum : "+rs.getInt(9));
+//				System.out.println("rownum : "+rs.getInt(9));
 			}
 			System.out.println("listCountedTrans() select done");
 		} catch (Exception e) {
