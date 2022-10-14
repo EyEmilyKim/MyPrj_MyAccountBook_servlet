@@ -1,0 +1,226 @@
+2022.10.13목 @ kosea
+
+-- 2:05 -- 
+★(kosea) Transaction 에 reg_date 추가 완료.
+현재 거래내역 총 10건
+
+​■ 가계부 목록 - N줄 보기 추가 
+(참고 mySweet_NoticeListServlet //최근 5개 글)
+처음부터 5개만 골라서 보여주네... 
+
+
+* listTrans jsp
+
+jsp 에 몇 건 보여줄지select를 넣자.
+onChange="showListCount(this.value)"
+func 에서 
+document.frm.submit();
+
+form > listTransaction.do
+
+* listTrans 서블릿 
+전체 건수, 선택한 slc("SLC") , 필요 페이지수 
+
+ex)--------
+select 쿼리 인자
+slc : 5
+p1: 1~5
+p2: 6~10
+
+sllc : 10
+1: 1~10
+2: 11~20
+
+(mySweet_Notice)
+int pageNo = 1;
+
+String pageParam = request.getParameter("PAGE");
+if(pageParam != null) pageNo = Integer.parseInt(pageParam);
+
+int start = (pageNo -1)* 5;
+int end = ((pageNo -1)* 5) + 6;
+
+int start = (pageNo -1)* 10;
+int end = ((pageNo -1)* 10) + 11;
+
+맞지. 반복문 i < end and i > start 할꺼니까.
+
+pageNo = 1; 
+//파람 있으면 pageNo 바꿔주고
+int start = (pageNo -1)* slc;
+int end = ((pageNo -1)* slc) + (scl +1);
+--------------
+
+* Trans DAO getTotalCount()
+//전체 거래내역 건수 검색 메서드 
+	public Integer getTotalTransCount()
+
+쿼리 : 
+select count(*) from mab_transactions
+
+
+* listTrans 서블릿 
+전체 건수ㅇㅋ, 선택한 slc("SLC") , 필요 페이지수
+-- 2:57 -- 
+
+select 쿼리 인자
+pageNo = 1; 
+//파람 있으면 pageNo 바꿔주고
+int start = (pageNo -1)* slc;
+int end = ((pageNo -1)* slc) + (slc +1);
+
+필요 페이지 수 * - getTotalCount() 필요
+int totalCount = dao.getNoticeCount();
+int pageCount = totalCount / slc;
+if(totalCount % slc != 0) pageCount++;
+
+디폴트 slc = 5 < index.jsp a.href
+
+(mySweet_noticeList.do)
+//trans 테이블에 있는 최근 N 개의 거래 검색
+-> rn 사용 필요.
+pageNo
+pageParam
+start
+end
+ArrayList = dao.listCountedTrans()*
+"LIST"
+//필요한 페이지 정보 및 전체 건수
+totalCount = dao.get()
+pageCount / N
+if( % N != 0 ) pageCount++
+//각 페이지 표시글 번호 
+// - 현 페이지 첫줄
+// - 현 페이지 마지막줄
+
+
+* DAO 에 listCountedTrans()*
+
+♥ order by 결과에 rownum 줄 때, 
+from/ where/ select/ order by 순서로 처리되기 때문에 서브쿼리로 정렬은 시킨 다음에 
+그 바깥에서 다시 select를 하면서 rn 을 줘야한다.
+그담에 rn 으로 또 select @,@;;; 
+-- 3:58 -- 
+
+
+쿼리 : OK
+select rn, seqno, inex, t_date, cate_code, item, amount, meth_code  
+from ( 
+select rownum rn, seqno, inex, t_date, cate_code, item, amount, meth_code 
+from (
+select seqno, inex, to_char(trans_date, 'YYYY-MM-DD') t_date, cate_code, item, amount, meth_code  
+from mab_transactions 
+order by trans_date desc, seqno desc ) ) 
+where rn > ? and rn < ? 
+
+
+(항목 몇개만 쿼리 test) OK!
+select rn, seqno, t_date, item 
+from ( 
+select rownum rn, seqno, t_date, item 
+from (
+select seqno, to_char(trans_date, 'YYYY-MM-DD') t_date, item 
+from mab_transactions 
+order by trans_date desc, seqno desc ) ) 
+where rn > 0 and rn < 6
+
+-- 4:21 -- OK !
+
+10줄 보기, 15줄 보기 잘됨 ! 
+
+근데 select 기본이 5줄 onChange 안돼서... 
+selected를 줘야됨.
+
+5줄 보기도 해결 ! 
+preset form 과 onLoad preset()
+-- 4:39 --
+
+잘되가니 boy~?
+
+-- 4:57 -- .... 
+
+-- 5:34 그는 깃허브를 정말 시작하고 싶었나보다 ... --
+​​
+
+■ 가계부 목록 - 페이지 처리
+페이지 번호 ??? ( 밑으로 더 보기 하고 싶은데... 일단 재쳐두고)
+
+int start = (pageNo -1)* 5;
+int end = ((pageNo -1)* 5) + 6;
+ 
+
+■ 가계부 목록 - N~N / Total 
+
+* jsp
+#1 ~ 5 / 10건
+
+
+
+
+◈>>>지금 여기<<<< 
+
+
+
+
+
+
+
+
+■ 가계부 목록 - 조건 조회 (월별, 기간_yymmdd~yymmdd : 최대3M)
+
+
+* (정렬 기본: 최신거래순 -> 선택: 거래날짜순)
+
+
+■ 카테, 수단 등록할 때, 같은 이름, 같은 순번 안넘어가도록
+
+
+
+■ check()에 inNaN 조건 추가
+■ 지출보기
+■ 수입보기
+
+■ 수입 / 지출 - 조건 조회
+(월별, 기간, 카테고리별, 결제수단별)
+
+
+■ 서비스를 이용하려면 로그인해주세요
+■ 로그인 폼체크
+■ 로그인에 pwd 타입 잊지 말 것!
+■ 회원가입 ( 중복검사 )
+
+* 나중에 trans DTO 에 name 필드 추가, DAO 에 조인 조회 추가하기.
+(유저 여러명일 때 누구의 거래내역인지 ...? 였나..? )
+
+★(kosea/surf) Transactions 테이블에 ITEM 디폴트값+nn : '내용없음' 추가
+★(kosea/surf) Transaction 에 reg_date + 아래 추가
+( constraint mab_trans_regdate_nn not null )
+★(surf) 테이블에 number(10) 주기!
+
+■ 카테고리 - 미지정 value=null, default='미지정/none' 추가
+■ 결제수단 - 미지정 value=null, default='미지정/none' 추가
+■ 그리고 또 가계부 테이블에 method nn조건 지워야 디폴트 들어가는건가..?
+이건 DAO insert 돌아갈떄 확인해서 고치는걸로 하쟈 ㅠ
+
+* 정책 : 
+2. 카테고리를 삭제하면 
+--> on delete set null
+'기존에 이 카테고리를 사용해 입력한 가계부 기록의 카테고리 정보가 사라집니다.'
+3. 카테고리를 수정하면 
+--> trigger
+'기존에 이 카테고리를 사용해 입력한 가계부 기록에도 변경된 카테고리명이 반영됩니다.'
+4. 거래상세 수정에서 수입/지출은 못바꿈. 필요시 삭제 후 재등록!
+
+
+■ doGet / doPost 정리
+■ css 정리, 따로 빼기
+■ 반응형
+
+
+● PPT 
+
+
+* [오늘] 버튼 ??
+
+
+============
