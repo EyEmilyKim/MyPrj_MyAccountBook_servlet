@@ -14,20 +14,33 @@
 		.inner { margin:0 auto; }
 		.in { color:blue; } .ex { color:red; }
 		.cate, .meth { color: skyblue; }
-		.hidden { display: ; }
-		
+		.hidden { display:none; }
+	/* structure */
+		.set_view { display: flex; justify-content: space-between; margin:10px; }
 		
 	</style>
 </head>
-<body>
+<body onLoad="preset()">
 <div class="home">
 	<a href="index.jsp">My 가계부</a>
 </div>
 <div class="contMain">
 	<p>가계부 목록 화면입니다.</p>
-	총 ${SIZE } 건<br>
-	
+	<form class="hidden" name="preset">
+		<input type="text" name="PRE_SLC" value="${param.SLC }">
+	</form>
+	<div class="set_view">
+		<div id="totalCnt">총 ${SIZE } 건<br></div>
+		<div><form action="listTransaction.do" name="fmSLC">
+			<select name="SLC" id="slc" onChange="showListCount(this.value)">
+				<option value="5">5줄 보기</option>
+				<option value="10">10줄 보기</option>
+				<option value="15">15줄 보기</option>
+			</select></form>
+		</div>
+	</div>
 	<c:forEach items="${LIST }" var="trans">
+	<div class="oneTrans">
 	<div class="oneTrans">
 	<div class="upper">
 		<div class="inner date">${trans.trans_date }</div>
@@ -48,7 +61,22 @@
 		<div class="inner meth">결제수단: ${trans.meth_code }</div>
 	</div>
 	</div>
+	</div>
 	</c:forEach>
 </div>
 </body>
+
+<script type="text/javascript">
+
+/* 화면 로드시 데이터에 따라 미리 html 요소 반영 */
+function preset(){ 
+	alert("로드되었습니다");
+	const pre_slc = document.preset.PRE_SLC.value;
+	document.getElementById("slc").value = pre_slc;
+}
+function showListCount(thisV){ //선택지 바뀌면 해당 수 만큼 거래목록 조회
+	alert("showListCount(thisV) 호출됨" +"\nthisV : "+thisV);
+	document.fmSLC.submit();
+}
+</script>
 </html>

@@ -10,6 +10,17 @@ public class Transaction {
 	private String meth_code;
 	private String reg_date;
 	
+	private Integer rownum; //DB검색 정렬을 위한 변수 
+		
+	
+	public Integer getRownum() {
+		return rownum;
+	}
+	public void setRownum(Integer rownum) {
+		this.rownum = rownum;
+	}
+
+	
 	public Integer getSeqno() {
 		return seqno;
 	}

@@ -32,12 +32,22 @@ public class ListTransactionServlet extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		String str_slc = request.getParameter("SLC");
+		int slc = Integer.parseInt(str_slc);
+		//page 파라미터 수신
+		int pageNo = 1;
+		//if(page != "")
+		int start = (pageNo -1)* slc;
+		int end = ( (pageNo -1)* slc ) + (slc +1);
+		System.out.println("listTrans.do"+"\n start : "+start+"\n end : "+end);
+		//
 		TransactionDAO dao = new TransactionDAO();
-		ArrayList<Transaction> list = dao.listTransaction();
+		ArrayList<Transaction> list = dao.listCountedTrans(start, end);
 		request.setAttribute("LIST", list);
 		request.setAttribute("SIZE", list.size());
 		RequestDispatcher rd = request.getRequestDispatcher("listTransaction.jsp");
 		rd.forward(request, response);
+		
 	}
 
 	/**
