@@ -15,6 +15,124 @@ public class TransactionDAO {
 	private PreparedStatement pstmt = null;
 	private ResultSet rs = null;
 	
+	//지정된 '건수'의 거래내역 '조건'검색 메서드
+	public ArrayList<Transaction> searchCountedTrans(String fr, String to, String it, int start, int end) {
+		ArrayList<Transaction> list = new ArrayList<Transaction>();
+		String select = "select seqno, inex, t_date, cate_code, item, amount, meth_code, r_date, rn "
+				+ "from ( "
+				+ "select rownum rn, seqno, inex, t_date, cate_code, item, amount, meth_code, r_date "
+				+ "from ( "
+				+ "select seqno, inex, to_char(trans_date, 'YYYY-MM-DD') t_date, cate_code, item, "
+				+ "amount, meth_code, to_char(reg_date, 'YYYY-MM-DD HH24:MI:SS') r_date "
+				+ "from mab_transactions "
+				+ "order by trans_date desc, seqno desc ) "
+				+ "where "
+				+ "t_date between to_date(?,'YYYY-MM-DD') and to_date(?,'YYYY-MM-DD') "
+				+ "and item like ? ) " 
+				+ "where rn > ? and rn < ? " ;
+		try {
+			Class.forName(driver);
+			con = DriverManager.getConnection(url,"hr","hr");
+			pstmt = con.prepareStatement(select);
+			pstmt.setString(1, fr);
+			pstmt.setString(2, to);
+			pstmt.setString(3, it);
+			pstmt.setInt(4, start);
+			pstmt.setInt(5, end);
+			rs = pstmt.executeQuery();
+			while(rs.next()) {
+				Transaction t = new Transaction();
+				t.setSeqno(rs.getInt(1));
+				t.setInex(rs.getString(2));
+				t.setTrans_date(rs.getString(3));
+				t.setCate_code(rs.getString(4));
+				t.setItem(rs.getString(5));
+				t.setAmount(rs.getInt(6));
+				t.setMeth_code(rs.getString(7));
+				t.setReg_date(rs.getString(8));
+				t.setRownum(rs.getInt(9));
+				list.add(t);
+				System.out.println("searchCountedTrans() rs true");
+				System.out.println("seqno : "+rs.getInt(1));
+//				System.out.println(rs.getString(2));
+				System.out.println(rs.getString(3));
+//				System.out.println(rs.getString(4));
+				System.out.println(rs.getString(5));
+//				System.out.println(rs.getInt(6));
+//				System.out.println(rs.getString(7));
+//				System.out.println(rs.getString(8));
+				System.out.println("rownum : "+rs.getInt(9));
+			}
+			System.out.println("searchCountedTrans() select done");
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				rs.close(); pstmt.close(); con.close();
+			} catch (Exception e2) {			}
+		}
+		System.out.println("searchCountedTrans() end");
+		return list;
+	}
+	
+	//조건에 맞는 모든 거래내역 검색 메서드
+	public ArrayList<Transaction> searchAllTrans(String from, String to, String item){
+		ArrayList<Transaction> list = new ArrayList<Transaction>();
+		String select = "select seqno, inex, t_date, cate_code, item, amount, meth_code, r_date, rn "
+				+ "from ( "
+				+ "select rownum rn, seqno, inex, t_date, cate_code, item, amount, meth_code, r_date "
+				+ "from ( "
+				+ "select seqno, inex, to_char(trans_date, 'YYYY-MM-DD') t_date, cate_code, item, "
+				+ "amount, meth_code, to_char(reg_date, 'YYYY-MM-DD HH24:MI:SS') r_date "
+				+ "from mab_transactions "
+				+ "order by trans_date desc, seqno desc ) "
+				+ "where "
+				+ "t_date between to_date(?,'YYYY-MM-DD') and to_date(?,'YYYY-MM-DD') "
+				+ "and item like ? " 
+				+ " ) " ;
+		try {
+			Class.forName(driver);
+			con = DriverManager.getConnection(url,"hr","hr");
+			pstmt = con.prepareStatement(select);
+			pstmt.setString(1, from);
+			pstmt.setString(2, to);
+			pstmt.setString(3, item);
+			rs = pstmt.executeQuery();
+			while(rs.next()) {
+				Transaction t = new Transaction();
+				t.setSeqno(rs.getInt(1));
+				t.setInex(rs.getString(2));
+				t.setTrans_date(rs.getString(3));
+				t.setCate_code(rs.getString(4));
+				t.setItem(rs.getString(5));
+				t.setAmount(rs.getInt(6));
+				t.setMeth_code(rs.getString(7));
+				t.setReg_date(rs.getString(8));
+//				t.setRownum(rs.getInt(9));
+				list.add(t);
+//				System.out.println("searchAllTrans() rs true");
+//				System.out.println("seqno : "+rs.getInt(1));
+//				System.out.println(rs.getString(2));
+//				System.out.println(rs.getString(3));
+//				System.out.println(rs.getString(4));
+//				System.out.println(rs.getString(5));
+//				System.out.println(rs.getInt(6));
+//				System.out.println(rs.getString(7));
+//				System.out.println(rs.getString(8));
+//				System.out.println("rownum : "+rs.getInt(9));
+			}
+			System.out.println("searchAllTrans() select done");
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				rs.close(); pstmt.close(); con.close();
+			} catch (Exception e2) {			}
+		}
+		System.out.println("searchAllTrans() end");
+		return list;
+	}
+	
 	//지정된 건수의 거래내역 검색 메서드
 	public ArrayList<Transaction> listCountedTrans(int start, int end) {
 		ArrayList<Transaction> list = new ArrayList<Transaction>();
