@@ -43,7 +43,7 @@ public class ListCategoryServlet extends HttpServlet {
 		ArrayList<Category> list = dao.listCategory(id);
 		request.setAttribute("LIST", list);
 		request.setAttribute("SIZE", list.size());
-		RequestDispatcher rd = request.getRequestDispatcher("listCategory.jsp");
+		RequestDispatcher rd = request.getRequestDispatcher("index.jsp?BODY=listCategory.jsp");
 		rd.forward(request, response);
 	}
 

@@ -39,7 +39,8 @@ public class MakeAddTransServlet extends HttpServlet {
 		HttpSession session = request.getSession();
 		String id = (String)session.getAttribute("USER_ID");
 		if(id == null) {
-			response.sendRedirect("needLogin.jsp"); return;
+			System.out.println("makeAddTrans 호출됨. //로그인 아이디 없음.");
+			response.sendRedirect("index.jsp?BODY=needLogin.jsp"); return;
 		}
 		/* 가계부 기록의 최신 일련번호 수신, 전달 */
 		TransactionDAO daoT = new TransactionDAO();
@@ -54,7 +55,7 @@ public class MakeAddTransServlet extends HttpServlet {
 		ArrayList<Method> methList = daoM.listMethod(id);
 		request.setAttribute("METHLIST", methList);
 		/* 가계부 작성 form화면으로 이동 */
-		RequestDispatcher rd = request.getRequestDispatcher("addTransaction.jsp");
+		RequestDispatcher rd = request.getRequestDispatcher("index.jsp?BODY=addTransaction.jsp");
 		rd.forward(request, response);
 	}
 

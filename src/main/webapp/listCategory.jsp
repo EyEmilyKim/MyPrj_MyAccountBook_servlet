@@ -7,19 +7,36 @@
 <meta charset="UTF-8">
 <title>listCategory.jsp</title>
 	<style type="text/css">
-	#in { color:blue; } #ex { color:red; } #sys { background-color:beige; }
-	.seqno, .cate_code { display:none; }
-	.hidden { display:none; }
+		.contMain { min-width:500px; min-height:300px; background-color: white; align:center; padding:20px; border-radius: 15px;} 
+		 h3{ margin: 10px 0 20px; color:var(--hoverMenu-color); }
+		#in { color:blue; } #ex { color:red; } #sys { background-color:beige; }
+		.seqno, .cate_code { display:none; }
+		.hidden { display:none; }
+		table {min-width:300px;} tr {height : 25px; }
+		.btn {
+			display: block;
+		    border: 1px solid var(--topbott-color);
+		    font-size: 0.8rem;
+ 		    font-weight: 400; 
+		    padding: 0.1rem 0;
+		    border-radius: 5px;
+		    text-decoration: none;
+		    text-align: center;
+		    background-color: var(--background-color);
+		    color: var(--selectedMenu-color);
+		}
+		.add { height:1.5rem; margin:10px; font-size: 1rem;
+ 		    font-weight: 400; text-align: center;}
 	</style>
 </head>
 <body>
-<div class="home">
-	<a href="index.jsp">My 가계부</a>
-</div>
-<div>
-	<p>카테고리 목록</p>
-	총 ${SIZE } 건<br>
-	<table border="1">
+<!-- <div class="home"> -->
+<!-- 	<a href="index.jsp">My 가계부</a> -->
+<!-- </div> -->
+<div class="contMain" align="center">
+	<h3>카테고리 목록</h3>
+	총 ${SIZE } 건<br><br>
+	<table >
 	<tr class="hidden"><td class="seqno">seqno</td><td class="cate_code">cate_code</td>
 		<td>inex</td><td>cate_name</td>
 	<c:forEach items="${LIST }" var="c">
@@ -31,16 +48,16 @@
 			<tr id="sys">
 				<td class="seqno">${c.seqno }</td><td class="cate_code">${c.cate_code }</td>
 				<td>기본</td><td>${c.cate_name }</td>
-				<td><a href="${url }" onClick="popupUpdate(this); return false;">수정</a></td>
-				<td><a href="${url }" onClick="popupDelete(this); return false;">삭제</a></td>
-				<td class="hidden">url : <c:out value="${url }"></c:out></td>
+				<td class="hidden"><a href="${url }" onClick="popupUpdate(this); return false;">수정</a></td>
+				<td class="hidden"><a href="${url }" onClick="popupDelete(this); return false;">삭제</a></td>
+				<td class="hidden">url : <c:out value="${url }"></c:out></td></tr>
 		</c:when>
 		<c:otherwise>
 			<tr><td class="seqno">${c.seqno }</td><td class="cate_code">${c.cate_code }</td>
 				<c:if test="${c.inex == 'IN' }"><td id="in">수입</td><td>${c.cate_name }</td></c:if>
 				<c:if test="${c.inex == 'EX' }"><td id="ex">지출</td><td>${c.cate_name }</td></c:if>
-				<td><a href="${url }" onClick="popupUpdate(this); return false;">수정</a></td>
-				<td><a href="${url }" onClick="popupDelete(this); return false;">삭제</a></td>
+				<td><a class="btn" href="${url }" onClick="popupUpdate(this); return false;">수정</a></td>
+				<td><a class="btn" href="${url }" onClick="popupDelete(this); return false;">삭제</a></td>
 				<td class="hidden">url : <c:out value="${url }"></c:out></td>
 			</tr>
 	    </c:otherwise>
@@ -49,7 +66,7 @@
 	</table>
 	<br>
 	<div class="buttons">
-	<a href="preAddCate.do" onClick="popupAdd(this); return false;">추가하기</a>
+	<a  class="btn add" href="preAddCate.do" onClick="popupAdd(this); return false;">추가하기</a>
 	</div>
 </div>
 </body>

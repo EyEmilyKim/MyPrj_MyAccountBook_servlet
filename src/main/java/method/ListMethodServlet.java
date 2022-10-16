@@ -43,7 +43,7 @@ public class ListMethodServlet extends HttpServlet {
 		ArrayList<Method> list = dao.listMethod(id);
 		request.setAttribute("LIST", list);
 		request.setAttribute("SIZE", list.size());
-		RequestDispatcher rd = request.getRequestDispatcher("listMethod.jsp");
+		RequestDispatcher rd = request.getRequestDispatcher("index.jsp?BODY=listMethod.jsp");
 		rd.forward(request, response);
 	}
 

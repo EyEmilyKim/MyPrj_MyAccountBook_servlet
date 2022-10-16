@@ -9,39 +9,27 @@
 <meta charset="UTF-8">
 <title>listINTransaction.jsp</title>
 	<style type="text/css">
-		.contMain { border: 1px skyblue solid; max-width: 700px;}
-		.listMain, .page { text-align: center; border: 1px red solid; margin: 5px 10px; }
-		.oneTrans { border: 1px gray solid; margin: 5px 10px; }
+ 		.contMain { min-width:500px; }  h3{ margin: 10px 0 20px; color:var(--hoverMenu-color); }
+		.listMain, .page { text-align: center; margin: 5px 10px; }
+		.oneTrans { background-color: white; margin: 5px 10px; padding:2px; border-radius: 10px; }
 		.upper, .lower { display:flex; justify-content: space-between; text-align:center; }	
 		.inner { margin:0 auto; }
 		.in { color:blue; } .ex { color:red; }
 		.cate, .meth { color: skyblue; }
 		.hidden { display:none; }
-		.addTrans {
-			display: block;
-		    border: 1px solid black;
-		    width: 150px;
-		    font-size: 1.3rem;
-		    font-weight: 600;
-		    margin: auto;
-		    padding: 1rem;
-		    border-radius: 10px;
-		    text-decoration: none;
-		    background-color: white;
-		    color: black;
-  		  }
+		
 	/* structure */
 		.preSrch, .set_listCount { display:flex; justify-content: space-between; margin:10px; }
-		.left { align:left; border:orange solid 1px; } 
-		.right { display:flex; align:right; border:orange solid 1px; }
+		.left { float:left;  } 
+		.right { display:flex; float:right;  }
 		.btn_search { margin:0px 5px;}
 		#set_search { display:none; }
 	</style>
 </head>
 <body onLoad="preset()">
-<div class="home">
-	<a href="index.jsp">My 가계부</a>
-</div>
+<!-- <div class="home"> -->
+<!-- 	<a href="index.jsp">My 가계부</a> -->
+<!-- </div> -->
 <div class="contMain">
 	<h3>수입 목록 화면입니다.</h3>
 <!-- 목록 화면 컨트롤	-->

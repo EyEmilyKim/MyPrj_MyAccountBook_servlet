@@ -8,34 +8,34 @@
 <meta charset="UTF-8">
 <title>addTransaction.jsp</title>
 <style type="text/css">
-	.contMain { border: 1px skyblue solid; max-width: 400px;}
+	.contMain { min-width:500px; min-height:300px; background-color: white; align:center; padding:20px; border-radius: 15px;}  
 	#slct_in, #slct_ex, #row_meth, #slct_mn, #slct_crd { display:none; } 
-	#guide { color:red; } #ccode, #mcode { border:orange solid 1px;  display:none; }
-	.hidden { display:none; } .test {border:red solid 1px; color:orange; }
+	#guide { color:red; }  h3{ margin: 10px 0 20px; color:var(--hoverMenu-color); }
+	#ccode, #mcode { border:orange solid 1px;  display:none; }
+	.hidden { display:; } .test {border:red solid 1px; color:orange; }
 </style>
 </head>
 <body>
-<div class="home">
-	<a href="index.jsp">My 가계부</a>
-</div>
+<!-- <div class="home"> -->
+<!-- 	<a href="index.jsp">My 가계부</a> -->
+<!-- </div> -->
 	<div class="contMain">
-	<p>가계부 쓰기 화면입니다.</p>
+	<h3>가계부 쓰기 화면입니다.</h3>
 	
 	<form action="addTransaction.do" method = "post" name="fm" onSubmit="return catchSub()">
 <!-- 0.일련번호(hidden)-->
 		<input type="hidden" name="SEQNO" value="${requestScope.MSN +1 }">
-		<table>
 <!-- 1.수입or지출 구분 -->
-		<tr><td><input type="hidden" name="INEX" id="inex">
+		<div><input type="hidden" name="INEX" id="inex">
 			<input type="button" value="수입" onClick="doIN()" id="btn_in">
 			<input type="button" value="지출" onClick="doEX()" id="btn_ex">
-			</td></tr>
+			</div>
 <!-- 2.거래날짜 -->
-		<tr><td><input type="date" name="DATE" id="date"></td></tr>
-<!--  버려둔 버튼	<input type="button" value="오늘" onClick="setToday()"></td></tr> -->
+		<div><input type="date" name="DATE" id="date"></div>
+<!--  버려둔 버튼	<input type="button" value="오늘" onClick="setToday()"></div></div> -->
 <!-- 3.카테고리 -->
 	<!-- 드롭다운 : 초기화면 -->
-		<tr><td><input type="text" name="CCODE" id="ccode" placeholder="ccode 자동수신">
+		<div align="center"><input type="text" name="CCODE" id="ccode" placeholder="ccode 자동수신">
 				<select name="SLCT_NN" id="slct_nn">
 					<option value="">--카테고리(미지정)--</option>
 				</select>
@@ -59,23 +59,22 @@
 					<option value="${c.cate_code }">${c.cate_name }</option>
 				</c:if>		
 				</c:forEach></select>
-			</td></tr>	
+			</div>	
 <!-- 4.거래내용 -->
-		<tr><td><textarea name="ITEM" placeholder="내용을 입력하세요"
-		 			cols="40" rows="5"></textarea></td></tr>
+		<div><textarea name="ITEM" placeholder="내용을 입력하세요"
+		 			cols="40" rows="5"></textarea></div>
 <!-- 5.거래금액 -->
-		<tr><td>
-			<input type="text" placeholder="금액을 입력하세요" name="AMOUNT"></td></tr>
+		<div><input type="text" placeholder="금액을 입력하세요" name="AMOUNT"></div>
 <!-- 6.결제수단 -->	
 	<!-- 현금or카드 버튼 -->
-		<tr id="row_meth">
-			<td><input type="hidden" name="SupMETHOD">
+		<div id="row_meth">
+			<input type="hidden" name="SupMETHOD">
 				<input type="text" name="MCODE" id="mcode"  placeholder="mcode 자동수신">
 				<input type="button" value="현금" onClick="doMN()" id="btn_mn">
 				<input type="button" value="카드" onClick="doCRD()" id="btn_crd">
-				</td>
+				
 	<!-- 드롭다운 : 현금 -->
-			<td><select name="SLCT_MN" id="slct_mn" onChange="setMCODE(this.value)">
+			<div align="center"><select name="SLCT_MN" id="slct_mn" onChange="setMCODE(this.value)">
 					<option value="">--결제수단(현금)--</option>
 				<c:forEach items="${METHLIST }" var="m">
 				<c:set var="meth_code" value="${m.meth_code }"/>
@@ -94,26 +93,25 @@
 					<option value="${m.meth_code }">${m.meth_name }</option>
 				</c:if>		
 				</c:forEach></select>
-			</td></tr>	
+			</div></div>	
 	<!-- (확인용 hidden) 전체 결제수단 출력-->
-		<tr class="hidden">
-			<td><c:forEach items="${METHLIST }" var="m">
+		<div class="hidden">
+			<div><c:forEach items="${METHLIST }" var="m">
 				<%-- <c:set var="meth_code" value="${m.meth_code }"/>
 				<c:set var="meth_name" value="${m.meth_name }"/> --%>
 				${m.meth_code } / ${m.meth_name }<br>
 <%-- 				<c:out value="${m.meth_code }"/> / <c:out value="${m.meth_name }"/><br> --%>
 				</c:forEach>
-			</td></tr>
-		<tr class="hidden test"><td><input type="text" name="TEST1"></td></tr>	
-		<tr class="hidden test"><td><input type="text" name="TEST2"></td></tr>	
-		<tr class="hidden test"><td><input type="text" name="TEST3"></td></tr>	
+			</div></div>
+		<div class="hidden test"><div><input type="text" name="TEST1"></div></div>	
+		<div class="hidden test"><div><input type="text" name="TEST2"></div></div>	
+		<div class="hidden test"><div><input type="text" name="TEST3"></div></div>	
 <!-- 7.안내문구 출력row -->			
-		<tr><td id="guide"></td></tr>	
+		<div><div id="guide"></div></div>	
 <!-- 8.form 등록/취소 -->			
-		<tr><td><br>
+		<div><div><br>
 			<input type="submit" value="등록">
-			<input type="reset" value="취소" onClick="backToList()"></td></tr>
-		</table>
+			<input type="reset" value="취소" onClick="backToList()"></div></div>
 	</form>
 	</div>
 </body>

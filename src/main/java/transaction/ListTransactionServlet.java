@@ -74,7 +74,7 @@ public class ListTransactionServlet extends HttpServlet {
 		int totalCount = 0;
 		boolean search = false;
 		System.out.println("여기1");
-		String url = "";
+		String url = "index.jsp?BODY=";
 		CategoryDAO daoC = null;
 		MethodDAO daoM = null;
 		ArrayList<Category> cateList = null;
@@ -83,7 +83,7 @@ public class ListTransactionServlet extends HttpServlet {
 		switch(inex) {
 		case "ALL" : //전체내역 보기
 			System.out.println("INEX = ALL");
-			url = "listALLTransaction.jsp";
+			url = url+"listALLTransaction.jsp";
 			if(d_from == null && d_to == null && item == null) {
 			//검색 조건 하나도 없을 때 : 
 				list = dao.listCountedTrans(start, end, id);
@@ -103,7 +103,7 @@ public class ListTransactionServlet extends HttpServlet {
 			break;
 		case "EX" : 
 			System.out.println("INEX = EX");
-			url = "listEXTransaction.jsp";
+			url = url+"listEXTransaction.jsp";
 			if(d_from == null && d_to == null && item == null && cate == null && meth == null) {
 			//검색 조건 하나도 없을 때 : 
 				list = dao.listCountedEXTrans(start, end, id);
@@ -131,7 +131,7 @@ public class ListTransactionServlet extends HttpServlet {
 			break;
 		case "IN" : 
 			System.out.println("INEX = IN");
-			url = "listINTransaction.jsp";
+			url = url+"listINTransaction.jsp";
 			if(d_from == null && d_to == null && item == null && cate == null ) {
 			//검색 조건 없을 때 : 
 				list = dao.listCountedINTrans(start, end, id);
