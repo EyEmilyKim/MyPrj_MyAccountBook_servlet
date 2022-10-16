@@ -7,6 +7,9 @@
 <meta charset="UTF-8">
 <title>index</title>
 <link rel="stylesheet" href="index.css">
+<style type="text/css">
+	.hidden { display:none; }
+</style>
 </head>
 <body>
 <div class="container">
@@ -23,24 +26,24 @@
 			<ul class="depth_1">
                 <li><a href="listCategory.do">카테고리 관리</a></li>
                 <li><a href="listMethod.do">결제수단 관리</a></li>
-                <li><a href="#">고정금액 관리(tbu)</a></li>
+                <li class="hidden"><a href="#">고정금액 관리(tbu)</a></li>
             </ul>
-		</li id="">
+		</li>
 	<c:if test="${sessionScope.USER_ID != null }">
 		<li id="logout"><a href="logout.do">로그아웃</a></li>
 	</c:if>	
 	</ul>
 </header>
 <section>
+	<p>땡그랑 한푼, 땡그랑 두푼♪</p>
 	<c:if test="${ empty sessionScope.USER_ID }">
 	<p>로그인해주세요~</p>
+	<a href="login.jsp" class="login">로그인</a>
+	<a href="signUp.jsp" class="signUp">가입하기</a>
 	</c:if>
 	<c:if test="${! empty sessionScope.USER_ID }">
 	<p>반갑습니다 ${USER_ID }님~~</p>
 	</c:if>
-	<p>땡그랑 한푼, 땡그랑 두푼♪</p>
-	<a href="login.jsp" class="login">로그인</a>
-	<a href="signUp.jsp" class="signUp">가입하기</a>
 	<div>
 <%-- 	<%@ include file="login.jsp" %>	 --%>
 	</div>

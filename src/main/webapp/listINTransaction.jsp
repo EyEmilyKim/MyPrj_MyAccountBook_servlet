@@ -88,7 +88,8 @@
 			<c:if test="${ fn:startsWith(cate_code,'IN') }">
 				<option>${c.cate_name }</option>
 			</c:if>		
-			</c:forEach>
+		</c:forEach>
+			<option>미지정</option>
 		</select>
 		<input type="submit" value="조회하기">
 	</div>	<!-- set_search 끝 --> 

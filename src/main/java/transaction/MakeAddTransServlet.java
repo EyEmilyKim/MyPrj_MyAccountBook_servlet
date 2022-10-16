@@ -9,6 +9,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import model.Category;
 import model.Method;
@@ -35,6 +36,11 @@ public class MakeAddTransServlet extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		HttpSession session = request.getSession();
+		String id = (String)session.getAttribute("USER_ID");
+		if(id == null) {
+			response.sendRedirect("needLogin.jsp"); return;
+		}
 		/* 가계부 기록의 최신 일련번호 수신, 전달 */
 		TransactionDAO daoT = new TransactionDAO();
 		int maxSeqno = daoT.getTransSeqno();

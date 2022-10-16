@@ -88,7 +88,8 @@
 			<c:if test="${ fn:startsWith(cate_code,'EX') }">
 				<option>${c.cate_name }</option>
 			</c:if>		
-			</c:forEach>
+		</c:forEach>
+			<option>미지정</option>
 		</select>
 		<select name="METH">
 			<option value="">--결제수단--</option>

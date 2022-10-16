@@ -9,6 +9,7 @@ public class Transaction {
 	private Integer amount;
 	private String meth_code;
 	private String reg_date;
+	private String id;
 	
 	private Integer rownum; //DB검색 정렬을 위한 변수 
 	private String cate_name; //list용 카테고리 이름
@@ -80,6 +81,12 @@ public class Transaction {
 	}
 	public void setReg_date(String reg_date) {
 		this.reg_date = reg_date;
+	}
+	public String getId() {
+		return id;
+	}
+	public void setId(String id) {
+		this.id = id;
 	}
 	
 }

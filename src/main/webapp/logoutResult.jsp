@@ -5,7 +5,7 @@
 <head>
 <meta charset="UTF-8">
 <!-- 3초 후 홈화면으로 이동 -->
-<meta http-equiv="refresh" content="2; url=index.jsp">
+<meta http-equiv="refresh" content="1; url=index.jsp">
 <title>logoutResult.jsp</title>
 </head>
 <!-- 시간지연 전환 효과 주려다 실패  -->
@@ -15,7 +15,7 @@
 로그아웃 되었습니다.<br>
 오늘도 좋은 하루 보내세요.<br>
 <br>
-~ 3초 뒤 My 가계부 홈으로 이동합니다 :) ~<br>
+~ 1초 뒤 My 가계부 홈으로 이동합니다 :) ~<br>
 </div>
 <!-- <script type="text/javascript"> -->
 <!-- 	alert("로그아웃 되었습니다.\n오늘도 좋은 하루 보내세요."); -->

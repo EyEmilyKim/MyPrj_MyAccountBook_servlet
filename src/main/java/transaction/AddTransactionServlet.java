@@ -7,6 +7,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import model.Transaction;
 import utility.TransactionDAO;
@@ -46,6 +47,8 @@ public class AddTransactionServlet extends HttpServlet {
 		String item = request.getParameter("ITEM");
 		String amount = request.getParameter("AMOUNT");
 		String mcode = request.getParameter("MCODE");
+		HttpSession session = request.getSession();
+		String id = (String)session.getAttribute("USER_ID");
 	System.out.println("form수신> ccode: "+ccode+" / mcode: "+mcode);
 		if(ccode.equals("")) ccode = "caNN0";//카테고리 미선택 디폴트: '미지정'
 		if(mcode.equals("")) { //결제수단 미선택 디폴트:
@@ -62,6 +65,7 @@ public class AddTransactionServlet extends HttpServlet {
 		t.setItem(item);
 		t.setAmount(Integer.parseInt(amount));
 		t.setMeth_code(mcode);
+		t.setId(id);
 		TransactionDAO dao = new TransactionDAO();
 		boolean flag = dao.insertTransaction(t);
 		response.sendRedirect("addTransactionResult.jsp?R="+flag);

@@ -16,7 +16,7 @@ public class TransactionDAO {
 	private ResultSet rs = null;
 
 	//조건에 맞는 모든 '지출'내역 총 건수 검색 메서드
-	public Integer getTotalOfSearchEXTrans(String fr, String to, String it, String cn, String mn ) {
+	public Integer getTotalOfSearchEXTrans(String fr, String to, String it, String cn, String mn, String id ) {
 		String select = "select count(*) "
 				+ "from ( "
 				+ "select rownum rn, seqno, inex, t_date, cate_name, cate_code, item, amount, meth_name, meth_code, r_date "
@@ -26,7 +26,8 @@ public class TransactionDAO {
 				+ "from mab_transactions t , mab_categories c , mab_methods m "
 				+ "where t.cate_code = c.cate_code "
 				+ "and t.meth_code = m.meth_code "
-				+ "and t.inex = 'EX') "
+				+ "and t.inex = 'EX'"
+				+ "and id = ? ) "
 				+ "where "
 				+ "t_date between to_date(?,'YYYY-MM-DD') and to_date(?,'YYYY-MM-DD') "
 				+ "and item like ? and cate_name like ? and meth_name like ? ) " ;
@@ -35,11 +36,12 @@ public class TransactionDAO {
 			Class.forName(driver);
 			con = DriverManager.getConnection(url,"hr","hr");
 			pstmt = con.prepareStatement(select);
-			pstmt.setString(1, fr);
-			pstmt.setString(2, to);
-			pstmt.setString(3, it);
-			pstmt.setString(4, cn);
-			pstmt.setString(5, mn);
+			pstmt.setString(1, id);
+			pstmt.setString(2, fr);
+			pstmt.setString(3, to);
+			pstmt.setString(4, it);
+			pstmt.setString(5, cn);
+			pstmt.setString(6, mn);
 			rs = pstmt.executeQuery();
 			if(rs.next()) total = rs.getInt(1);
 			System.out.println("getTotalOfSearchEXTrans() total : "+total);
@@ -54,7 +56,7 @@ public class TransactionDAO {
 	}
 		
 	//지정된 '건수'의 '지출'내역 '조건'검색 메서드
-	public ArrayList<Transaction> searchCountedEXTrans(String fr, String to, String it, String cn, String mn, int start, int end) {
+	public ArrayList<Transaction> searchCountedEXTrans(String fr, String to, String it, String cn, String mn, int start, int end, String id) {
 		ArrayList<Transaction> list = new ArrayList<Transaction>();
 		String select = "select seqno, inex, t_date, cate_name, item, amount, meth_name, r_date, rn "
 				+ "from ( "
@@ -66,6 +68,7 @@ public class TransactionDAO {
 				+ "where t.cate_code = c.cate_code "
 				+ "and t.meth_code = m.meth_code "
 				+ "and t.inex = 'EX' "
+				+ "and id = ? "
 				+ "order by t_date desc, t.seqno desc "
 				+ ") "
 				+ "where "
@@ -78,13 +81,14 @@ public class TransactionDAO {
 			Class.forName(driver);
 			con = DriverManager.getConnection(url,"hr","hr");
 			pstmt = con.prepareStatement(select);
-			pstmt.setString(1, fr);
-			pstmt.setString(2, to);
-			pstmt.setString(3, it);
-			pstmt.setString(4, cn);
-			pstmt.setString(5, mn);
-			pstmt.setInt(6, start);
-			pstmt.setInt(7, end);
+			pstmt.setString(1, id);
+			pstmt.setString(2, fr);
+			pstmt.setString(3, to);
+			pstmt.setString(4, it);
+			pstmt.setString(5, cn);
+			pstmt.setString(6, mn);
+			pstmt.setInt(7, start);
+			pstmt.setInt(8, end);
 			rs = pstmt.executeQuery();
 			while(rs.next()) {
 				Transaction t = new Transaction();
@@ -122,13 +126,15 @@ public class TransactionDAO {
 	}	
 		
 	//전체 '지출'내역 건수 검색 메서드 
-	public Integer getTotalofEXTrans() {
-		String select = "select count(*) from mab_transactions where inex = 'EX'";
+	public Integer getTotalofEXTrans(String id) {
+		String select = "select count(*) from mab_transactions where inex = 'EX' "
+				+ "and id = ? ";
 		Integer total = 0;
 		try {
 			Class.forName(driver);
 			con = DriverManager.getConnection(url,"hr","hr");
 			pstmt = con.prepareStatement(select);
+			pstmt.setString(1, id);
 			rs = pstmt.executeQuery();
 			if(rs.next()) total = rs.getInt(1);
 		}catch(Exception e) {
@@ -141,7 +147,7 @@ public class TransactionDAO {
 	}	
 		
 	//지정된 건수의 '지출'내역 검색 메서드
-	public ArrayList<Transaction> listCountedEXTrans(int start, int end) {
+	public ArrayList<Transaction> listCountedEXTrans(int start, int end, String id) {
 		ArrayList<Transaction> list = new ArrayList<Transaction>();
 		String select = "select seqno, inex, t_date, cate_name, item, amount, meth_name, r_date, rn "
 				+ "from ( "
@@ -153,6 +159,7 @@ public class TransactionDAO {
 				+ "where t.cate_code = c.cate_code "
 				+ "and t.meth_code = m.meth_code "
 				+ "and t.inex = 'EX' "
+				+ "and id = ? "
 				+ "order by t_date desc, t.seqno desc "
 				+ ") "
 				+ "order by rn"
@@ -162,8 +169,9 @@ public class TransactionDAO {
 			Class.forName(driver);
 			con = DriverManager.getConnection(url,"hr","hr");
 			pstmt = con.prepareStatement(select);
-			pstmt.setInt(1, start);
-			pstmt.setInt(2, end);
+			pstmt.setString(1, id);
+			pstmt.setInt(2, start);
+			pstmt.setInt(3, end);
 			rs = pstmt.executeQuery();
 			while(rs.next()) {
 				Transaction t = new Transaction();
@@ -201,7 +209,7 @@ public class TransactionDAO {
 	}		
 	
 	//조건에 맞는 모든 '수입'내역 총 건수 검색 메서드
-	public Integer getTotalOfSearchINTrans(String from, String to, String it, String cn) {
+	public Integer getTotalOfSearchINTrans(String from, String to, String it, String cn, String id) {
 		String select = "select count(*) "
 				+ "from ( "
 				+ "select rownum rn, seqno, inex, t_date, cate_name, cate_code, item, amount, meth_name, meth_code, r_date "
@@ -211,7 +219,9 @@ public class TransactionDAO {
 				+ "from mab_transactions t , mab_categories c , mab_methods m "
 				+ "where t.cate_code = c.cate_code "
 				+ "and t.meth_code = m.meth_code "
-				+ "and t.inex = 'IN') "
+				+ "and t.inex = 'IN' "
+				+ "and id = ? "
+				+ ") "
 				+ "where "
 				+ "t_date between to_date(?,'YYYY-MM-DD') and to_date(?,'YYYY-MM-DD') "
 				+ "and item like ? and cate_name like ? ) ";
@@ -221,10 +231,11 @@ public class TransactionDAO {
 			Class.forName(driver);
 			con = DriverManager.getConnection(url,"hr","hr");
 			pstmt = con.prepareStatement(select);
-			pstmt.setString(1, from);
-			pstmt.setString(2, to);
-			pstmt.setString(3, it);
-			pstmt.setString(4, cn);
+			pstmt.setString(1, id);
+			pstmt.setString(2, from);
+			pstmt.setString(3, to);
+			pstmt.setString(4, it);
+			pstmt.setString(5, cn);
 			rs = pstmt.executeQuery();
 			if(rs.next()) total = rs.getInt(1);
 			System.out.println("getTotalOfSearchINTrans() total : "+total);
@@ -239,7 +250,7 @@ public class TransactionDAO {
 	}
 	
 	//지정된 '건수'의 '수입'내역 '조건'검색 메서드
-	public ArrayList<Transaction> searchCountedINTrans(String fr, String to, String it, String cn, int start, int end) {
+	public ArrayList<Transaction> searchCountedINTrans(String fr, String to, String it, String cn, int start, int end, String id) {
 		ArrayList<Transaction> list = new ArrayList<Transaction>();
 		String select = "select seqno, inex, t_date, cate_name, item, amount, meth_name, r_date, rn "
 				+ "from ( "
@@ -250,7 +261,8 @@ public class TransactionDAO {
 				+ "from mab_transactions t , mab_categories c , mab_methods m "
 				+ "where t.cate_code = c.cate_code "
 				+ "and t.meth_code = m.meth_code "
-				+ "and t.inex = 'IN'"
+				+ "and t.inex = 'IN' "
+				+ "and id = ? "
 				+ "order by t_date desc, t.seqno desc "
 				+ ") "
 				+ "where "
@@ -263,12 +275,13 @@ public class TransactionDAO {
 			Class.forName(driver);
 			con = DriverManager.getConnection(url,"hr","hr");
 			pstmt = con.prepareStatement(select);
-			pstmt.setString(1, fr);
-			pstmt.setString(2, to);
-			pstmt.setString(3, it);
-			pstmt.setString(4, cn);
-			pstmt.setInt(5, start);
-			pstmt.setInt(6, end);
+			pstmt.setString(1, id);
+			pstmt.setString(2, fr);
+			pstmt.setString(3, to);
+			pstmt.setString(4, it);
+			pstmt.setString(5, cn);
+			pstmt.setInt(6, start);
+			pstmt.setInt(7, end);
 			rs = pstmt.executeQuery();
 			while(rs.next()) {
 				Transaction t = new Transaction();
@@ -306,13 +319,15 @@ public class TransactionDAO {
 	}	
 	
 	//전체 '수입'내역 건수 검색 메서드 
-	public Integer getTotalofINTrans() {
-		String select = "select count(*) from mab_transactions where inex = 'IN'";
+	public Integer getTotalofINTrans(String id) {
+		String select = "select count(*) from mab_transactions where inex = 'IN' "
+				+ "and id = ? ";
 		Integer total = 0;
 		try {
 			Class.forName(driver);
 			con = DriverManager.getConnection(url,"hr","hr");
 			pstmt = con.prepareStatement(select);
+			pstmt.setString(1, id);
 			rs = pstmt.executeQuery();
 			if(rs.next()) total = rs.getInt(1);
 		}catch(Exception e) {
@@ -325,7 +340,7 @@ public class TransactionDAO {
 	}	
 	
 	//지정된 건수의 '수입'내역 검색 메서드
-	public ArrayList<Transaction> listCountedINTrans(int start, int end) {
+	public ArrayList<Transaction> listCountedINTrans(int start, int end, String id) {
 		ArrayList<Transaction> list = new ArrayList<Transaction>();
 		String select = "select seqno, inex, t_date, cate_name, item, amount, meth_name, r_date, rn "
 				+ "from ( "
@@ -337,6 +352,7 @@ public class TransactionDAO {
 				+ "where t.cate_code = c.cate_code "
 				+ "and t.meth_code = m.meth_code "
 				+ "and t.inex = 'IN' "
+				+ "and id = ? "
 				+ "order by t_date desc, t.seqno desc "
 				+ ") "
 				+ "order by rn "
@@ -346,8 +362,9 @@ public class TransactionDAO {
 			Class.forName(driver);
 			con = DriverManager.getConnection(url,"hr","hr");
 			pstmt = con.prepareStatement(select);
-			pstmt.setInt(1, start);
-			pstmt.setInt(2, end);
+			pstmt.setString(1, id);
+			pstmt.setInt(2, start);
+			pstmt.setInt(3, end);
 			rs = pstmt.executeQuery();
 			while(rs.next()) {
 				Transaction t = new Transaction();
@@ -385,17 +402,19 @@ public class TransactionDAO {
 	}	
 	
 	//거래내역 가장 최신 날짜 조회
-		public String getNewestTransDate() {
+		public String getNewestTransDate(String id) {
 			String t_from = "";
-			String select = "select to_char(max(trans_date),'YYYY-MM-DD') from mab_transactions";
+			String select = "select to_char(max(trans_date),'YYYY-MM-DD') from mab_transactions "
+					+ "where id = ? ";
 			try {
 				Class.forName(driver);
 				con = DriverManager.getConnection(url,"hr","hr");
 				pstmt = con.prepareStatement(select);
+				pstmt.setString(1, id);
 				rs = pstmt.executeQuery();
 				if(rs.next()) {
 					t_from = rs.getString(1);
-					System.out.println("getNewestTransDate() t_to:"+rs.getString(1));
+					System.out.println("getNewestTransDate(id) t_to:"+rs.getString(1));
 				}
 			}catch(Exception e) {
 				e.printStackTrace();
@@ -403,22 +422,24 @@ public class TransactionDAO {
 				try { rs.close(); pstmt.close(); con.close(); }
 				catch(Exception e) {}
 			}
-			System.out.println("getNewestTransDate() end");
+			System.out.println("getNewestTransDate(id) end");
 			return t_from;
 		}
 		
 		//거래내역 가장 옛날 날짜 조회
-	public String getOldestTransDate() {
+	public String getOldestTransDate(String id) {
 		String t_from = "";
-		String select = "select to_char(min(trans_date),'YYYY-MM-DD') from mab_transactions";
+		String select = "select to_char(min(trans_date),'YYYY-MM-DD') from mab_transactions "
+				+ "where id = ?";
 		try {
 			Class.forName(driver);
 			con = DriverManager.getConnection(url,"hr","hr");
 			pstmt = con.prepareStatement(select);
+			pstmt.setString(1, id);
 			rs = pstmt.executeQuery();
 			if(rs.next()) {
 				t_from = rs.getString(1);
-				System.out.println("getOldestTransDate() t_from:"+rs.getString(1));
+				System.out.println("getOldestTransDate(id) t_from:"+rs.getString(1));
 			}
 		}catch(Exception e) {
 			e.printStackTrace();
@@ -426,12 +447,12 @@ public class TransactionDAO {
 			try { rs.close(); pstmt.close(); con.close(); }
 			catch(Exception e) {}
 		}
-		System.out.println("getOldestTransDate() end");
+		System.out.println("getOldestTransDate(id) end");
 		return t_from;
 	}
 	
 	//지정된 '건수'의 거래내역 '조건'검색 메서드
-	public ArrayList<Transaction> searchCountedTrans(String fr, String to, String it, int start, int end) {
+	public ArrayList<Transaction> searchCountedTrans(String fr, String to, String it, int start, int end, String id) {
 		ArrayList<Transaction> list = new ArrayList<Transaction>();
 		String select = "select seqno, inex, t_date, cate_name, item, amount, meth_name, r_date, rn "
 				+ "from ( "
@@ -442,6 +463,7 @@ public class TransactionDAO {
 				+ "from mab_transactions t , mab_categories c , mab_methods m "
 				+ "where t.cate_code = c.cate_code "
 				+ "and t.meth_code = m.meth_code "
+				+ "and id = ?"
 				+ "order by t_date desc, t.seqno desc "
 				+ ") "
 				+ "where "
@@ -453,11 +475,12 @@ public class TransactionDAO {
 			Class.forName(driver);
 			con = DriverManager.getConnection(url,"hr","hr");
 			pstmt = con.prepareStatement(select);
-			pstmt.setString(1, fr);
-			pstmt.setString(2, to);
-			pstmt.setString(3, it);
-			pstmt.setInt(4, start);
-			pstmt.setInt(5, end);
+			pstmt.setString(1, id);
+			pstmt.setString(2, fr);
+			pstmt.setString(3, to);
+			pstmt.setString(4, it);
+			pstmt.setInt(5, start);
+			pstmt.setInt(6, end);
 			rs = pstmt.executeQuery();
 			while(rs.next()) {
 				Transaction t = new Transaction();
@@ -495,7 +518,7 @@ public class TransactionDAO {
 	}
 	
 	//조건에 맞는 모든 거래내역 총 건수 검색 메서드
-	public Integer getTotalOfSearchTrans(String from, String to, String item) {
+	public Integer getTotalOfSearchTrans(String from, String to, String item, String id) {
 		String select = "select count(*) "
 			+ "from ( "
 			+ "select rownum rn, seqno, inex, t_date, cate_code, item, amount, meth_code, r_date "
@@ -503,6 +526,7 @@ public class TransactionDAO {
 			+ "select seqno, inex, to_char(trans_date, 'YYYY-MM-DD') t_date, cate_code, item, "
 			+ "amount, meth_code, to_char(reg_date, 'YYYY-MM-DD HH24:MI:SS') r_date "
 			+ "from mab_transactions "
+			+ "where id = ? "
 			+ "order by trans_date desc, seqno desc ) "
 			+ "where "
 			+ "t_date between to_date(?,'YYYY-MM-DD') and to_date(?,'YYYY-MM-DD') "
@@ -513,9 +537,10 @@ public class TransactionDAO {
 			Class.forName(driver);
 			con = DriverManager.getConnection(url,"hr","hr");
 			pstmt = con.prepareStatement(select);
-			pstmt.setString(1, from);
-			pstmt.setString(2, to);
-			pstmt.setString(3, item);
+			pstmt.setString(1, id);
+			pstmt.setString(2, from);
+			pstmt.setString(3, to);
+			pstmt.setString(4, item);
 			rs = pstmt.executeQuery();
 			if(rs.next()) total = rs.getInt(1);
 			System.out.println("getTotalOfSearchTrans() total : "+total);
@@ -589,7 +614,7 @@ public class TransactionDAO {
 	}
 	
 	//지정된 건수의 거래내역 검색 메서드
-	public ArrayList<Transaction> listCountedTrans(int start, int end) {
+	public ArrayList<Transaction> listCountedTrans(int start, int end, String id) {
 		ArrayList<Transaction> list = new ArrayList<Transaction>();
 		String select = "select seqno, inex, t_date, cate_name, item, amount, meth_name, r_date , rn "
 				+ "from ( "
@@ -600,6 +625,7 @@ public class TransactionDAO {
 				+ "from mab_transactions t , mab_categories c , mab_methods m "
 				+ "where t.cate_code = c.cate_code "
 				+ "and t.meth_code = m.meth_code "
+				+ "and id = ?"
 				+ "order by t_date desc, t.seqno desc "
 				+ ") "
 				+ "order by rn"
@@ -609,8 +635,9 @@ public class TransactionDAO {
 			Class.forName(driver);
 			con = DriverManager.getConnection(url,"hr","hr");
 			pstmt = con.prepareStatement(select);
-			pstmt.setInt(1, start);
-			pstmt.setInt(2, end);
+			pstmt.setString(1, id);
+			pstmt.setInt(2, start);
+			pstmt.setInt(3, end);
 			rs = pstmt.executeQuery();
 			while(rs.next()) {
 				Transaction t = new Transaction();
@@ -648,13 +675,14 @@ public class TransactionDAO {
 	}
 	
 	//전체 거래내역 건수 검색 메서드 
-	public Integer getTotalofTrans() {
-		String select = "select count(*) from mab_transactions";
+	public Integer getTotalofTrans(String id) {
+		String select = "select count(*) from mab_transactions where id = ?";
 		Integer total = 0;
 		try {
 			Class.forName(driver);
 			con = DriverManager.getConnection(url,"hr","hr");
 			pstmt = con.prepareStatement(select);
+			pstmt.setString(1, id);
 			rs = pstmt.executeQuery();
 			if(rs.next()) total = rs.getInt(1);
 		}catch(Exception e) {
@@ -818,7 +846,7 @@ public class TransactionDAO {
 	public boolean insertTransaction(Transaction t) {
 		boolean flag = false;
 		String insert = "insert into mab_transactions values(?,?,"
-				+ "to_date(?,'YYYY-MM-DD'),?,?,?,?,sysdate)";
+				+ "to_date(?,'YYYY-MM-DD'),?,?,?,?,sysdate,?)";
 		try {
 			Class.forName(driver);
 			con = DriverManager.getConnection(url,"hr","hr");
@@ -830,6 +858,7 @@ public class TransactionDAO {
 			pstmt.setString(5, t.getItem());
 			pstmt.setInt(6, t.getAmount());
 			pstmt.setString(7, t.getMeth_code());
+			pstmt.setString(8, t.getId());
 			System.out.println("1 Seqno : "+t.getSeqno());
 			System.out.println("2 Inex : "+t.getInex());
 			System.out.println("3 Trans_date : "+t.getTrans_date());
@@ -837,6 +866,7 @@ public class TransactionDAO {
 			System.out.println("5 getItem : "+t.getItem());
 			System.out.println("6 getAmount : "+t.getAmount());
 			System.out.println("7 Meth_code : "+t.getMeth_code());
+			System.out.println("8 id : "+t.getId());
 			pstmt.executeUpdate();
 			con.commit();
 			System.out.println("insertTransaction() insert done");

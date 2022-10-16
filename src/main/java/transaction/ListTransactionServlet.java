@@ -1,7 +1,6 @@
 package transaction;
 
 import java.io.IOException;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 import javax.servlet.RequestDispatcher;
@@ -10,6 +9,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import model.Category;
 import model.Method;
@@ -38,6 +38,12 @@ public class ListTransactionServlet extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		System.out.println("listTransaction.do 호출됨.");
+		//세션에서 id 정보 수신 -> 비로그인 시 로그인 요청
+		HttpSession session = request.getSession();
+		String id = (String)session.getAttribute("USER_ID");
+		if(id == null) {
+			response.sendRedirect("needLogin.jsp"); return;
+		}
 		//INEX 파라미터(수입/지출) 수신
 		String inex = "ALL";
 		String inexParam = (String)request.getParameter("INEX");
@@ -80,18 +86,18 @@ public class ListTransactionServlet extends HttpServlet {
 			url = "listALLTransaction.jsp";
 			if(d_from == null && d_to == null && item == null) {
 			//검색 조건 하나도 없을 때 : 
-				list = dao.listCountedTrans(start, end);
-				totalCount = dao.getTotalofTrans();
+				list = dao.listCountedTrans(start, end, id);
+				totalCount = dao.getTotalofTrans(id);
 			}else {
 			//검색 조건 있을 때 : 
 				//거래내역 가장 옛날 & 최신 날짜 검색
-				String t_from = dao.getOldestTransDate();
-				String t_to = dao.getNewestTransDate();
+				String t_from = dao.getOldestTransDate(id);
+				String t_to = dao.getNewestTransDate(id);
 				if(d_from == "") d_from = t_from;
 				if(d_to == "") d_to = t_to;
 				//거래내역 테이블에서 N건의 최근 조건부합 내역 검색
-				list = dao.searchCountedTrans(d_from, d_to, "%"+item+"%", start, end);
-				totalCount = dao.getTotalOfSearchTrans(d_from, d_to, "%"+item+"%");
+				list = dao.searchCountedTrans(d_from, d_to, "%"+item+"%", start, end, id);
+				totalCount = dao.getTotalOfSearchTrans(d_from, d_to, "%"+item+"%", id);
 				search = true;
 			}
 			break;
@@ -100,17 +106,17 @@ public class ListTransactionServlet extends HttpServlet {
 			url = "listEXTransaction.jsp";
 			if(d_from == null && d_to == null && item == null && cate == null && meth == null) {
 			//검색 조건 하나도 없을 때 : 
-				list = dao.listCountedEXTrans(start, end);
-				totalCount = dao.getTotalofEXTrans();
+				list = dao.listCountedEXTrans(start, end, id);
+				totalCount = dao.getTotalofEXTrans(id);
 			}else { 
 			//검색 조건 있을 때 : 
 				//거래내역 가장 옛날 & 최신 날짜 검색
-				String t_from = dao.getOldestTransDate();
-				String t_to = dao.getNewestTransDate();
+				String t_from = dao.getOldestTransDate(id);
+				String t_to = dao.getNewestTransDate(id);
 				if(d_from == "") d_from = t_from;
 				if(d_to == "") d_to = t_to;
-				list = dao.searchCountedEXTrans(d_from, d_to, "%"+item+"%", "%"+cate+"%", "%"+meth+"%", start, end);
-				totalCount = dao.getTotalOfSearchEXTrans(d_from, d_to, "%"+item+"%", "%"+cate+"%", "%"+meth+"%");
+				list = dao.searchCountedEXTrans(d_from, d_to, "%"+item+"%", "%"+cate+"%", "%"+meth+"%", start, end, id);
+				totalCount = dao.getTotalOfSearchEXTrans(d_from, d_to, "%"+item+"%", "%"+cate+"%", "%"+meth+"%", id);
 				System.out.println("totalCount : "+totalCount);
 				search = true;
 			}
@@ -128,17 +134,17 @@ public class ListTransactionServlet extends HttpServlet {
 			url = "listINTransaction.jsp";
 			if(d_from == null && d_to == null && item == null && cate == null ) {
 			//검색 조건 없을 때 : 
-				list = dao.listCountedINTrans(start, end);
-				totalCount = dao.getTotalofINTrans();
+				list = dao.listCountedINTrans(start, end, id);
+				totalCount = dao.getTotalofINTrans(id);
 			}else {
 			//검색 조건 있을 때 : 
 				//거래내역 가장 옛날 & 최신 날짜 검색
-				String t_from = dao.getOldestTransDate();
-				String t_to = dao.getNewestTransDate();
+				String t_from = dao.getOldestTransDate(id);
+				String t_to = dao.getNewestTransDate(id);
 				if(d_from == "") d_from = t_from;
 				if(d_to == "") d_to = t_to;
-				list = dao.searchCountedINTrans(d_from, d_to, "%"+item+"%", "%"+cate+"%", start, end);
-				totalCount = dao.getTotalOfSearchINTrans(d_from, d_to, "%"+item+"%", "%"+cate+"%");
+				list = dao.searchCountedINTrans(d_from, d_to, "%"+item+"%", "%"+cate+"%", start, end, id);
+				totalCount = dao.getTotalOfSearchINTrans(d_from, d_to, "%"+item+"%", "%"+cate+"%", id);
 				search = true;
 			}
 			/* 전체 카테고리 객체 수신, 전달 */
