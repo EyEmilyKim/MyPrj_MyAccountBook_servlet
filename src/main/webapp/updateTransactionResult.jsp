@@ -8,6 +8,7 @@
 <title>updateTransactionResult.jsp</title>
 </head>
 <body>
+	<input type="hidden" value="${param.SN }" name="SEQNO" id="seqno">
 <c:if test="${param.R == true }">
 	<script type="text/javascript">
 		alert("가계부가 수정되었습니다.");	
@@ -20,6 +21,7 @@
 </c:if>
 </body>
 <script type="text/javascript">
-	location.href = "listTransaction.do";
+	const seqno = document.getElementById("seqno").value;
+	location.href = "detailTransaction.do?SN="+seqno;
 </script>
 </html>

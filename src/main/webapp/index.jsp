@@ -16,9 +16,9 @@
 	</div>
 	<ul class="menu">
 		<li id="add"><a href="makeAddTrans.do">가계부 쓰기</a></li>
-		<li id="list"><a href=listTransaction.do>전체내역</a></li>
-		<li id="ex"><a href="">지출</a></li>
-		<li id="in"><a href="">수입</a></li>
+		<li id="list"><a href=listTransaction.do?INEX=ALL>전체내역</a></li>
+		<li id="ex"><a href="listTransaction.do?INEX=EX">지출</a></li>
+		<li id="in"><a href="listTransaction.do?INEX=IN">수입</a></li>
 		<li id="set"><a href="#">설정</a>
 			<ul class="depth_1">
                 <li><a href="listCategory.do">카테고리 관리</a></li>

@@ -62,7 +62,7 @@ public class UpdateTransactionServlet extends HttpServlet {
 		t.setMeth_code(mcode);
 		TransactionDAO dao = new TransactionDAO();
 		boolean flag = dao.updateTransaction(t);
-		response.sendRedirect("updateTransactionResult.jsp?R="+flag);
+		response.sendRedirect("updateTransactionResult.jsp?R="+flag+"&SN="+seqno);
 		System.out.println("서블렛 끝");
 	}
 

@@ -11,7 +11,11 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import model.Category;
+import model.Method;
 import model.Transaction;
+import utility.CategoryDAO;
+import utility.MethodDAO;
 import utility.TransactionDAO;
 
 /**
@@ -34,6 +38,10 @@ public class ListTransactionServlet extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		System.out.println("listTransaction.do 호출됨.");
+		//INEX 파라미터(수입/지출) 수신
+		String inex = "ALL";
+		String inexParam = (String)request.getParameter("INEX");
+		if(inexParam != null) inex = inexParam;
 		//slc 파라미터(N줄 보기) 수신
 		int slc = 5;
 		String slcParam = (String)request.getParameter("SLC");
@@ -42,7 +50,10 @@ public class ListTransactionServlet extends HttpServlet {
 				String d_from = (String)request.getParameter("D_FROM");
 				String d_to = (String)request.getParameter("D_TO");
 				String item = (String)request.getParameter("ITEM");
-				String[] srch_v = {d_from, d_to, item};
+				String cate = (String)request.getParameter("CATE");
+				String meth = (String)request.getParameter("METH");
+				System.out.println("SEARCH_V > \nd_from / d_to : "+d_from+" / "+d_to+"\nitem : "+item+" / cate : "+cate+" / meth : "+meth);
+				String[] srch_v = {d_from, d_to, item, cate, meth};
 				request.setAttribute("SRCH_V", srch_v);
 		//page 파라미터 수신
 		int pageNo = 1;
@@ -57,19 +68,87 @@ public class ListTransactionServlet extends HttpServlet {
 		int totalCount = 0;
 		boolean search = false;
 		System.out.println("여기1");
+		String url = "";
+		CategoryDAO daoC = null;
+		MethodDAO daoM = null;
+		ArrayList<Category> cateList = null;
+		ArrayList<Method> methList = null;
+		//////// DB 연동 ////////
+		switch(inex) {
+		case "ALL" : //전체내역 보기
+			System.out.println("INEX = ALL");
+			url = "listALLTransaction.jsp";
+			if(d_from == null && d_to == null && item == null) {
+			//검색 조건 하나도 없을 때 : 
+				list = dao.listCountedTrans(start, end);
+				totalCount = dao.getTotalofTrans();
+			}else {
+			//검색 조건 있을 때 : 
+				//거래내역 가장 옛날 & 최신 날짜 검색
+				String t_from = dao.getOldestTransDate();
+				String t_to = dao.getNewestTransDate();
+				if(d_from == "") d_from = t_from;
+				if(d_to == "") d_to = t_to;
+				//거래내역 테이블에서 N건의 최근 조건부합 내역 검색
+				list = dao.searchCountedTrans(d_from, d_to, "%"+item+"%", start, end);
+				totalCount = dao.getTotalOfSearchTrans(d_from, d_to, "%"+item+"%");
+				search = true;
+			}
+			break;
+		case "EX" : 
+			System.out.println("INEX = EX");
+			url = "listEXTransaction.jsp";
+			if(d_from == null && d_to == null && item == null && cate == null && meth == null) {
+			//검색 조건 하나도 없을 때 : 
+				list = dao.listCountedEXTrans(start, end);
+				totalCount = dao.getTotalofEXTrans();
+			}else { 
+			//검색 조건 있을 때 : 
+				//거래내역 가장 옛날 & 최신 날짜 검색
+				String t_from = dao.getOldestTransDate();
+				String t_to = dao.getNewestTransDate();
+				if(d_from == "") d_from = t_from;
+				if(d_to == "") d_to = t_to;
+				list = dao.searchCountedEXTrans(d_from, d_to, "%"+item+"%", "%"+cate+"%", "%"+meth+"%", start, end);
+				totalCount = dao.getTotalOfSearchEXTrans(d_from, d_to, "%"+item+"%", "%"+cate+"%", "%"+meth+"%");
+				System.out.println("totalCount : "+totalCount);
+				search = true;
+			}
+			/* 전체 카테고리 객체 수신, 전달 */
+			daoC = new CategoryDAO();
+			cateList = daoC.listCategory();
+			request.setAttribute("CATELIST", cateList);
+			/* 전체 결제수단 객체 수신, 전달 */
+			daoM = new MethodDAO();
+			methList = daoM.listMethod();
+			request.setAttribute("METHLIST", methList);
+			break;
+		case "IN" : 
+			System.out.println("INEX = IN");
+			url = "listINTransaction.jsp";
+			if(d_from == null && d_to == null && item == null && cate == null ) {
+			//검색 조건 없을 때 : 
+				list = dao.listCountedINTrans(start, end);
+				totalCount = dao.getTotalofINTrans();
+			}else {
+			//검색 조건 있을 때 : 
+				//거래내역 가장 옛날 & 최신 날짜 검색
+				String t_from = dao.getOldestTransDate();
+				String t_to = dao.getNewestTransDate();
+				if(d_from == "") d_from = t_from;
+				if(d_to == "") d_to = t_to;
+				list = dao.searchCountedINTrans(d_from, d_to, "%"+item+"%", "%"+cate+"%", start, end);
+				totalCount = dao.getTotalOfSearchINTrans(d_from, d_to, "%"+item+"%", "%"+cate+"%");
+				search = true;
+			}
+			/* 전체 카테고리 객체 수신, 전달 */
+			daoC = new CategoryDAO();
+			cateList = daoC.listCategory();
+			request.setAttribute("CATELIST", cateList);
+			break;
 		
-		if(d_from == null && d_to == null && item == null) { //검색 조건 없을 때 : 
-			list = dao.listCountedTrans(start, end);
-			totalCount = dao.getTotalofTrans();
-		}else if(d_from != null || d_to != null || item == null) { //검색 조건 있을 때 : 
-//			//거래내역 가장 옛날 & 최신 날짜 검색
-//			String t_from = dao.getOldestTransDate();
-//			String t_to = dao.getNewestTransDate();
-			//거래내역 테이블에서 N건의 최근 조건부합 내역 검색
-			list = dao.searchCountedTrans(d_from, d_to, "%"+item+"%", start, end);
-			totalCount = dao.getTotalOfSearchTrans(d_from, d_to, "%"+item+"%");
-			search = true;
 		}
+		////////DB 연동 끝////////
 		request.setAttribute("LIST", list);
 		System.out.println("여기3");
 		//필요한 페이지 수 계산
@@ -85,7 +164,7 @@ public class ListTransactionServlet extends HttpServlet {
 		request.setAttribute("STARTRN", startRn);
 		request.setAttribute("ENDRN", endRn);
 		//jsp로 데이터 전달
-		RequestDispatcher rd = request.getRequestDispatcher("listTransaction.jsp?SLC="+slc+"&SRCH="+search);
+		RequestDispatcher rd = request.getRequestDispatcher(url+"?SLC="+slc+"&SRCH="+search);
 		rd.forward(request, response);
 		
 	}

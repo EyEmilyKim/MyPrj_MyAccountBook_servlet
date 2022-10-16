@@ -6,9 +6,9 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>listTransaction.jsp</title>
+<title>listALLTransaction.jsp</title>
 	<style type="text/css">
-		.contMain { border: 1px skyblue solid; max-width: 600px;}
+		.contMain { border: 1px skyblue solid; max-width: 700px;}
 		.listMain, .page { text-align: center; border: 1px red solid; margin: 5px 10px; }
 		.oneTrans { border: 1px gray solid; margin: 5px 10px; }
 		.upper, .lower { display:flex; justify-content: space-between; text-align:center; }	
@@ -42,15 +42,15 @@
 	<a href="index.jsp">My 가계부</a>
 </div>
 <div class="contMain">
-	<p>가계부 목록 화면입니다.</p>
+	<h3>가계부 목록 화면입니다.</h3>
 <!-- 목록 화면 컨트롤	-->
 	<form class="" name="preset">
-		<input type="text" name="PRE_SLC" value="${param.SLC }">
 		<c:if test="${param.SRCH == 'true' }">
-		<div class="preSrch"></div>
+		<div class="preSrch">
 			<div class="left">
-			기간: [ ${SRCH_V[0] } ~ ${SRCH_V[1] } ] / 내용 : [ ${SRCH_V[2] } ] 로 검색한 결과입니다.
-			<input type="button" value="전체보기" onClick="location.href='listTransaction.do?SLC=${param.SLC }'">
+			기간: [ ${SRCH_V[0] } ~ ${SRCH_V[1] } ] / 내용 : [ ${SRCH_V[2] } ] 검색 결과입니다.
+			<input type="button" value="전체보기" onClick="location.href='listTransaction.do?INEX=ALL&SLC=${param.SLC }'"></div>
+		</div>	
 		</c:if>
 	</form>
 	<div class="set_listCount">
@@ -59,16 +59,26 @@
 			<div class="btn_search">
 			<input type="button" value="검색" onClick="switchSearch()"></div>
 			<div id="slc"><form action="listTransaction.do" name="fmLC">
+				<input type="hidden" name="INEX" value="ALL">
+			<c:if test="${param.SRCH == 'true' }">
+				<input type="hidden" name="D_FROM" value="${SRCH_V[0] }">
+				<input type="hidden" name="D_TO" value="${SRCH_V[1] }">
+				<input type="hidden" name="ITEM" value="${SRCH_V[2] }">
+				<input type="hidden" name="CATE" value="${SRCH_V[3] }">
+				<input type="hidden" name="METH" value="${SRCH_V[4] }">
+			</c:if>	
 				<select name="SLC" id="slct_slc" onChange="showListCounted(this.value)">
 					<option value="5">5줄 보기</option>
 					<option value="10">10줄 보기</option>
 					<option value="15">15줄 보기</option>
 				</select></form></div></div>
 	</div>	<!-- set_listCount 끝 --> 
-	<form action="listTransaction.do" name="fmSRCH" >
+	<form action="listTransaction.do?INEX=ALL" name="fmSRCH" >
 	<div id="set_search"><input type="hidden" id="onOff_set_search" value="0">
+		<input type="hidden" name="INEX" value="ALL">
+		<input type="text" name="SLC" value="${param.SLC }" size="3">
 		<input type="date" name="D_FROM" id="d_from"> ~ <input type="date" name="D_TO" id="d_to"> 
-		<input type="text" name="ITEM" placeholder="내용">
+		<input type="text" name="ITEM" placeholder="--내용--" size="10"><br/>
 		<input type="submit" value="조회하기">
 	</div>	<!-- set_search 끝 --> 
 	
@@ -99,7 +109,7 @@
 			${trans.amount }</fmt:formatNumber>원</div>
 		</div>
 		<div class="lower">
-			<div class="hidden inner seqno">${trans.seqno }</div>
+			<div class=" inner seqno">${trans.seqno }</div>
 			<div class="inner cate">카테고리: ${trans.cate_name }</div>
 			<div class="inner meth">결제수단: ${trans.meth_name }</div>
 		</div>
@@ -109,12 +119,12 @@
 	<div class="page">
 		<c:if test="${ param.SRCH == 'false' }">
 			<c:forEach begin="1" end="${PAGES }" var="page">
-			<a href="listTransaction.do?SLC=${param.SLC }&PG=${page }">${page }</a>	
+			<a href="listTransaction.do?INEX=ALL&SLC=${param.SLC }&PG=${page }">${page }</a>	
 			</c:forEach>
 		</c:if>
 		<c:if test="${ param.SRCH == 'true' }">
 			<c:forEach begin="1" end="${PAGES }" var="page">
-			<a href="listTransaction.do?SLC=${param.SLC }&PG=${page }&
+			<a href="listTransaction.do?INEX=ALL&SLC=${param.SLC }&PG=${page }&
 			D_FROM=${SRCH_V[0] }&D_TO=${SRCH_V[1] }&ITEM=${SRCH_V[2] }">${page }</a>	
 			</c:forEach>
 		</c:if>
@@ -129,7 +139,7 @@ const onOff_set_search = document.getElementById("onOff_set_search");
 /* 화면 로드시 데이터에 따라 미리 html 요소 반영 */
 function preset(){ 
 // 	alert("로드되었습니다");
-	const pre_slc = document.preset.PRE_SLC.value;
+	const pre_slc = document.fmSRCH.SLC.value;
 	slct_slc.value = pre_slc;
 }
 function switchSearch(){

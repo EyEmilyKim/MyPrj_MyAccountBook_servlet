@@ -14,11 +14,380 @@ public class TransactionDAO {
 	private Connection con = null;
 	private PreparedStatement pstmt = null;
 	private ResultSet rs = null;
+
+	//조건에 맞는 모든 '지출'내역 총 건수 검색 메서드
+	public Integer getTotalOfSearchEXTrans(String fr, String to, String it, String cn, String mn ) {
+		String select = "select count(*) "
+				+ "from ( "
+				+ "select rownum rn, seqno, inex, t_date, cate_name, cate_code, item, amount, meth_name, meth_code, r_date "
+				+ "from ( "
+				+ "select t.seqno, t.inex, to_char(trans_date, 'YYYY-MM-DD') t_date, t.cate_code cate_code, cate_name, item, "
+				+ "amount, t.meth_code meth_code, meth_name, to_char(reg_date, 'YYYY-MM-DD HH24:MI:SS') r_date "
+				+ "from mab_transactions t , mab_categories c , mab_methods m "
+				+ "where t.cate_code = c.cate_code "
+				+ "and t.meth_code = m.meth_code "
+				+ "and t.inex = 'EX') "
+				+ "where "
+				+ "t_date between to_date(?,'YYYY-MM-DD') and to_date(?,'YYYY-MM-DD') "
+				+ "and item like ? and cate_name like ? and meth_name like ? ) " ;
+		Integer total = 0;
+		try {
+			Class.forName(driver);
+			con = DriverManager.getConnection(url,"hr","hr");
+			pstmt = con.prepareStatement(select);
+			pstmt.setString(1, fr);
+			pstmt.setString(2, to);
+			pstmt.setString(3, it);
+			pstmt.setString(4, cn);
+			pstmt.setString(5, mn);
+			rs = pstmt.executeQuery();
+			if(rs.next()) total = rs.getInt(1);
+			System.out.println("getTotalOfSearchEXTrans() total : "+total);
+		}catch(Exception e) {
+			e.printStackTrace();
+		}finally {
+			try { rs.close(); pstmt.close(); con.close(); }
+			catch(Exception e){}
+		}
+		System.out.println("getTotalOfSearchEXTrans() end");
+		return total;
+	}
+		
+	//지정된 '건수'의 '지출'내역 '조건'검색 메서드
+	public ArrayList<Transaction> searchCountedEXTrans(String fr, String to, String it, String cn, String mn, int start, int end) {
+		ArrayList<Transaction> list = new ArrayList<Transaction>();
+		String select = "select seqno, inex, t_date, cate_name, item, amount, meth_name, r_date, rn "
+				+ "from ( "
+				+ "select rownum rn, seqno, inex, t_date, cate_name, item, amount, meth_name, r_date "
+				+ "from ( "
+				+ "select t.seqno, t.inex, to_char(trans_date, 'YYYY-MM-DD') t_date, cate_name, item, "
+				+ "amount, meth_name, to_char(reg_date, 'YYYY-MM-DD HH24:MI:SS') r_date "
+				+ "from mab_transactions t , mab_categories c , mab_methods m "
+				+ "where t.cate_code = c.cate_code "
+				+ "and t.meth_code = m.meth_code "
+				+ "and t.inex = 'EX' "
+				+ "order by t_date desc, t.seqno desc "
+				+ ") "
+				+ "where "
+				+ "t_date between to_date(?,'YYYY-MM-DD') and to_date(?,'YYYY-MM-DD') "
+				+ "and item like ? and cate_name like ? and meth_name like ? "
+				+ "order by rn "
+				+ ") " 
+				+ "where rn > ? and rn < ? ";
+		try {
+			Class.forName(driver);
+			con = DriverManager.getConnection(url,"hr","hr");
+			pstmt = con.prepareStatement(select);
+			pstmt.setString(1, fr);
+			pstmt.setString(2, to);
+			pstmt.setString(3, it);
+			pstmt.setString(4, cn);
+			pstmt.setString(5, mn);
+			pstmt.setInt(6, start);
+			pstmt.setInt(7, end);
+			rs = pstmt.executeQuery();
+			while(rs.next()) {
+				Transaction t = new Transaction();
+				t.setSeqno(rs.getInt(1));
+				t.setInex(rs.getString(2));
+				t.setTrans_date(rs.getString(3));
+				t.setCate_name(rs.getString(4));
+				t.setItem(rs.getString(5));
+				t.setAmount(rs.getInt(6));
+				t.setMeth_name(rs.getString(7));
+				t.setReg_date(rs.getString(8));
+				t.setRownum(rs.getInt(9));
+				list.add(t);
+				System.out.println("searchCountedEXTrans() rs true");
+				System.out.println("seqno : "+rs.getInt(1));
+//						System.out.println(rs.getString(2));
+//						System.out.println(rs.getString(3));
+				System.out.println("cate_name : "+rs.getString(4));
+//						System.out.println(rs.getString(5));
+//						System.out.println(rs.getInt(6));
+				System.out.println("meth_name : "+rs.getString(7));
+//						System.out.println(rs.getString(8));
+				System.out.println("rownum : "+rs.getInt(9));
+			}
+			System.out.println("searchCountedEXTrans() select done");
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				rs.close(); pstmt.close(); con.close();
+			} catch (Exception e2) {			}
+		}
+		System.out.println("searchCountedEXTrans() end");
+		return list;
+	}	
+		
+	//전체 '지출'내역 건수 검색 메서드 
+	public Integer getTotalofEXTrans() {
+		String select = "select count(*) from mab_transactions where inex = 'EX'";
+		Integer total = 0;
+		try {
+			Class.forName(driver);
+			con = DriverManager.getConnection(url,"hr","hr");
+			pstmt = con.prepareStatement(select);
+			rs = pstmt.executeQuery();
+			if(rs.next()) total = rs.getInt(1);
+		}catch(Exception e) {
+			e.printStackTrace();
+		}finally {
+			try { rs.close(); pstmt.close(); con.close(); }
+			catch(Exception e){}
+		}
+		return total;
+	}	
+		
+	//지정된 건수의 '지출'내역 검색 메서드
+	public ArrayList<Transaction> listCountedEXTrans(int start, int end) {
+		ArrayList<Transaction> list = new ArrayList<Transaction>();
+		String select = "select seqno, inex, t_date, cate_name, item, amount, meth_name, r_date, rn "
+				+ "from ( "
+				+ "select rownum rn, seqno, inex, t_date, cate_name, item, amount, meth_name, r_date "
+				+ "from ( "
+				+ "select t.seqno seqno, t.inex inex, to_char(trans_date, 'YYYY-MM-DD') t_date, cate_name, "
+				+ "item, amount, meth_name, to_char(reg_date, 'YYYY-MM-DD HH24:MI:SS') r_date "
+				+ "from mab_transactions t , mab_categories c , mab_methods m "
+				+ "where t.cate_code = c.cate_code "
+				+ "and t.meth_code = m.meth_code "
+				+ "and t.inex = 'EX' "
+				+ "order by t_date desc, t.seqno desc "
+				+ ") "
+				+ "order by rn"
+				+ ") "
+				+ "where rn > ? and rn < ? ";
+		try {
+			Class.forName(driver);
+			con = DriverManager.getConnection(url,"hr","hr");
+			pstmt = con.prepareStatement(select);
+			pstmt.setInt(1, start);
+			pstmt.setInt(2, end);
+			rs = pstmt.executeQuery();
+			while(rs.next()) {
+				Transaction t = new Transaction();
+				t.setSeqno(rs.getInt(1));
+				t.setInex(rs.getString(2));
+				t.setTrans_date(rs.getString(3));
+				t.setCate_name(rs.getString(4));
+				t.setItem(rs.getString(5));
+				t.setAmount(rs.getInt(6));
+				t.setMeth_name(rs.getString(7));
+				t.setReg_date(rs.getString(8));
+				t.setRownum(rs.getInt(9));
+				list.add(t);
+//						System.out.println("listCountedEXTrans() rs true");
+//						System.out.println("seqno : "+rs.getInt(1));
+//						System.out.println(rs.getString(2));
+//						System.out.println(rs.getString(3));
+//						System.out.println(rs.getString(4));
+//						System.out.println(rs.getString(5));
+//						System.out.println(rs.getInt(6));
+//						System.out.println(rs.getString(7));
+//						System.out.println(rs.getString(8));
+//						System.out.println("rownum : "+rs.getInt(9));
+			}
+			System.out.println("listCountedEXTrans() select done");
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				rs.close(); pstmt.close(); con.close();
+			} catch (Exception e2) {			}
+		}
+		System.out.println("listCountedEXTrans() end");
+		return list;
+	}		
+	
+	//조건에 맞는 모든 '수입'내역 총 건수 검색 메서드
+	public Integer getTotalOfSearchINTrans(String from, String to, String it, String cn) {
+		String select = "select count(*) "
+				+ "from ( "
+				+ "select rownum rn, seqno, inex, t_date, cate_name, cate_code, item, amount, meth_name, meth_code, r_date "
+				+ "from ( "
+				+ "select t.seqno, t.inex, to_char(trans_date, 'YYYY-MM-DD') t_date, t.cate_code cate_code, cate_name, item, "
+				+ "amount, t.meth_code meth_code, meth_name, to_char(reg_date, 'YYYY-MM-DD HH24:MI:SS') r_date "
+				+ "from mab_transactions t , mab_categories c , mab_methods m "
+				+ "where t.cate_code = c.cate_code "
+				+ "and t.meth_code = m.meth_code "
+				+ "and t.inex = 'IN') "
+				+ "where "
+				+ "t_date between to_date(?,'YYYY-MM-DD') and to_date(?,'YYYY-MM-DD') "
+				+ "and item like ? and cate_name like ? ) ";
+		
+		Integer total = 0;
+		try {
+			Class.forName(driver);
+			con = DriverManager.getConnection(url,"hr","hr");
+			pstmt = con.prepareStatement(select);
+			pstmt.setString(1, from);
+			pstmt.setString(2, to);
+			pstmt.setString(3, it);
+			pstmt.setString(4, cn);
+			rs = pstmt.executeQuery();
+			if(rs.next()) total = rs.getInt(1);
+			System.out.println("getTotalOfSearchINTrans() total : "+total);
+		}catch(Exception e) {
+			e.printStackTrace();
+		}finally {
+			try { rs.close(); pstmt.close(); con.close(); }
+			catch(Exception e){}
+		}
+		System.out.println("getTotalOfSearchINTrans() end");
+		return total;
+	}
+	
+	//지정된 '건수'의 '수입'내역 '조건'검색 메서드
+	public ArrayList<Transaction> searchCountedINTrans(String fr, String to, String it, String cn, int start, int end) {
+		ArrayList<Transaction> list = new ArrayList<Transaction>();
+		String select = "select seqno, inex, t_date, cate_name, item, amount, meth_name, r_date, rn "
+				+ "from ( "
+				+ "select rownum rn, seqno, inex, t_date, cate_name, item, amount, meth_name, r_date "
+				+ "from ( "
+				+ "select t.seqno, t.inex, to_char(trans_date, 'YYYY-MM-DD') t_date, cate_name, item, "
+				+ "amount, meth_name, to_char(reg_date, 'YYYY-MM-DD HH24:MI:SS') r_date "
+				+ "from mab_transactions t , mab_categories c , mab_methods m "
+				+ "where t.cate_code = c.cate_code "
+				+ "and t.meth_code = m.meth_code "
+				+ "and t.inex = 'IN'"
+				+ "order by t_date desc, t.seqno desc "
+				+ ") "
+				+ "where "
+				+ "t_date between to_date(?,'YYYY-MM-DD') and to_date(?,'YYYY-MM-DD') "
+				+ "and item like ? and cate_name like ? "
+				+ "order by rn "
+				+ ") " 
+				+ "where rn > ? and rn < ? " ;
+		try {
+			Class.forName(driver);
+			con = DriverManager.getConnection(url,"hr","hr");
+			pstmt = con.prepareStatement(select);
+			pstmt.setString(1, fr);
+			pstmt.setString(2, to);
+			pstmt.setString(3, it);
+			pstmt.setString(4, cn);
+			pstmt.setInt(5, start);
+			pstmt.setInt(6, end);
+			rs = pstmt.executeQuery();
+			while(rs.next()) {
+				Transaction t = new Transaction();
+				t.setSeqno(rs.getInt(1));
+				t.setInex(rs.getString(2));
+				t.setTrans_date(rs.getString(3));
+				t.setCate_name(rs.getString(4));
+				t.setItem(rs.getString(5));
+				t.setAmount(rs.getInt(6));
+				t.setMeth_name(rs.getString(7));
+				t.setReg_date(rs.getString(8));
+				t.setRownum(rs.getInt(9));
+				list.add(t);
+				System.out.println("searchCountedINTrans() rs true");
+				System.out.println("seqno : "+rs.getInt(1));
+//					System.out.println(rs.getString(2));
+//					System.out.println(rs.getString(3));
+				System.out.println("cate_name : "+rs.getString(4));
+//					System.out.println(rs.getString(5));
+//					System.out.println(rs.getInt(6));
+				System.out.println("meth_name : "+rs.getString(7));
+//					System.out.println(rs.getString(8));
+				System.out.println("rownum : "+rs.getInt(9));
+			}
+			System.out.println("searchCountedINTrans() select done");
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				rs.close(); pstmt.close(); con.close();
+			} catch (Exception e2) {			}
+		}
+		System.out.println("searchCountedINTrans() end");
+		return list;
+	}	
+	
+	//전체 '수입'내역 건수 검색 메서드 
+	public Integer getTotalofINTrans() {
+		String select = "select count(*) from mab_transactions where inex = 'IN'";
+		Integer total = 0;
+		try {
+			Class.forName(driver);
+			con = DriverManager.getConnection(url,"hr","hr");
+			pstmt = con.prepareStatement(select);
+			rs = pstmt.executeQuery();
+			if(rs.next()) total = rs.getInt(1);
+		}catch(Exception e) {
+			e.printStackTrace();
+		}finally {
+			try { rs.close(); pstmt.close(); con.close(); }
+			catch(Exception e){}
+		}
+		return total;
+	}	
+	
+	//지정된 건수의 '수입'내역 검색 메서드
+	public ArrayList<Transaction> listCountedINTrans(int start, int end) {
+		ArrayList<Transaction> list = new ArrayList<Transaction>();
+		String select = "select seqno, inex, t_date, cate_name, item, amount, meth_name, r_date, rn "
+				+ "from ( "
+				+ "select rownum rn, seqno, inex, t_date, cate_name, item, amount, meth_name, r_date "
+				+ "from ( "
+				+ "select t.seqno seqno, t.inex inex, to_char(trans_date, 'YYYY-MM-DD') t_date, cate_name, "
+				+ "item, amount, meth_name, to_char(reg_date, 'YYYY-MM-DD HH24:MI:SS') r_date "
+				+ "from mab_transactions t , mab_categories c , mab_methods m "
+				+ "where t.cate_code = c.cate_code "
+				+ "and t.meth_code = m.meth_code "
+				+ "and t.inex = 'IN' "
+				+ "order by t_date desc, t.seqno desc "
+				+ ") "
+				+ "order by rn "
+				+ ") "
+				+ "where rn > ? and rn < ? ";
+		try {
+			Class.forName(driver);
+			con = DriverManager.getConnection(url,"hr","hr");
+			pstmt = con.prepareStatement(select);
+			pstmt.setInt(1, start);
+			pstmt.setInt(2, end);
+			rs = pstmt.executeQuery();
+			while(rs.next()) {
+				Transaction t = new Transaction();
+				t.setSeqno(rs.getInt(1));
+				t.setInex(rs.getString(2));
+				t.setTrans_date(rs.getString(3));
+				t.setCate_name(rs.getString(4));
+				t.setItem(rs.getString(5));
+				t.setAmount(rs.getInt(6));
+				t.setMeth_name(rs.getString(7));
+				t.setReg_date(rs.getString(8));
+				t.setRownum(rs.getInt(9));
+				list.add(t);
+//					System.out.println("listCountedINTrans() rs true");
+//					System.out.println("seqno : "+rs.getInt(1));
+//					System.out.println(rs.getString(2));
+//					System.out.println(rs.getString(3));
+//					System.out.println(rs.getString(4));
+//					System.out.println(rs.getString(5));
+//					System.out.println(rs.getInt(6));
+//					System.out.println(rs.getString(7));
+//					System.out.println(rs.getString(8));
+//					System.out.println("rownum : "+rs.getInt(9));
+			}
+			System.out.println("listCountedINTrans() select done");
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				rs.close(); pstmt.close(); con.close();
+			} catch (Exception e2) {			}
+		}
+		System.out.println("listCountedINTrans() end");
+		return list;
+	}	
 	
 	//거래내역 가장 최신 날짜 조회
 		public String getNewestTransDate() {
 			String t_from = "";
-			String select = "select to_char(max(trans_date)) from mab_transactions";
+			String select = "select to_char(max(trans_date),'YYYY-MM-DD') from mab_transactions";
 			try {
 				Class.forName(driver);
 				con = DriverManager.getConnection(url,"hr","hr");
@@ -41,7 +410,7 @@ public class TransactionDAO {
 		//거래내역 가장 옛날 날짜 조회
 	public String getOldestTransDate() {
 		String t_from = "";
-		String select = "select to_char(min(trans_date)) from mab_transactions";
+		String select = "select to_char(min(trans_date),'YYYY-MM-DD') from mab_transactions";
 		try {
 			Class.forName(driver);
 			con = DriverManager.getConnection(url,"hr","hr");
@@ -72,10 +441,13 @@ public class TransactionDAO {
 				+ "amount, meth_name, to_char(reg_date, 'YYYY-MM-DD HH24:MI:SS') r_date "
 				+ "from mab_transactions t , mab_categories c , mab_methods m "
 				+ "where t.cate_code = c.cate_code "
-				+ "and t.meth_code = m.meth_code ) "
+				+ "and t.meth_code = m.meth_code "
+				+ "order by t_date desc, t.seqno desc "
+				+ ") "
 				+ "where "
 				+ "t_date between to_date(?,'YYYY-MM-DD') and to_date(?,'YYYY-MM-DD') "
-				+ "and item like ? ) " 
+				+ "and item like ? " 
+				+ "order by rn ) "
 				+ "where rn > ? and rn < ? " ;
 		try {
 			Class.forName(driver);
@@ -146,14 +518,14 @@ public class TransactionDAO {
 			pstmt.setString(3, item);
 			rs = pstmt.executeQuery();
 			if(rs.next()) total = rs.getInt(1);
-			System.out.println("getTotalSearchTransCount() total : "+total);
+			System.out.println("getTotalOfSearchTrans() total : "+total);
 		}catch(Exception e) {
 			e.printStackTrace();
 		}finally {
 			try { rs.close(); pstmt.close(); con.close(); }
 			catch(Exception e){}
 		}
-		System.out.println("getTotalSearchTransCount() end");
+		System.out.println("getTotalOfSearchTrans() end");
 		return total;
 	}
 	
@@ -219,15 +591,19 @@ public class TransactionDAO {
 	//지정된 건수의 거래내역 검색 메서드
 	public ArrayList<Transaction> listCountedTrans(int start, int end) {
 		ArrayList<Transaction> list = new ArrayList<Transaction>();
-		String select = "select seqno, inex, t_date, cate_name, item, amount, meth_name, r_date, rn "
+		String select = "select seqno, inex, t_date, cate_name, item, amount, meth_name, r_date , rn "
 				+ "from ( "
 				+ "select rownum rn, seqno, inex, t_date, cate_name, item, amount, meth_name, r_date "
 				+ "from ( "
-				+ "select t.seqno seqno, t.inex inex, to_char(trans_date, 'YYYY-MM-DD') t_date, cate_name, "
-				+ "item, amount, meth_name, to_char(reg_date, 'YYYY-MM-DD HH24:MI:SS') r_date "
+				+ "select t.seqno seqno, t.inex inex, to_char(trans_date, 'YYYY-MM-DD') t_date, t.cate_code cate_code, cate_name, "
+				+ "item, amount, t.meth_code, meth_name, to_char(reg_date, 'YYYY-MM-DD HH24:MI:SS') r_date "
 				+ "from mab_transactions t , mab_categories c , mab_methods m "
 				+ "where t.cate_code = c.cate_code "
-				+ "and t.meth_code = m.meth_code ) ) "
+				+ "and t.meth_code = m.meth_code "
+				+ "order by t_date desc, t.seqno desc "
+				+ ") "
+				+ "order by rn"
+				+ ") "
 				+ "where rn > ? and rn < ? ";
 		try {
 			Class.forName(driver);
@@ -398,7 +774,8 @@ public class TransactionDAO {
 				+ "item, amount, meth_name, to_char(reg_date, 'YYYY-MM-DD HH24:MI:SS') r_date "
 				+ "from mab_transactions t , mab_categories c , mab_methods m "
 				+ "where t.cate_code = c.cate_code "
-				+ "and t.meth_code = m.meth_code ";
+				+ "and t.meth_code = m.meth_code "
+				+ "order by t_date desc, seqno desc";
 		try {
 			Class.forName(driver);
 			con = DriverManager.getConnection(url,"hr","hr");
@@ -415,7 +792,7 @@ public class TransactionDAO {
 				t.setMeth_name(rs.getString(7));
 				t.setReg_date(rs.getString(8));
 				list.add(t);
-//				System.out.println("listTransaction() rs true");
+//				System.out.println("listAllTransaction() rs true");
 				System.out.println("seqno : "+rs.getInt(1));
 //				System.out.println(rs.getString(2));
 //				System.out.println(rs.getString(3));
@@ -425,7 +802,7 @@ public class TransactionDAO {
 //				System.out.println(rs.getString(7));
 				System.out.println("reg_date : "+rs.getString(8));
 			}
-			System.out.println("listTransaction() select done");
+			System.out.println("listAllTransaction() select done");
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
@@ -433,7 +810,7 @@ public class TransactionDAO {
 				rs.close(); pstmt.close(); con.close();
 			} catch (Exception e2) {			}
 		}
-		System.out.println("listTransaction() end");
+		System.out.println("listAllTransaction() end");
 		return list;
 	}
 	

@@ -96,7 +96,7 @@
 				</c:forEach></select>
 			</td></tr>	
 	<!-- (확인용 hidden) 전체 결제수단 출력-->
-		<tr class="">
+		<tr class="hidden">
 			<td><c:forEach items="${METHLIST }" var="m">
 				<%-- <c:set var="meth_code" value="${m.meth_code }"/>
 				<c:set var="meth_name" value="${m.meth_name }"/> --%>
