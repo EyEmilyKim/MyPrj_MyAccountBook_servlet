@@ -1,0 +1,618 @@
+2022.10.13목 @ my room
+
+어제 결혼식 잘 갔다 오고 무릎이 깨졌다 ㅎ ㅋ 
+덕분인지 뭐 어쨌든 어제는 푹 쉬었다. 
+-- 5:40 --
+
+■ 조건 검색
+
+* 검색 결과 0 일때 시작번호도 0
+
+-- 6:00 - 8:50 샌드위치 sky --
+
+* listTrans.do
+일반목록 , 검색목록 같은 서블릿에서 분기처리하도록.
+-- 9:58 --
+
+* 검색 form 액션 > listTrans 로 옮겨주기. 
+
+
+* 검색 결과에도 페이지 a 에 파람 다 넣어줘야됨! (PAGE, SLC ok)
+
+전체내역 - N줄 보기 / 페이지 OK
+검색결과 - N줄 보기 / 페이지 OK / 없으면 a link OK
+-- 10:58 --
+
+
+■ list 에 코드 -> txt (INEX, CCODE, MCODE)
+
+INEX 는 c:if // OK
+
+CCODE, MCODE 는 쿼리 수정 ;;
+Trans model 에 cate_name, meth_name 추가 아예 set 해버려.
+
+getTotalTrans() getTotalofSearchTrans() 이름 변경.
+listAllTransaction(), selectOneTransaction() 이름 변경.
+
+쿼리수정...
+searchCountedTrans --4. 12:11--
+getTotalofSearchTrans ㄴㄴ
+searchAllTrans --3. ㅇㅇ
+listCountedTrans ㅇㅇ --2. 11:59--
+selectOneTransaction --5.
+listAllTransaction ㅇㅇ
+
+
+쿼리 : 
+select t.seqno, t.inex, to_char(trans_date, 'YYYY-MM-DD') t_date, cate_name, item, 
+amount, meth_name, to_char(reg_date, 'YYYY-MM-DD HH24:MI:SS') r_date 
+from mab_transactions t , mab_categories c , mab_methods m 
+where t.cate_code = c.cate_code 
+and t.meth_code = m.meth_code 
+
+( test )
+select 
+t.seqno, t.inex, to_char(trans_date, 'YYYY-MM-DD') t_date, cate_name,  meth_name, to_char(reg_date, 'YYYY-MM-DD HH24:MI:SS') r_date 
+from mab_transactions t , mab_categories c , mab_methods m 
+where t.cate_code = c.cate_code 
+and t.meth_code = m.meth_code 
+
+* list jsp / search jsp / detai jsp OK -- 12:19 --
+* modify jsp 원래 OK
+
+* DAO method 정리 get -> select
+
+CateDAO ㅇㅇ
+MethDAO ㅇㅇ
+UserDAO ㄴㄴ
+
+
+
+■ 카테, 수단 등록할 때, 같은 이름, 같은 순번 안넘어가도록
+getCateSeqno -> preAddCate.do / PreAddCateServlet 
+getMethSeqno -> preAddMeth.do / PreAddMethServlet
+
+* cate.jsp - check() //ok  -- 3:02 커밋 --
+* meth.jsp - check() //ok -- 
+
+
+■ Trans check()에 isNaN 조건 추가
+-- 3:29 까지 하다가 안돼서 일단 pass --
+
+
+■ 수입 / 지출 보기
+
+* listTrans 서블릿 ALL / IN / EX 분기 OK
+IN ㅇㅇ
+EX 
+
+* DAO
+>>> IN
+1.
+//지정된 건수의 '수입'내역 검색 메서드
+	public ArrayList<Transaction> listCountedINTrans(int start, int end)
+
+쿼리 : 
+select t.seqno, t.inex, to_char(trans_date, 'YYYY-MM-DD') t_date, cate_name, item, 
+amount, meth_name, to_char(reg_date, 'YYYY-MM-DD HH24:MI:SS') r_date 
+from mab_transactions t , mab_categories c , mab_methods m 
+where t.cate_code = c.cate_code 
+and t.meth_code = m.meth_code 
+and t.inex = 'IN' 
+
+2.
+//전체 '수입'내역 건수 검색 메서드 
+	public Integer getTotalofINTrans()
+
+쿼리 : 
+select count(*) from mab_transactions where inex = 'IN'
+
+3. searchCountedINTrans
+//지정된 '건수'의 '수입'내역 '조건'검색 메서드
+	public ArrayList<Transaction> searchCountedINTrans(String fr, String to, String it, int start, int end)
+
+4. getTotalOfSearchINTrans
+//조건에 맞는 모든 '수입'내역 총 건수 검색 메서드
+	public Integer getTotalOfSearchINTrans(String from, String to, String item)
+
+>>> EX
+1. listCountedEXTrans ㅇㅇ
+2. getTotalofEXTrans ㅇㅇ
+3. searchCountedEXTrans ㅇㅇ
+4. getTotalOfSearchEXTrans ㅇㅇ
+
+-> 홈에서 수입/지출 jump OK
+-- 4:20 --
+
+
+* 수입/지출 page 파라미터 ㅇㅇ
+IN
+EX
+
+* 수입/지출 N줄보기 onChange ㅇㅇ
+form hidden param 
+-- 4:50 --
+
+■ 조건 조회 일부만 넣었을 떄
+ALL 내용만 ㅇㅇfrom만 ㅇㅇ to만 ㅇㅇ
+(rn 확인 ㅠㅠ)
+EX 
+IN
+
+select seqno, trans_date, item from mab_transactions 
+where inex = 'EX' and trans_date between 
+to_date('2022-10-01', 'yyyy-mm-dd') and 
+to_date('2022-10-31', 'yyyy-mm-dd') 
+and item like '%%' 
+and cate_code like '%%' 
+and meth_code like '%CRD%' 
+
+■ 지출 - 조건 조회
+EX (월별, 기간, 카테고리별, 결제수단별)
+IN (월별, 기간, 카테고리별)
+
+* IN EX jsp form ㅇㅇ
+-- 5:16 --
+
+* listTrans 서블렛
+
+* DAO meth , cate list 전달... 
+EX ㅇㅇ
+IN
+
+* 다시 결과jsp 로 전달 ㅇㅇ
+
+
+* EX 조건검색 확인
+from only ㅇㅇ
+to only ㅇㅇ
+item only ㅇㅇ
+cate only ㅇㅇ
+meth only ㅇㅇ
+-- 6:48 --
+-> 검색결과 [ ] ㅇㅇ
+String[] srch_v = {d_from, d_to, item, cate, meth};
+-> 페이지 ㅇㅇ
+-> N줄 보기 ㅇㅇ
+-- 7:30 --
+
+* ALL 도 덮어써 
+* ALL 조건검색 확인
+from only 
+to only
+item only
+cate only
+meth only
+-> 검색결과 [ ] 
+-> 페이지 
+-> N줄 보기  
+다 ㅇㅇ !!
+-- 7:45 --
+
+■ ALL - rn 처리 OK
+
+* listCountedTrans(int start, int end)
+> ok
+
+select seqno, inex, t_date, cate_name, item, amount, meth_name, r_date , rn 
+from ( 
+select rownum rn, seqno, inex, t_date, cate_name, item, amount, meth_name, r_date 
+from ( 
+select t.seqno seqno, t.inex inex, to_char(trans_date, 'YYYY-MM-DD') t_date, t.cate_code cate_code, cate_name, 
+item, amount, t.meth_code, meth_name, to_char(reg_date, 'YYYY-MM-DD HH24:MI:SS') r_date 
+from mab_transactions t , mab_categories c , mab_methods m 
+where t.cate_code = c.cate_code 
+and t.meth_code = m.meth_code 
+order by t_date desc, t.seqno desc 
+) 
+order by rn
+) 
+where rn > ? and rn < ? 
+
+
+
+* searchCountedTrans(String fr, String to, String it, int start, int end)
+> ok
+
+ALL - rn 처리 OK
+-- 8:16 --
+EX - rn 처리 OK
+IN - rn 처리 OK
+-- 8:27 --
+
+■ 수입 - 조건 조회
+* DAO meth , cate list 전달... 
+EX ㅇㅇ
+IN 
+
+* IN 조건검색 확인
+from only 
+to only
+item only
+cate only
+meth only
+-> 검색결과 [ ] ㅇㅇ
+-> # N ~ N / Total ㅇㅇ -- 8:46 --
+-- 치킨 ! ㅋ 9:07 --
+-> 페이지 ㅇㅇ
+-> N줄 보기  ㅇㅇ
+
+■ update trans 후에 detail 로.
+OK
+-- 9:28 --
+
+-- 커밋 9:35 --
+
+■ USER 항목 추가
+email / birthday / reg_date
+varchar2(50) / date / date 
+DTO ok
+table
+
+* 테이블 수정
+쿼리 : (한번에 여러 칼럼 추가 안되네;;;)
+alter table mab_users add email varchar2(50) ;
+alter table mab_users add birthday date ;
+alter table mab_users add reg_date date ;
+
+* 기존 데이터 빈칸 채우기
+update mab_users set email = 'master@master.com' , 
+birthday = to_date('2000-01-01', 'yyyy-mm-dd') , 
+reg_date = to_date('2022-10-01', 'yyyy-mm-dd') ;
+commit;
+
+* 제약조건 추가
+alter table mab_users modify email constraint mab_users_email_nn not null ;
+
+alter table mab_users modify birthday constraint mab_users_bday_nn not null ;
+
+alter table mab_users modify reg_date constraint mab_users_rdate_nn not null ;
+
+desc mab_users 
+> OK
+
+
+* 회원 테이블 mab_users 최신 구조
+아이디(id) / 비밀번호(pwd) / 닉네임(nickname) / 이메일(email) / 생년월일(birthday) / 등록일(reg_date)
+varchar2(30) / varchar2(30) / varchar2(30) / varchar2(50) / date / date 
+pk / nn / nn / nn / nn / nn
+
+* 최신 쿼리
+create table mab_users (
+id varchar2(30) constraint mab_users_id_pk primary key, 
+pwd varchar2(30) constraint mab_users_pwd_nn not null, 
+nickname varchar2(30) constraint mab_users_nname_nn not null,
+email varchar2(50) constraint mab_users_email_nn not null, 
+birthday date constraint mab_users_bday_nn not null, 
+reg_date date constraint mab_users_rdate_nn not null, 
+ );
+-- 10:04 --
+
+
+■ 회원가입
+(java > login 패키지명 변경 to user )
+
+* index.jsp
+
+* ===> signUp.jsp
+
+* id 중복검사
+===> idCheck.do / IdCheckServlet
+
+* DAO 
+//입력된 id로 id 검색 (id 중복검사용)
+	public String getId(String id)
+
+쿼리 : 
+select id from mab_users where id = ?
+
+
+-- 10:28 -- 아니 갑자기 왜 톰캣 에러???
+> 해결 ! 원인 : url 매핑 중복
+
+*
+===> idCheck.jsp
+-- 10:57 --
+
+
+* 서블릿
+===> signUp.do / SignUpServlet
+
+* DAO
+
+쿼리 : 
+insert into mab_users values(?,?,?,?,?, sysdate)
+
+* 결과 jsp
+===> signUpResult.jsp
+-- 11:19 커밋--
+
+
+■ 로그인 폼체크
+OK
+■ 로그인 / 회원가입 pwd 타입 잊지 말 것!
+OK
+■ 홈에 로그인 창 로그아웃시 가리기 
+OK
+-- 11:25 --
+
+
+■ trans DTO 에 id 필드 추가, > OK
+(유저 여러명일 때 누구의 거래내역인지 ...? 였나..? )
+
+* 테이블에 id 추가, 
+
+alter table mab_transactions add id varchar2(30) 
+
+update mab_transactions set id = 'master';
+commit;
+
+alter table mab_transactions modify id constraint mab_trans_id_nn not null;
+
+* 가계부 테이블 (mab_transactions) 최신 구조
+일련번호(seqno) / 수입.지출(inex) / 거래날짜(trans_date) / 카테고리(cate_code) / 내용(item) / 금액(amount) / 결제수단(meth_code) / 등록일시(reg_date) / 아이디(id)
+number / varchar2(10) / date / varchar2(20) / varchar2(50) / number / varchar2(20) / date / varchar2(30) 
+pk / nn, ck / nn / nn(default : 'caNN0'), fk(mab_categories) / - / nn / nn(default : 'meNN0'),  fk(mab_methods) / nn / nn
+
+-- 11:40 --
+//세션에서 id 정보 수신 
+HttpSession session = request.getSession();
+String id = (String)session.getAttribute("USER_ID");
+
+■ trans DAO 에 id 추가하기.
+where id = 
+
+* add trans servlet 
+OK -- 11:50 --
+
+* list trans servlet 
+(master : ALL 14 내용없음 7 / EX 13 내용없음 3 / IN 9 내용없음 4)
+
+ALL
+list //OK
+search // N~N/total - OK // list -OK
+
+select to_char(min(trans_date), 'YYYY-MM-DD') from mab_transactions 
+where id = 'master' 
+
+EX 
+list //OK
+search //OK
+
+IN
+list //OK
+search //OK
+-- 12:26 --
+
+
+■ 서비스를 이용하려면 로그인해주세요
+session "USER_ID"
+
+//세션에서 id 정보 수신 -> 비로그인 시 로그인 요청
+HttpSession session = request.getSession();
+String id = (String)session.getAttribute("USER_ID");
+if(id == null) {
+	response.sendRedirect("needLogin.jsp"); return;
+}
+
+makeAddTrans.do // OK 
+listTransaction.do // OK
+listCategory.do //OK
+listMethod.do //OK
+
+* 로그인 요청
+===> needLogin.jsp
+
+-- 12:41 --
+
+* 검색 카테고리 - 미지정 추가
+-- 12:44 커밋 --
+
+
+■ 카테 에도 id 추가 ㅠㅠ
+
+id varchar2(30)
+
+* model 
+Category ㅇㅇ
+Method ㅇㅇ
+
+* table
+alter table mab_categories add id varchar2(30);
+
+update mab_categories set id = 'master' ;
+update mab_categories set id = 'system' where cate_code = 'caNN0' ;
+commit ; 
+
+alter table mab_categories modify id constraint mab_cate_id_nn not null;
+
+
+* 카테고리 테이블 (mab_categories) 최신 구조
+일련번호(seqno) / 수입.지출(inex) / 카테고리명(cate_name) / 카테고리코드(cate_code) / 아이디(id)
+number(10) / varchar2(10) / varchar2(20) / varchar2(10) / varchar2(30)
+nn , uk / nn,ck('IN', 'EX', 'caNN') / nn / pk / nn
+★surf 테이블에 number(10) 주기!
+
+create table mab_categories ( 
+seqno number(10) constraint mab_cate_seqno_nn not null, 
+constraint mab_cate_seqno_uk unique(seqno), 
+inex varchar2(10) constraint mab_cate_inex_nn not null 
+constraint mab_cate_inex_ck check(inex in ('IN', 'EX', 'caNN')), 
+cate_name varchar2(20) constraint mab_cate_cname_nn not null, 
+cate_code varchar2(10) constraint mab_cate_ccode_pk primary key,
+id varchar2(30) constraint mab_cate_id_nn not null );
+-- 12:59 --
+
+
+* DAO
+
+
+
+
+
+■ 수단에도 id 추가 ㅠㅠ
+
+* table
+alter table mab_methods add id varchar2(30);
+
+update mab_methods set id = 'master' ;
+update mab_methods set id = 'system' where meth_code = 'meNN0' ;
+commit ; 
+
+alter table mab_methods modify id constraint mab_meth_id_nn not null;
+
+* 결제수단 mab_methods 최신 구조 : 
+
+일련번호(seqno) / 현금or카드(mncrd) / 결제수단이름(meth_name)  / 결제수단코드(meth_code) / 아이디(id)
+number(10) / varchar2(10) / varvhar2(20)  / varchar2(10) / varchar2(30)
+nn, uk / nn, ck('MN', 'CRD', 'meNN') / nn / pk / nn
+★surf 테이블에 number(10) 주기!
+​
+
+* 최신 쿼리 : 
+
+create table mab_methods (
+seqno number(10) constraint mab_meth_seqno_nn not null 
+constraint mab_meth_seqno_uk unique,  
+mncrd varchar2(10) constraint mab_meth_mncrd_nn not null 
+constraint mab_meth_mncrd_ck check(mncrd in ('MN', 'CRD', 'meNN')), 
+meth_name varchar2(20) constraint mab_meth_name_nn not null, 
+meth_code varchar2(10) constraint mab_meth_mcode_pk primary key, 
+id varchar2(30) constraint mab_meth_id_nn not null );
+
+-- 1:03 --
+
+* DAO / servlet 
+CateDAO
+insert / add //ok //OK
+list / list //ok //OK
+-- 1:25 --
+
+MethDAO / servlet
+list / list //OK
+insert add //OK
+
+addCate, addMeth check() OK ! 
+-- 1:34 -- 
+
+커밋 -- 1:36 --
+
+■ hidden 정리 / alert 정리 (workThrough)
+* 모든 메뉴 need login //OK
+* 가입 //OK
+* 로그인 //OK
+* 가계부 쓰기 //OK
+* 전체내역 - 목록 OK 검색 OK 
+* 지출 - 목록 OK 검색 OK
+* 수입 - 목록 OK 검색 OK 
+* 상세내역 - 조회 OK 수정 OK 삭제 OK
+* 카테고리 - 목록 hidden OK 추가 OK 수정 OK 삭제  OK
+* 결제수단 - 목록 hidden OK 추가 OK 수정 OK 삭제 OK 
+* 로그아웃 //OK
+
+** FK 삭제 못함
+
+-- 커밋 3:37 --
+
+■ css 정리, 따로 빼기
+
+* 홈 화면
+* 메인 칼라 
+-- 4:28 --
+
+* BODY 심기
+index.jsp?BODY=
+
+makeAddTrans.do ㅇㅇ //ok
+listTransaction.do? ㅇㅇ //ok
+listCategory.do ㅇㅇ //ok
+listMethod.do ㅇㅇ //ok
+logout.do ㅇㅇ //ok
+login.jsp ㅇㅇ //ok
+signUp.jsp ㅇㅇ //ok
+
+* 이미지 심고 꾸미기 얼추 끝 !!
+-- 6:30 --
+
+
+● PPT 
+◈>>>지금 여기<<<< 
+
+
+* 정책 : 
+2. 카테고리를 삭제하면 
+--> on delete set null
+'기존에 이 카테고리를 사용해 입력한 가계부 기록의 카테고리 정보가 사라집니다.'
+3. 카테고리를 수정하면 
+--> trigger
+'기존에 이 카테고리를 사용해 입력한 가계부 기록에도 변경된 카테고리명이 반영됩니다.'
+4. 거래상세 수정에서 수입/지출은 못바꿈. 필요시 삭제 후 재등록!
+
+
+
+
+
+=== 일단 PASS ===
+★(kosea/surf) Transactions 테이블에 ITEM 디폴트값+nn : '내용없음' 추가
+★(kosea/surf) Transaction 에 reg_date + 아래 추가
+( constraint mab_trans_regdate_nn not null )
+★(surf) 테이블에 number(10) 주기!
+
+■ doGet / doPost 정리
+■ 카테고리 - 미지정 value=null, default='미지정/none' 추가
+■ 결제수단 - 미지정 value=null, default='미지정/none' 추가
+■ 그리고 또 가계부 테이블에 method nn조건 지워야 디폴트 들어가는건가..?
+이건 DAO insert 돌아갈떄 확인해서 고치는걸로 하쟈 ㅠ
+
+* 가계부 목록 - (정렬 기본: 최신거래순 -> 선택: 거래날짜순)
+order by ( desc / asc ) 를 매개변수로 받아서 dao.~~(desc) 
+
+■ 반응형
+
+
+============
+
+* js 에서 date control
+
+alert("dateControl() called.");
+
+const d_from = document.fm.D_FROM.value;
+const d_to = document.fm.D_TO.value;
+
+dd_from = new Date(d_from);
+dd_to = new Date(d_to);
+
+let d1 = new Date();
+let d2 = new Date();
+
+d1.setDate(dd_from.getDate()-1);
+d2.setDate(dd_to.getDate()+1);
+
+---------------------------
+
+select sysdate from dual ; 
+//ok
+
+select sysdate+1 from dual ; 
+//ok
+
+select to_date('2022-10-14', 'yyyy-mm-dd')+1 from dual ; 
+//ok
+
+============
+
+html 공란 &nbsp 와 &#32 차이
+https://aboooks.tistory.com/109
+
+javascript 자바스크립트 하루 전/후 날짜 구하기 다음달 이전달 구하기 내년 작년 날짜 구하기
+https://lifefun.tistory.com/30
+
+JavaScript 기간 날짜 자동 구하기 기능 (함수)(당일)(전월)(3개월)
+https://blog.naver.com/yf2121/222721059870
+
+JavaScript 날짜, 시간 / Date 객체 활용
+https://programmers-sosin.tistory.com/entry/JavaScript-Date-%EC%9E%90%EB%B0%94%EC%8A%A4%ED%81%AC%EB%A6%BD%ED%8A%B8-%EB%82%A0%EC%A7%9C-%EC%8B%9C%EA%B0%84-Date-%EA%B0%9D%EC%B2%B4
+
+톰캣에러 - 원인 : url 매핑 중복
+Server Tomcat v9.0 Server at localhost failed to start.
+https://blog.naver.com/jang0_0yw/222676127767

@@ -17,7 +17,11 @@ pk / nn / nn
 create table mab_users (
 id varchar2(30) constraint mab_users_id_pk primary key, 
 pwd varchar2(30) constraint mab_users_pwd_nn not null, 
-nickname varchar2(30) constraint mab_users_nname_nn not null );
+nickname varchar2(30) constraint mab_users_nname_nn not null,
+email varchar2(50) constraint mab_users_email_nn not null, 
+birthday date constraint mab_users_bday_nn not null, 
+reg_date date constraint mab_users_rdate_nn not null, 
+ );
 
 insert into mab_users values ('master', 'master', '마스터'); 
 commit;
@@ -25,9 +29,9 @@ commit;
 2.* mab_categories 카테고리 테이블
 
 * 카테고리 테이블 (mab_categories) 최신 구조
-일련번호(seqno) / 수입.지출(inex) / 분류명(cate_name) / 분류코드(cate_code)
-number(10) / varchar2(10) / varchar2(20) / varchar2(10) 
-nn , uk / nn,ck('IN', 'EX', 'caNN') / nn / pk 
+일련번호(seqno) / 수입.지출(inex) / 카테고리명(cate_name) / 카테고리코드(cate_code) / 아이디(id)
+number(10) / varchar2(10) / varchar2(20) / varchar2(10) / varchar2(30)
+nn , uk / nn,ck('IN', 'EX', 'caNN') / nn / pk / nn
 ★surf 테이블에 number(10) 주기!
 
 create table mab_categories ( 
@@ -36,16 +40,17 @@ constraint mab_cate_seqno_uk unique(seqno),
 inex varchar2(10) constraint mab_cate_inex_nn not null 
 constraint mab_cate_inex_ck check(inex in ('IN', 'EX', 'caNN')), 
 cate_name varchar2(20) constraint mab_cate_cname_nn not null, 
-cate_code varchar2(10) constraint mab_cate_ccode_pk primary key);
+cate_code varchar2(10) constraint mab_cate_ccode_pk primary key,
+id varchar2(30) constraint mab_cate_id_nn not null );
 
 
 3.* mab_methods 결제수단 테이블
 
 * 결제수단 mab_methods 최신 구조 : 
 
-일련번호(seqno) / 현금or카드(mncrd) / 수단이름(meth_name)  / 수단코드(meth_code)
-number(10) / varchar2(10) / varvhar2(20)  / varchar2(10)
-nn, uk / nn, ck('MN', 'CRD', 'meNN') / nn / pk 
+일련번호(seqno) / 현금or카드(mncrd) / 결제수단이름(meth_name)  / 결제수단코드(meth_code) / 아이디(id)
+number(10) / varchar2(10) / varvhar2(20)  / varchar2(10) / varchar2(30)
+nn, uk / nn, ck('MN', 'CRD', 'meNN') / nn / pk / nn
 ★surf 테이블에 number(10) 주기!
 ​
 
@@ -57,15 +62,16 @@ constraint mab_meth_seqno_uk unique,
 mncrd varchar2(10) constraint mab_meth_mncrd_nn not null 
 constraint mab_meth_mncrd_ck check(mncrd in ('MN', 'CRD', 'meNN')), 
 meth_name varchar2(20) constraint mab_meth_name_nn not null, 
-meth_code varchar2(10) constraint mab_meth_mcode_pk primary key);
+meth_code varchar2(10) constraint mab_meth_mcode_pk primary key, 
+id varchar2(30) constraint mab_meth_id_nn not null );
 
 
 4.* mab_transactions 가계부 테이블
 
 * 가계부 테이블 (mab_transactions) 최신 구조
-일련번호(seqno) / 수입.지출(inex) / 거래날짜(trans_date) / 카테고리(cate_code) / 내용(item) / 금액(amount) / 결제수단(meth_code) / 등록일시(reg_date)
-number / varchar2(10) / date / varchar2(20) / varchar2(50) / number / varchar2(20) / date
-pk / nn, ck / nn / nn(default : 'caNN0'), fk(mab_categories) / - / nn / nn(default : 'meNN0'),  fk(mab_methods) / nn 
+일련번호(seqno) / 수입.지출(inex) / 거래날짜(trans_date) / 카테고리(cate_code) / 내용(item) / 금액(amount) / 결제수단(meth_code) / 등록일시(reg_date) / 아이디(id)
+number / varchar2(10) / date / varchar2(20) / varchar2(50) / number / varchar2(20) / date / varchar2(30) 
+pk / nn, ck / nn / nn(default : 'caNN0'), fk(mab_categories) / - / nn / nn(default : 'meNN0'),  fk(mab_methods) / nn / nn
 
 * 최신 쿼리
 create table mab_transactions (
@@ -79,7 +85,8 @@ item varchar2(50),
 amount number constraint mab_trans_amount_nn not null, 
 meth_code varchar2(20) default 'meNN0' 
 constraint mab_trans_methcode_nn not null,
-reg_date date constraint mab_trans_regdate_nn not null
+reg_date date constraint mab_trans_regdate_nn not null, 
+id varchar2(30) constraint mab_trans_id_nn not null
  );
 +
 alter table mab_transactions add constraint mab_trans_catecode_fk foreign key(cate_code) references mab_categories(cate_code);
@@ -91,7 +98,7 @@ alter table mab_transactions add constraint mab_trans_methcode_fk foreign key(me
 ============================
 !@ sys 데이터
 
-insert into mab_users values ('master', 'master', '마스터'); 
+insert into mab_users values ('master', 'master', '마스터', 'master@master.com', to_date('2000-01-01', 'yyyy-mm-dd')  ); 
 commit;
 
 insert into mab_methods values(0, 'meNN', '미지정', 'meNN0');
