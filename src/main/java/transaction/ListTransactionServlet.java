@@ -60,14 +60,14 @@ public class ListTransactionServlet extends HttpServlet {
 		
 		if(d_from == null && d_to == null && item == null) { //검색 조건 없을 때 : 
 			list = dao.listCountedTrans(start, end);
-			totalCount = dao.getTotalTransCount();
+			totalCount = dao.getTotalofTrans();
 		}else if(d_from != null || d_to != null || item == null) { //검색 조건 있을 때 : 
 //			//거래내역 가장 옛날 & 최신 날짜 검색
 //			String t_from = dao.getOldestTransDate();
 //			String t_to = dao.getNewestTransDate();
 			//거래내역 테이블에서 N건의 최근 조건부합 내역 검색
 			list = dao.searchCountedTrans(d_from, d_to, "%"+item+"%", start, end);
-			totalCount = dao.getTotalSearchTransCount(d_from, d_to, "%"+item+"%");
+			totalCount = dao.getTotalOfSearchTrans(d_from, d_to, "%"+item+"%");
 			search = true;
 		}
 		request.setAttribute("LIST", list);

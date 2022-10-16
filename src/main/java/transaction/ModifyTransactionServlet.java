@@ -39,7 +39,7 @@ public class ModifyTransactionServlet extends HttpServlet {
 		/* 수신한 seqno로 거래내역 객체 수신, 전달 */
 		String seqno = request.getParameter("SN");
 		TransactionDAO daoT = new TransactionDAO();
-		Transaction trans = daoT.getTransaction(Integer.parseInt(seqno));
+		Transaction trans = daoT.selectOneTransaction(Integer.parseInt(seqno));
 		request.setAttribute("TRANS", trans);
 		/* 전체 카테고리 객체 수신, 전달 */
 		CategoryDAO daoC = new CategoryDAO();

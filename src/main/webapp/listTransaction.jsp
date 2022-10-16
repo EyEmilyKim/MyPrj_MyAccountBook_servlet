@@ -88,10 +88,10 @@
 		<div class="upper">
 			<div class="inner date">${trans.trans_date }</div>
 			<c:if test="${trans.inex == 'IN' }">
-			<div class="inner in">${trans.inex }</div>
+			<div class="inner in">수입</div>
 			</c:if>
 			<c:if test="${trans.inex == 'EX' }">
-			<div class="inner ex">${trans.inex }</div>
+			<div class="inner ex">지출</div>
 			</c:if>
 			<div class="inner item">
 			<a href="detailTransaction.do?SN=${trans.seqno }">${trans.item }</a></div>
@@ -100,8 +100,8 @@
 		</div>
 		<div class="lower">
 			<div class="hidden inner seqno">${trans.seqno }</div>
-			<div class="inner cate">카테고리: ${trans.cate_code }</div>
-			<div class="inner meth">결제수단: ${trans.meth_code }</div>
+			<div class="inner cate">카테고리: ${trans.cate_name }</div>
+			<div class="inner meth">결제수단: ${trans.meth_name }</div>
 		</div>
 	</div> <!-- oneTrans 끝 -->
 	</c:forEach>

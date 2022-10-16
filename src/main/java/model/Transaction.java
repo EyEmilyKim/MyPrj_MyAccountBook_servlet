@@ -11,7 +11,8 @@ public class Transaction {
 	private String reg_date;
 	
 	private Integer rownum; //DB검색 정렬을 위한 변수 
-		
+	private String cate_name; //list용 카테고리 이름
+	private String meth_name; //list용 결제수단 이름
 	
 	public Integer getRownum() {
 		return rownum;
@@ -19,7 +20,18 @@ public class Transaction {
 	public void setRownum(Integer rownum) {
 		this.rownum = rownum;
 	}
-
+	public String getCate_name() {
+		return cate_name;
+	}
+	public void setCate_name(String cate_name) {
+		this.cate_name = cate_name;
+	}
+	public String getMeth_name() {
+		return meth_name;
+	}
+	public void setMeth_name(String meth_name) {
+		this.meth_name = meth_name;
+	}
 	
 	public Integer getSeqno() {
 		return seqno;

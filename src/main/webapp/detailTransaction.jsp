@@ -29,18 +29,18 @@
 			<div class="hidden inner seqno">${TRANS.seqno }</div>
 			<div class="inner date">${TRANS.trans_date }</div>
 			<c:if test="${TRANS.inex == 'IN' }">
-			<div class="inner in">${TRANS.inex }</div>
+			<div class="inner in">수입</div>
 			</c:if>
 			<c:if test="${TRANS.inex == 'EX' }">
-			<div class="inner ex">${TRANS.inex }</div>
+			<div class="inner ex">지출</div>
 			</c:if>
 			<div class="inner item">${TRANS.item }</div>
 			<div class="inner amnt"><fmt:formatNumber groupingUsed="true">
 			${TRANS.amount }</fmt:formatNumber>원</div>
 		</div>
 		<div class="lower">
-			<div class="inner cate">카테고리: ${TRANS.cate_code }</div>
-			<div class="inner meth">결제수단: ${TRANS.meth_code }</div>
+			<div class="inner cate">카테고리: ${TRANS.cate_name }</div>
+			<div class="inner meth">결제수단: ${TRANS.meth_name }</div>
 		</div>
 	</div>	<!-- oneTrans 끝 -->
 	<div class="btns">

@@ -33,7 +33,7 @@ public class DetailTransactionServlet extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String seqno = request.getParameter("SN");
 		TransactionDAO dao = new TransactionDAO();
-		Transaction trans = dao.getTransaction(Integer.parseInt(seqno));
+		Transaction trans = dao.selectOneTransaction(Integer.parseInt(seqno));
 		request.setAttribute("TRANS", trans);
 		RequestDispatcher rd = request.getRequestDispatcher("detailTransaction.jsp");
 		rd.forward(request, response);

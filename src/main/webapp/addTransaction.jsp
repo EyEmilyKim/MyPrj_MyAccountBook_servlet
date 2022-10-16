@@ -96,11 +96,12 @@
 				</c:forEach></select>
 			</td></tr>	
 	<!-- (확인용 hidden) 전체 결제수단 출력-->
-		<tr class="hidden">
+		<tr class="">
 			<td><c:forEach items="${METHLIST }" var="m">
-				<c:set var="meth_code" value="${m.meth_code }"/>
-				<c:set var="meth_name" value="${m.meth_name }"/>
-				<c:out value="${meth_code }"/> / <c:out value="${meth_name }"/><br>
+				<%-- <c:set var="meth_code" value="${m.meth_code }"/>
+				<c:set var="meth_name" value="${m.meth_name }"/> --%>
+				${m.meth_code } / ${m.meth_name }<br>
+<%-- 				<c:out value="${m.meth_code }"/> / <c:out value="${m.meth_name }"/><br> --%>
 				</c:forEach>
 			</td></tr>
 		<tr class="hidden test"><td><input type="text" name="TEST1"></td></tr>	
