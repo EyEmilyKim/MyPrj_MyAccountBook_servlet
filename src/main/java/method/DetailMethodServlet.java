@@ -36,7 +36,7 @@ public class DetailMethodServlet extends HttpServlet {
 		String mod = request.getParameter("MOD");
 		System.out.println("DetailMethodServlet 수신 MCODE : "+meth_code);
 		MethodDAO dao = new MethodDAO();
-		Method m = dao.getMethod(meth_code);
+		Method m = dao.selectMethod(meth_code);
 		request.setAttribute("M", m);
 		String url = "";
 		if(mod.equals("UPD")) { url = "updateMethod.jsp"; }

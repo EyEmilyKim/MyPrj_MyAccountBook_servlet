@@ -1,26 +1,29 @@
 package method;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import model.Method;
 import utility.MethodDAO;
 
 /**
  * Servlet implementation class GetMethSeqnoServlet
  */
-@WebServlet("/getMethSeqno.do")
-public class GetMethSeqnoServlet extends HttpServlet {
+@WebServlet("/preAddMeth.do")
+public class PreAddMethServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public GetMethSeqnoServlet() {
+    public PreAddMethServlet() {
         super();
         // TODO Auto-generated constructor stub
     }
@@ -31,7 +34,11 @@ public class GetMethSeqnoServlet extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		MethodDAO dao = new MethodDAO();
 		int maxSeqno = dao.getMethSeqno();
-		response.sendRedirect("addMethod.jsp?MSN="+maxSeqno);
+		ArrayList<Method> list = dao.listMethod();
+		request.setAttribute("LIST", list);
+		System.out.println("list.size() : "+list.size());
+		RequestDispatcher rd = request.getRequestDispatcher("addMethod.jsp?MSN="+maxSeqno);
+		rd.forward(request, response);
 	}
 
 	/**

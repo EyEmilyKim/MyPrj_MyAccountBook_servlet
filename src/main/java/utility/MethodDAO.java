@@ -64,7 +64,7 @@ public class MethodDAO {
 	}
 
 	//meth_code로 결제수단 검색 메서드
-	public Method getMethod(String meth_code) {
+	public Method selectMethod(String meth_code) {
 		Method m = null;
 		String select = "select seqno, mncrd, meth_name, meth_code from mab_methods where meth_code = ?";
 		try {
