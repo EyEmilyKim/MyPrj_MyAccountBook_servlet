@@ -5,6 +5,7 @@ public class Method {
 	private String mncrd;
 	private String meth_name;
 	private String meth_code;
+	private String id;
 	
 	public Integer getSeqno() {
 		return seqno;
@@ -29,6 +30,12 @@ public class Method {
 	}
 	public void setMeth_code(String meth_code) {
 		this.meth_code = meth_code;
+	}
+	public String getId() {
+		return id;
+	}
+	public void setId(String id) {
+		this.id = id;
 	}
 	
 }

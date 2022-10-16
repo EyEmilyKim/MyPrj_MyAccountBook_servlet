@@ -6,6 +6,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import model.Category;
 import utility.CategoryDAO;
@@ -29,6 +30,8 @@ public class AddCategoryServlet extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		HttpSession session = request.getSession();
+		String id = (String)session.getAttribute("USER_ID");
 		request.setCharacterEncoding("UTF-8");
 		String Sseqno = request.getParameter("SEQNO");
 		int seqno = Integer.parseInt(Sseqno);
@@ -40,6 +43,7 @@ public class AddCategoryServlet extends HttpServlet {
 		c.setInex(inex);
 		c.setCate_name(cate_name);
 		c.setCate_code(cate_code);
+		c.setId(id);
 		CategoryDAO dao = new CategoryDAO();
 		boolean flag = dao.insertCategory(c); 
 		String url = "addCategoryResult.jsp?R=";

@@ -61,6 +61,8 @@ function nameDupCheck(cname){
 		if(cname == slct_name.options[i].value) {
 		alert("이미 사용중인 카테고리명입니다."); return false; }
 	}
+	alert("nameDupCheck(cname) 끝.");
+	return true;
 }
 function check(){
 	alert("check() 호출됨");
@@ -69,9 +71,10 @@ function check(){
 	let cname = document.fm.CNAME.value;
 	if(inex == ''){ alert("지출/소비 구분을 선택해주세요."); return false }
 	if(cname == ''){ alert("카테고리명을 입력해주세요."); return false }
-	alert("check() 여기");
+	alert("check() 여기1");
 	//기존 카테고리명과 중복 확인
 	if(! nameDupCheck(cname) ) return false;
+	alert("check() 여기2");
 	if(! confirm("등록하시겠습니까?\n\n---\n구분 : "+s_inex+"\n카테고리명 : "+cname) ) return false;
 	if(! confirm("등록될 seqno : "+document.fm.SEQNO.value) ) return false;
 }

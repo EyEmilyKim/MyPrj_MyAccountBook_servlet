@@ -98,7 +98,7 @@ public class MethodDAO {
 	//메서드 삽입 메서드
 	public boolean insertMethod(Method m) {
 		boolean flag = false;
-		String insert = "insert into mab_methods values(?, ?, ?, ?)";
+		String insert = "insert into mab_methods values(?, ?, ?, ?, ?)";
 		try {
 			Class.forName(driver);
 			con = DriverManager.getConnection(url,"hr","hr");
@@ -107,6 +107,7 @@ public class MethodDAO {
 			pstmt.setString(2, m.getMncrd());
 			pstmt.setString(3, m.getMeth_name());
 			pstmt.setString(4, m.getMeth_code());
+			pstmt.setString(5, m.getId());
 			pstmt.executeUpdate();
 			con.commit();
 			flag = true;
@@ -142,14 +143,16 @@ public class MethodDAO {
 		}
 		
 	//전체 결제수단 검색 메서드
-	public ArrayList<Method> listMethod() {
+	public ArrayList<Method> listMethod(String id) {
 		ArrayList<Method> list = new ArrayList<Method>();
-		String select = "select seqno, mncrd, meth_name, meth_code from mab_methods "
+		String select = "select seqno, mncrd, meth_name, meth_code, id from mab_methods "
+				+ "where id in (?, 'system') "
 				+ "order by meth_code";
 		try {
 			Class.forName(driver);
 			con = DriverManager.getConnection(url,"hr","hr");
 			pstmt = con.prepareStatement(select);
+			pstmt.setString(1, id);
 			rs = pstmt.executeQuery();
 			while(rs.next()) {
 				Method m = new Method();
@@ -157,6 +160,7 @@ public class MethodDAO {
 				m.setMncrd(rs.getString(2));
 				m.setMeth_name(rs.getString(3));
 				m.setMeth_code(rs.getString(4));
+				m.setId(rs.getString(5));
 				list.add(m);
 //				System.out.println("listMethod() rs true");
 //				System.out.println(rs.getInt(1));

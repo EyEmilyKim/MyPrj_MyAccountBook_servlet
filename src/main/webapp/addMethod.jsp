@@ -61,6 +61,7 @@ function nameDupCheck(mname){
 		if(mname == slct_name.options[i].value) {
 		alert("이미 사용중인 카테고리명입니다."); return false; }
 	}
+	return true;
 }
 function check(){
 	let mncrd = document.fm.MNCRD.value;

@@ -9,6 +9,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import model.Method;
 import utility.MethodDAO;
@@ -32,9 +33,11 @@ public class PreAddMethServlet extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		HttpSession session = request.getSession();
+		String id = (String)session.getAttribute("USER_ID");
 		MethodDAO dao = new MethodDAO();
 		int maxSeqno = dao.getMethSeqno();
-		ArrayList<Method> list = dao.listMethod();
+		ArrayList<Method> list = dao.listMethod(id);
 		request.setAttribute("LIST", list);
 		System.out.println("list.size() : "+list.size());
 		RequestDispatcher rd = request.getRequestDispatcher("addMethod.jsp?MSN="+maxSeqno);

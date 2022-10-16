@@ -5,6 +5,7 @@ public class Category {
 	private String inex;
 	private String cate_name;
 	private String cate_code;
+	private String id;
 	
 	public Integer getSeqno() {
 		return seqno;
@@ -29,6 +30,12 @@ public class Category {
 	}
 	public void setCate_code(String cate_code) {
 		this.cate_code = cate_code;
+	}
+	public String getId() {
+		return id;
+	}
+	public void setId(String id) {
+		this.id = id;
 	}
 	
 }

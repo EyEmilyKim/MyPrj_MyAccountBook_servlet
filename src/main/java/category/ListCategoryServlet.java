@@ -40,7 +40,7 @@ public class ListCategoryServlet extends HttpServlet {
 			response.sendRedirect("needLogin.jsp"); return;
 		}
 		CategoryDAO dao = new CategoryDAO();
-		ArrayList<Category> list = dao.listCategory();
+		ArrayList<Category> list = dao.listCategory(id);
 		request.setAttribute("LIST", list);
 		request.setAttribute("SIZE", list.size());
 		RequestDispatcher rd = request.getRequestDispatcher("listCategory.jsp");

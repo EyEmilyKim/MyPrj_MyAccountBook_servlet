@@ -40,7 +40,7 @@ public class ListMethodServlet extends HttpServlet {
 			response.sendRedirect("needLogin.jsp"); return;
 		}
 		MethodDAO dao = new MethodDAO();
-		ArrayList<Method> list = dao.listMethod();
+		ArrayList<Method> list = dao.listMethod(id);
 		request.setAttribute("LIST", list);
 		request.setAttribute("SIZE", list.size());
 		RequestDispatcher rd = request.getRequestDispatcher("listMethod.jsp");

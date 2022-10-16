@@ -95,14 +95,16 @@ public class CategoryDAO{
 	}
 	
 	//전체 카테고리 검색 메서드
-	public ArrayList<Category> listCategory() {
+	public ArrayList<Category> listCategory(String id) {
 		ArrayList<Category> list = new ArrayList<Category>();
-		String select = "select seqno, inex, cate_name, cate_code from mab_categories "
+		String select = "select seqno, inex, cate_name, cate_code, id from mab_categories "
+				+ "where id in (?, 'system') "
 				+ "order by cate_code";
 		try {
 			Class.forName(driver);
 			con = DriverManager.getConnection(url,"hr","hr");
 			pstmt = con.prepareStatement(select);
+			pstmt.setString(1, id);
 			rs = pstmt.executeQuery();
 			while(rs.next()) {
 				Category c = new Category();
@@ -110,6 +112,7 @@ public class CategoryDAO{
 				c.setInex(rs.getString(2));
 				c.setCate_name(rs.getString(3));
 				c.setCate_code(rs.getString(4));
+				c.setId(rs.getString(5));
 				list.add(c);
 				System.out.println("listCategory() rs true");
 				System.out.println(rs.getInt(1));
@@ -132,7 +135,7 @@ public class CategoryDAO{
 	//카테고리 삽입 메서드
 	public boolean insertCategory(Category c) {
 		boolean flag = false;
-		String insert = "insert into mab_categories values(?, ?, ?, ?)";
+		String insert = "insert into mab_categories values(?, ?, ?, ?, ?)";
 		try {
 			Class.forName(driver);
 			con = DriverManager.getConnection(url,"hr","hr");
@@ -141,6 +144,7 @@ public class CategoryDAO{
 			pstmt.setString(2, c.getInex());
 			pstmt.setString(3, c.getCate_name());
 			pstmt.setString(4, c.getCate_code());
+			pstmt.setString(5, c.getId());
 			pstmt.executeUpdate();
 			con.commit();
 			flag = true;
