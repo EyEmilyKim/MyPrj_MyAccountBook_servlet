@@ -1,27 +1,27 @@
-package login;
+package user;
 
 import java.io.IOException;
 
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 import utility.UserDAO;
 
 /**
- * Servlet implementation class LoginServlet
+ * Servlet implementation class IdCheckServlet
  */
-@WebServlet("/login.do")
-public class LoginServlet extends HttpServlet {
+@WebServlet("/idCheck.do")
+public class IdCheckServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public LoginServlet() {
+    public IdCheckServlet() {
         super();
         // TODO Auto-generated constructor stub
     }
@@ -30,32 +30,23 @@ public class LoginServlet extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
-		response.getWriter().append("Served at: ").append(request.getContextPath());
+		String entry_id = request.getParameter("ID");
+		UserDAO dao = new UserDAO();
+		String dup_id = dao.getId(entry_id);
+		request.setAttribute("DUP", dup_id);
+		request.setAttribute("ID", entry_id);
+		//JSP에서 DUP가 null이면, 사용가능
+		//JSP에서 DUP가 null이 아니면, 사용중
+		RequestDispatcher rd = request.getRequestDispatcher("idCheck.jsp");
+		rd.forward(request, response);
 	}
 
 	/**
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		String id = request.getParameter("ID");
-		String pwd = request.getParameter("PWD");
-		String nname = null;
-		String flag = null;
-		UserDAO dao = new UserDAO();
-		String selectedPwd = dao.getPwd(id);
-		if(selectedPwd == null) {
-			flag = "NOID";
-		}else {
-			if(pwd.equals(selectedPwd)) {
-				flag = "OK";
-				HttpSession session = request.getSession();
-				session.setAttribute("USER_ID", id);
-			}else {
-				flag = "NOPWD";
-			}
-		}
-		response.sendRedirect("loginResult.jsp?R="+flag);
+		// TODO Auto-generated method stub
+		doGet(request, response);
 	}
 
 }

@@ -39,7 +39,8 @@
 	<p>반갑습니다 ${USER_ID }님~~</p>
 	</c:if>
 	<p>땡그랑 한푼, 땡그랑 두푼♪</p>
-	<a href="login.jsp">로그인</a>
+	<a href="login.jsp" class="login">로그인</a>
+	<a href="signUp.jsp" class="signUp">가입하기</a>
 	<div>
 <%-- 	<%@ include file="login.jsp" %>	 --%>
 	</div>
