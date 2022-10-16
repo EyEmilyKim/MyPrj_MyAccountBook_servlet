@@ -15,6 +15,52 @@ public class TransactionDAO {
 	private PreparedStatement pstmt = null;
 	private ResultSet rs = null;
 	
+	//거래내역 가장 최신 날짜 조회
+		public String getNewestTransDate() {
+			String t_from = "";
+			String select = "select to_char(max(trans_date)) from mab_transactions";
+			try {
+				Class.forName(driver);
+				con = DriverManager.getConnection(url,"hr","hr");
+				pstmt = con.prepareStatement(select);
+				rs = pstmt.executeQuery();
+				if(rs.next()) {
+					t_from = rs.getString(1);
+					System.out.println("getNewestTransDate() t_to:"+rs.getString(1));
+				}
+			}catch(Exception e) {
+				e.printStackTrace();
+			}finally {
+				try { rs.close(); pstmt.close(); con.close(); }
+				catch(Exception e) {}
+			}
+			System.out.println("getNewestTransDate() end");
+			return t_from;
+		}
+		
+		//거래내역 가장 옛날 날짜 조회
+	public String getOldestTransDate() {
+		String t_from = "";
+		String select = "select to_char(min(trans_date)) from mab_transactions";
+		try {
+			Class.forName(driver);
+			con = DriverManager.getConnection(url,"hr","hr");
+			pstmt = con.prepareStatement(select);
+			rs = pstmt.executeQuery();
+			if(rs.next()) {
+				t_from = rs.getString(1);
+				System.out.println("getOldestTransDate() t_from:"+rs.getString(1));
+			}
+		}catch(Exception e) {
+			e.printStackTrace();
+		}finally {
+			try { rs.close(); pstmt.close(); con.close(); }
+			catch(Exception e) {}
+		}
+		System.out.println("getOldestTransDate() end");
+		return t_from;
+	}
+	
 	//지정된 '건수'의 거래내역 '조건'검색 메서드
 	public ArrayList<Transaction> searchCountedTrans(String fr, String to, String it, int start, int end) {
 		ArrayList<Transaction> list = new ArrayList<Transaction>();
@@ -73,6 +119,41 @@ public class TransactionDAO {
 		}
 		System.out.println("searchCountedTrans() end");
 		return list;
+	}
+	
+	//조건에 맞는 모든 거래내역 총 건수 검색 메서드
+	public Integer getTotalSearchTransCount(String from, String to, String item) {
+		String select = "select count(*) "
+			+ "from ( "
+			+ "select rownum rn, seqno, inex, t_date, cate_code, item, amount, meth_code, r_date "
+			+ "from ( "
+			+ "select seqno, inex, to_char(trans_date, 'YYYY-MM-DD') t_date, cate_code, item, "
+			+ "amount, meth_code, to_char(reg_date, 'YYYY-MM-DD HH24:MI:SS') r_date "
+			+ "from mab_transactions "
+			+ "order by trans_date desc, seqno desc ) "
+			+ "where "
+			+ "t_date between to_date(?,'YYYY-MM-DD') and to_date(?,'YYYY-MM-DD') "
+			+ "and item like ? " 
+			+ " ) " ;
+		Integer total = 0;
+		try {
+			Class.forName(driver);
+			con = DriverManager.getConnection(url,"hr","hr");
+			pstmt = con.prepareStatement(select);
+			pstmt.setString(1, from);
+			pstmt.setString(2, to);
+			pstmt.setString(3, item);
+			rs = pstmt.executeQuery();
+			if(rs.next()) total = rs.getInt(1);
+			System.out.println("getTotalSearchTransCount() total : "+total);
+		}catch(Exception e) {
+			e.printStackTrace();
+		}finally {
+			try { rs.close(); pstmt.close(); con.close(); }
+			catch(Exception e){}
+		}
+		System.out.println("getTotalSearchTransCount() end");
+		return total;
 	}
 	
 	//조건에 맞는 모든 거래내역 검색 메서드
