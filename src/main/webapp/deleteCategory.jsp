@@ -30,16 +30,16 @@
 </body>
 <script type="text/javascript">
 function check(){
-	alert("check()호출됨");
+// 	alert("check()호출됨");
 	let s_inex = ""; switch(document.fm.S_INEX.value){
 	case "수입" : s_inex = "수입"; break; 
 	case "지출" : s_inex = "지출"; break; }
 	let cname = document.fm.CNAME.value;
 	let guideConf = "기존에 이 카테고리를 사용해 입력한 가계부 기록의 카테고리 정보가 사라집니다.";
 	let detailConf = "구분 : "+s_inex+"\n카테고리명 : "+cname;
-	alert("let OK");
+// 	alert("let OK");
 	if(! confirm( guideConf+"\n\n삭제하시겠습니까?\n\n---\n"+detailConf ) ) return false;
-	if(! confirm("삭제될 cate_code : "+document.fm.CCODE.value) ) return false;
+// 	if(! confirm("삭제될 cate_code : "+document.fm.CCODE.value) ) return false;
 }
 
 function backToList(){

@@ -47,11 +47,11 @@ public class MakeAddTransServlet extends HttpServlet {
 		request.setAttribute("MSN", maxSeqno);
 		/* 전체 카테고리 객체 수신, 전달 */
 		CategoryDAO daoC = new CategoryDAO();
-		ArrayList<Category> cateList = daoC.listCategory();
+		ArrayList<Category> cateList = daoC.listCategory(id);
 		request.setAttribute("CATELIST", cateList);
 		/* 전체 결제수단 객체 수신, 전달 */
 		MethodDAO daoM = new MethodDAO();
-		ArrayList<Method> methList = daoM.listMethod();
+		ArrayList<Method> methList = daoM.listMethod(id);
 		request.setAttribute("METHLIST", methList);
 		/* 가계부 작성 form화면으로 이동 */
 		RequestDispatcher rd = request.getRequestDispatcher("addTransaction.jsp");

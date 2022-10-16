@@ -19,7 +19,7 @@ const slct_crd = document.getElementById("slct_crd");
 
 /* --- form 제출 or 취소 --- */
 function catchSub(){
-	alert("catchSub() 호출됨. ");
+//	alert("catchSub() 호출됨. ");
 	const fmValues = { //모든 form 입력 내용을 object 에 담아 전달
 		seqno : document.fm.SEQNO.value,
 		inex : document.fm.INEX.value,
@@ -42,7 +42,7 @@ function catchSub(){
 	return check(fmValues, guide, detail);
 }
 function check(fmV, guide, detail){ //insert 전 필수항목 확인 & 컨펌 (인자:form입력값,안내문자열,확인문자열)
- 	alert("check() 호출됨. ");
+// 	alert("check() 호출됨. ");
 //	alert( isNaN(fmV.amount) );
 	//지출or소비
 	if(fmV.inex == ''){ alert("지출/소비 구분을 선택해주세요."); return false; }
@@ -55,7 +55,7 @@ function check(fmV, guide, detail){ //insert 전 필수항목 확인 & 컨펌 (�
 	else { if(isNaN(fmV.amount)){ alert("금액은 숫자로 입력해주세요."); return false; } }
 	//최종 컨펌
 	if(! confirm("등록하시겠습니까?\n---\n"+detail) ) return false;
-	if(! confirm("등록될 seqno : "+fmV.seqno) ) return false;	
+//	if(! confirm("등록될 seqno : "+fmV.seqno) ) return false;	
 //	alert("check() 끝");
 }
 function backToList(){

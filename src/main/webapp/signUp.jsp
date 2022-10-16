@@ -17,8 +17,9 @@
 		<tr><td><input type="password" size="30" name="PWDCONF" placeholder="비밀번호 확인"></td></tr>
 		<tr><td><input type="text" size="30" name="NNAME" placeholder="닉네임"></td></tr>
 		<tr><td><input type="text" size="30" name="EMAIL" placeholder="이메일"></td></tr>
-		<tr><td><input type="date" size="30" name="BDAY" placeholder="생년월일"></td></tr>
-		<tr><td><input type="submit" value="가입하기"/></td></tr>
+		<tr><td>생년월일 : <input type="date" size="30" name="BDAY" placeholder="생년월일"></td></tr>
+		<tr><td><input type="submit" value="가입하기"/>
+				<input type="reset" value="다시쓰기"></td></tr>
 	</table>
 	</form>
 	</div>
@@ -32,7 +33,7 @@ function idCheck(){
 	window.open(url, "아이디 중복확인", "width=450 height=250" );	
 }
 function check(fm){
-	alert("check(fm) 호출됨");
+// 	alert("check(fm) 호출됨");
 	if(fm.ID.value == ""){ alert("아이디를 입력하세요."); return false; }
 	if(fm.idChecked.value == ""){ alert("아이디 중복검사를 해주세요."); return false; }
 	if(fm.PWD.value == ""){ alert("암호를 입력하세요."); return false; }

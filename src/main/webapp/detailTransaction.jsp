@@ -52,17 +52,15 @@
 </body>
 <script type="text/javascript">
 function backToList(){
-	alert("backToList() 호출됨");
+// 	alert("backToList() 호출됨");
 	location.href = "listTransaction.do";
 }
 function updateTrans(seqno){
-	alert("updateTrans(seqno) 호출됨"+
-		"\n url: modifyTransaction.do?SN=[seqno] ");
+// 	alert("updateTrans(seqno) 호출됨"+"\n url: modifyTransaction.do?SN=[seqno] ");
 	location.href = "modifyTransaction.do?SN="+seqno;
 }
 function deleteTrans(seqno){
-	alert("deleteTrans(seqno) 호출됨"+
-		"\n url: deleteTransaction.do?SN=[seqno] ");
+// 	alert("deleteTrans(seqno) 호출됨"+"\n url: deleteTransaction.do?SN=[seqno] ");
 	if( confirm("삭제 하시겠습니까?") ){
 		location.href = "deleteTransaction.do?SN="+seqno;
 	}

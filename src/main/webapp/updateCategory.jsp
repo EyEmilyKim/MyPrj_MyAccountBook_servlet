@@ -33,12 +33,12 @@
 </body>
 <script type="text/javascript">
 function guideInex(){
-	alert("guideInex()호출됨");
+// 	alert("guideInex()호출됨");
 	let guideInex = "수입/지출 구분은 수정할 수 없습니다. 목록에서 삭제 후 다시 등록해주세요.";
 	document.getElementById("guide").innerHTML = guideInex;
 }
 function check(){
-	alert("check()호출됨");
+// 	alert("check()호출됨");
 	document.getElementById("guide").innerHTML = "";
 	let inex = document.fm.INEX.value;
 	let s_inex = ""; if(inex == "EX") s_inex = "지출"; else s_inex = "수입";
@@ -46,10 +46,10 @@ function check(){
 	let n_cname = document.fm.N_CNAME.value;
 	let guideConf = "기존에 이 카테고리를 사용해 입력한 가계부 기록에도 변경된 카테고리명이 반영됩니다.";
 	let detailConf = "구분 : "+s_inex+"\n수정 전 : "+cname+"\n수정 후 : "+n_cname;
-	alert("let OK");
+// 	alert("let OK");
 	if(n_cname == ''){ alert("카테고리명을 입력해주세요."); return false }
 	if(! confirm( guideConf+"\n\n저장하시겠습니까?\n\n---\n"+detailConf ) ) return false;
-	if(! confirm("수정될 cate_code : "+document.fm.CCODE.value) ) return false;
+// 	if(! confirm("수정될 cate_code : "+document.fm.CCODE.value) ) return false;
 }
 function backToList(){
 	if(confirm("취소하고 목록으로 돌아가시겠습니까?")){

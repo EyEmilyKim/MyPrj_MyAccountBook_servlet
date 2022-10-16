@@ -8,6 +8,7 @@
 <title>listMethod.jsp</title>
 	<style type="text/css">
 	#mn { color:blue; } #crd { color:orange; } #sys { background-color:beige; }
+	.seqno, .meth_code { display:none; }
 	.hidden { display:none; }
 	</style>
 </head>
@@ -19,7 +20,7 @@
 	<p>결제수단 목록</p>
 	총 ${SIZE } 건<br>
 	<table border="1">
-		<tr id="title"><td>seqno</td><td>meth_code</td><td>mncrd</td><td>meth_name</td></tr>
+		<tr class="hidden"><td class="seqno">seqno</td><td class="meth_code">meth_code</td><td>mncrd</td><td>meth_name</td></tr>
 	<c:forEach items="${LIST }" var="m">
 		<c:set var="url" value="detailMethod.do?MCODE=${m.meth_code }&MOD="/>	
 	  <!-- choose when: system용 '미지정'은 별도 tr로.   -->
@@ -27,19 +28,19 @@
 	  <c:choose>
 		<c:when test="${m.mncrd == 'meNN' }">
 			<tr id="sys">
-				<td>${m.seqno }</td><td>${m.meth_code }</td>
+				<td class="seqno">${m.seqno }</td><td class="meth_code">${m.meth_code }</td>
 				<td>기본</td><td>${m.meth_name }</td>
 				<td><a href="${url }" onClick="popupUpdate(this); return false;">수정</a></td>
 				<td><a href="${url }" onClick="popupDelete(this); return false;">삭제</a></td>
-				<td>url : <c:out value="${url }"></c:out></td>
+				<td class="hidden">url : <c:out value="${url }"></c:out></td>
 			</tr></c:when>
 		<c:otherwise>
-			<tr><td>${m.seqno }</td><td>${m.meth_code }</td>
+			<tr><td class="seqno">${m.seqno }</td><td class="meth_code">${m.meth_code }</td>
 				<c:if test="${m.mncrd == 'MN' }"><td id="mn">현금</td><td>${m.meth_name }</td></c:if>
 				<c:if test="${m.mncrd == 'CRD' }"><td id="crd">카드</td><td>${m.meth_name }</td></c:if>
 				<td><a href="${url }" onClick="popupUpdate(this); return false;">수정</a></td>
 				<td><a href="${url }" onClick="popupDelete(this); return false;">삭제</a></td>
-				<td>url : <c:out value="${url }"></c:out></td>
+				<td class="hidden">url : <c:out value="${url }"></c:out></td>
 			</tr></c:otherwise>
 	  </c:choose>
 	</c:forEach>
@@ -53,22 +54,22 @@
 
 <script type="text/javascript">
 function popupAdd(thisA){
-	alert("popupAdd(thisA)호출됨");
-	alert("url : "+thisA.href);
+// 	alert("popupAdd(thisA)호출됨");
+// 	alert("url : "+thisA.href);
 	window.open(thisA.href, '결제수단 추가하기', 'width=450, height=500');
 }
 
 function popupUpdate(thisA){
-	alert("popupUpdate(thisA)호출됨");
+// 	alert("popupUpdate(thisA)호출됨");
 	let url = thisA.href + 'UPD';
-	alert("url : "+url);
+// 	alert("url : "+url);
 	window.open(url, '결제수단 수정하기', 'width=450, height=500');
 }
 
 function popupDelete(thisA){
-	alert("popupDelete(thisA)호출됨");
+// 	alert("popupDelete(thisA)호출됨");
 	let url = thisA.href + 'DEL';
-	alert("url : "+url);
+// 	alert("url : "+url);
 	window.open(url, '결제수단 삭제하기', 'width=450, height=500');
 }
 

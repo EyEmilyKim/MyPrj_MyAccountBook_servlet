@@ -30,16 +30,16 @@
 </body>
 <script type="text/javascript">
 function check(){
-	alert("check()호출됨");
+// 	alert("check()호출됨");
 	let s_mncrd = ""; switch(document.fm.S_MNCRD.value){
 	case "현금" : s_mncrd = "현금"; break; 
 	case "카드" : s_mncrd = "카드"; break; }
 	let mname = document.fm.MNAME.value;
 	let guideConf = "기존에 이 결제수단을 사용해 입력한 가계부 기록의 결제수단 정보가 사라집니다.";
 	let detailConf = "구분 : "+s_mncrd+"\n결제수단명 : "+mname;
-	alert("let OK");
+// 	alert("let OK");
 	if(! confirm( guideConf+"\n\n삭제하시겠습니까?\n\n---\n"+detailConf ) ) return false;
-	if(! confirm("삭제될 meth_code : "+document.fm.MCODE.value) ) return false;
+// 	if(! confirm("삭제될 meth_code : "+document.fm.MCODE.value) ) return false;
 }
 
 function backToList(){

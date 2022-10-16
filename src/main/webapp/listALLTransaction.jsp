@@ -76,7 +76,7 @@
 	<form action="listTransaction.do?INEX=ALL" name="fmSRCH" >
 	<div id="set_search"><input type="hidden" id="onOff_set_search" value="0">
 		<input type="hidden" name="INEX" value="ALL">
-		<input type="text" name="SLC" value="${param.SLC }" size="3">
+		<input type="hidden" name="SLC" value="${param.SLC }" size="3">
 		<input type="date" name="D_FROM" id="d_from"> ~ <input type="date" name="D_TO" id="d_to"> 
 		<input type="text" name="ITEM" placeholder="--내용--" size="10"><br/>
 		<input type="submit" value="조회하기">
@@ -109,7 +109,7 @@
 			${trans.amount }</fmt:formatNumber>원</div>
 		</div>
 		<div class="lower">
-			<div class=" inner seqno">${trans.seqno }</div>
+			<div class="hidden inner seqno">${trans.seqno }</div>
 			<div class="inner cate">카테고리: ${trans.cate_name }</div>
 			<div class="inner meth">결제수단: ${trans.meth_name }</div>
 		</div>

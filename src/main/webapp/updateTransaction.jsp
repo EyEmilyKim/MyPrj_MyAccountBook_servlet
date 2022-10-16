@@ -130,19 +130,19 @@
 <script type="text/javascript">
 /* 취소 버튼 클릭 시 */
 function backToDetail(seqno){
-	alert("backToDetail(seqno) 호출됨.");
+// 	alert("backToDetail(seqno) 호출됨.");
 	if(confirm("취소하고 상세화면으로 돌아가시겠습니까?")){
 		location.href = "detailTransaction.do?SN="+seqno;
 	}
 	preset();
-	alert("끝");
+// 	alert("끝");
 }
 /* 수정 전 데이터에 따라 미리 html 요소 반영 */
 function preset(){ 
 	const pre_inex = document.preset.PRE_INEX.value;
 	const pre_ccode = document.preset.PRE_CCODE.value;
 	const pre_mcode = document.preset.PRE_MCODE.value;
-	alert("preset() 호출됨");
+// 	alert("preset() 호출됨");
 	const pre_SupCate = pre_ccode.substring(0,2);
 	const pre_SupMeth = pre_mcode.substring(0,2);
 // 	alert("pre_inex : "+pre_inex+" /pre_ccode : "+pre_ccode+" /pre_mcode : "+pre_mcode
@@ -161,7 +161,7 @@ function preset(){
 	case "MN" : doMN(); document.fm.SLCT_MN.value = pre_mcode; break;
 	case "CR" : doCRD(); document.fm.SLCT_CRD.value = pre_mcode; break;
 	}
-	alert("끝");
+// 	alert("끝");
 }
 </script>
 </html>

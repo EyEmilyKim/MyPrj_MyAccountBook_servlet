@@ -122,11 +122,11 @@ public class ListTransactionServlet extends HttpServlet {
 			}
 			/* 전체 카테고리 객체 수신, 전달 */
 			daoC = new CategoryDAO();
-			cateList = daoC.listCategory();
+			cateList = daoC.listCategory(id);
 			request.setAttribute("CATELIST", cateList);
 			/* 전체 결제수단 객체 수신, 전달 */
 			daoM = new MethodDAO();
-			methList = daoM.listMethod();
+			methList = daoM.listMethod(id);
 			request.setAttribute("METHLIST", methList);
 			break;
 		case "IN" : 
@@ -149,7 +149,7 @@ public class ListTransactionServlet extends HttpServlet {
 			}
 			/* 전체 카테고리 객체 수신, 전달 */
 			daoC = new CategoryDAO();
-			cateList = daoC.listCategory();
+			cateList = daoC.listCategory(id);
 			request.setAttribute("CATELIST", cateList);
 			break;
 		

@@ -6,6 +6,9 @@
 <head>
 <meta charset="UTF-8">
 <title>addMethod.jsp</title>
+<style type="text/css">
+	.hidden { display:none; }
+</style>
 </head>
 <body>
 	<div>
@@ -25,12 +28,14 @@
 			<input type="reset" value="취소" onClick="backToList()"></td>
 		</table>
 	</form>
-	<input type="text" value="${LIST.size() }" id="slct_name_cnt">
-	<select class="" id="slct_name">
-		<c:forEach items="${LIST }" var="m">
-			<option>${m.meth_name }</option>
-		</c:forEach>
-	</select>	
+	<div class="hidden">
+		<input type="text" value="${LIST.size() }" id="slct_name_cnt">
+		<select class="" id="slct_name">
+			<c:forEach items="${LIST }" var="m">
+				<option>${m.meth_name }</option>
+			</c:forEach>
+		</select>	
+	</div>
 	</div>
 </body>
 <script type="text/javascript">
@@ -41,7 +46,7 @@ let slct_name_cnt = document.getElementById("slct_name_cnt");
 function setMN(){
 		//현금or카드 구분(MNCRD) : 수입(MN)
 		document.fm.MNCRD.value = "MN";
-		alert("set MNCRD : "+document.fm.MNCRD.value);
+// 		alert("set MNCRD : "+document.fm.MNCRD.value);
 		//버튼 색 바꾸기
 		btn_mn.style.backgroundColor = "blue";
 		btn_crd.style.backgroundColor = null;
@@ -49,13 +54,13 @@ function setMN(){
 function setCRD(){
 		//현금or카드 구분(MNCRD) : 수입(CRD)
 		document.fm.MNCRD.value = "CRD";
-		alert("set MNCRD : "+document.fm.MNCRD.value);
+// 		alert("set MNCRD : "+document.fm.MNCRD.value);
 		//버튼 색 바꾸기
 		btn_mn.style.backgroundColor = null;
 		btn_crd.style.backgroundColor = "orange";
 }
 function nameDupCheck(mname){
-	alert("nameDupCheck(mname) 호출됨.");
+// 	alert("nameDupCheck(mname) 호출됨.");
 	let cnt = slct_name_cnt.value;
 	for(i=0; i<cnt; i++){
 		if(mname == slct_name.options[i].value) {
@@ -73,7 +78,7 @@ function check(){
 	//기존 결제수단명과 중복 확인
 	if(! nameDupCheck(mname) ) return false;
 	if(! confirm("등록하시겠습니까?\n\n---\n구분 : "+s_mncrd+"\n결제수단명 : "+mname) ) return false;
-	if(! confirm("등록될 seqno : "+document.fm.SEQNO.value) ) return false;
+// 	if(! confirm("등록될 seqno : "+document.fm.SEQNO.value) ) return false;
 }
 function backToList(){
 	if(confirm("취소하고 목록으로 돌아가시겠습니까?")){
@@ -82,7 +87,7 @@ function backToList(){
 	}else {
 		//현금or카드 구분(MNCRD) 초기화
 		document.fm.MNCRD.value = null;
-		alert("clear MNCRD : "+document.fm.MNCRD.value);
+// 		alert("clear MNCRD : "+document.fm.MNCRD.value);
 		//현금or카드 버튼색 초기화
 		btn_mn.style.backgroundColor = null;
 		btn_crd.style.backgroundColor = null;
