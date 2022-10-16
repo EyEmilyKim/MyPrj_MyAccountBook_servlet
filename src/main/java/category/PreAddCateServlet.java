@@ -2,26 +2,29 @@ package category;
 
 import java.io.IOException;
 import java.lang.ProcessBuilder.Redirect;
+import java.util.ArrayList;
 
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import model.Category;
 import utility.CategoryDAO;
 
 /**
  * Servlet implementation class EditCategoryServlet
  */
-@WebServlet("/getCateSeqno.do")
-public class GetCateSeqnoServlet extends HttpServlet {
+@WebServlet("/preAddCate.do")
+public class PreAddCateServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public GetCateSeqnoServlet() {
+    public PreAddCateServlet() {
         super();
         // TODO Auto-generated constructor stub
     }
@@ -32,7 +35,11 @@ public class GetCateSeqnoServlet extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		CategoryDAO dao = new CategoryDAO();
 		int maxSeqno = dao.getCateSeqno();
-		response.sendRedirect("addCategory.jsp?MSN="+maxSeqno);
+		ArrayList<Category> list = dao.listCategory();
+		request.setAttribute("LIST", list);
+		System.out.println("list.size() : "+list.size());
+		RequestDispatcher rd = request.getRequestDispatcher("addCategory.jsp?MSN="+maxSeqno);
+		rd.forward(request, response);
 	}
 
 	/**

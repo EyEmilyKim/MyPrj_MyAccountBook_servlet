@@ -47,7 +47,7 @@
 	</table>
 	<br>
 	<div class="buttons">
-	<a href="getCateSeqno.do" onClick="popupAdd(this); return false;">추가하기</a>
+	<a href="preAddCate.do" onClick="popupAdd(this); return false;">추가하기</a>
 	</div>
 </div>
 </body>

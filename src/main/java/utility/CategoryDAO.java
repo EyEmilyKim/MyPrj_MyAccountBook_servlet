@@ -63,7 +63,7 @@ public class CategoryDAO{
 	}
 	
 	//cate_code로 카테고리 검색 메서드
-	public Category getCategory(String cate_code) {
+	public Category selectCategory(String cate_code) {
 		Category c = null;
 		String select = "select seqno, inex, cate_name, cate_code from mab_categories where cate_code = ?";
 		try {
@@ -111,10 +111,10 @@ public class CategoryDAO{
 				c.setCate_name(rs.getString(3));
 				c.setCate_code(rs.getString(4));
 				list.add(c);
-//				System.out.println("listCategory() rs true");
-//				System.out.println(rs.getInt(1));
+				System.out.println("listCategory() rs true");
+				System.out.println(rs.getInt(1));
 //				System.out.println(rs.getString(2));
-//				System.out.println(rs.getString(3));
+				System.out.println(rs.getString(3));
 //				System.out.println(rs.getString(4));
 			}
 			System.out.println("listCategory() select done");
