@@ -11,7 +11,7 @@
 	<form action="signUp.do" method="post" name="fm" onSubmit="return check(this)">
 		<input type="hidden" name="idChecked"/>
 	<table>
-		<tr><td><input type="text" size="30" name="ID" id="id" placeholder="아이디">
+		<tr><td><input type="text" size="25" name="ID" id="id" placeholder="아이디">
 				<input type="button" value="중복 검사" onClick="idCheck()"/></td></tr>
 		<tr><td><input type="password" size="30" name="PWD" placeholder="비밀번호"></td></tr>
 		<tr><td><input type="password" size="30" name="PWDCONF" placeholder="비밀번호 확인"></td></tr>

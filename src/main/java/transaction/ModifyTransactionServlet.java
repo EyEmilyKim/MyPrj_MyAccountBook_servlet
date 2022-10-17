@@ -53,7 +53,7 @@ public class ModifyTransactionServlet extends HttpServlet {
 		ArrayList<Method> methList = daoM.listMethod(id);
 		request.setAttribute("METHLIST", methList);
 		/* 가계부 수정 form화면으로 이동 */
-		RequestDispatcher rd = request.getRequestDispatcher("updateTransaction.jsp");
+		RequestDispatcher rd = request.getRequestDispatcher("index.jsp?BODY=updateTransaction.jsp");
 		rd.forward(request, response);
 		
 	}

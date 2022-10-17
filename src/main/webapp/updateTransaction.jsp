@@ -8,18 +8,19 @@
 <meta charset="UTF-8">
 <title>updateTransaction.jsp</title>
 <style type="text/css">
-	.contMain { border: 1px skyblue solid; max-width: 400px;}
+	.contMain { min-width:500px; min-height:300px; background-color: white; align:center; padding:20px; border-radius: 15px;}  
 	#slct_in, #slct_ex, #row_meth, #slct_mn, #slct_crd { display:none; } 
-	#guide { color:red; } #ccode, #mcode { border:orange solid 1px;  display:none; }
-	.hidden { display:none; } .test {border:red solid 1px; color:orange; }
+	#guide { color:red; }  h3{ margin: 10px 0 20px; color:var(--hoverMenu-color); }
+	#ccode, #mcode { border:orange solid 1px;  display:none; }
+	.hidden { display:; } .test {border:red solid 1px; color:orange; }
 </style>
 </head>
 <body onLoad="preset()">
-<div class="home">
-	<a href="index.jsp">My 가계부</a>
-</div>
-<div class="contMain">
-	<p>가계부 수정 화면입니다.</p>
+<!-- <div class="home"> -->
+<!-- 	<a href="index.jsp">My 가계부</a> -->
+<!-- </div> -->
+<div class="contMain" align="center">
+	<h3>가계부 수정 화면입니다.</h3>
 	
 	<c:set value="${TRANS }" var="t"/>
 	

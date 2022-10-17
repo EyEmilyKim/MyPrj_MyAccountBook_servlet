@@ -8,7 +8,8 @@
 <meta charset="UTF-8">
 <title>detailTransaction.jsp</title>
 	<style type="text/css">
-		.contMain { border: 1px skyblue solid; max-width: 400px;}
+		.contMain { min-width:500px; min-height:300px; background-color: white; align:center; padding:20px; border-radius: 15px;} 
+		 h3{ margin: 10px 0 20px; color:var(--hoverMenu-color); }
 		.oneTrans { border: 1px gray solid; margin: 5px 10px; }
 		.in { color:blue; } .ex { color:red; }
 		.btns { display:flex;  justify-content: space-evenly;  } 
@@ -18,11 +19,11 @@
 	</style>
 </head>
 <body>
-<div class="home">
-	<a href="index.jsp">My 가계부</a>
-</div>
+<!-- <div class="home"> -->
+<!-- 	<a href="index.jsp">My 가계부</a> -->
+<!-- </div> -->
 <div class="contMain">
-	<p>가계부 상세 화면입니다.</p>
+	<h3>가계부 상세 화면입니다.</h3>
 <!-- 거래내역 상세 정보 -->
 	<div class="oneTrans">	
 		<div class="upper">
