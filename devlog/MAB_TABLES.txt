@@ -1,10 +1,12 @@
 ■ MyAccountBook 테이블 정보
+-- 2022.10.18 4:47 updated --
 
-
+================================
 1.* mab_users
 2.* mab_categories
 3.* mab_methods
 4.* mab_transactions
+================================
 
 1.* mab_users 회원 테이블
 
@@ -20,11 +22,13 @@ pwd varchar2(30) constraint mab_users_pwd_nn not null,
 nickname varchar2(30) constraint mab_users_nname_nn not null,
 email varchar2(50) constraint mab_users_email_nn not null, 
 birthday date constraint mab_users_bday_nn not null, 
-reg_date date constraint mab_users_rdate_nn not null, 
+reg_date date constraint mab_users_rdate_nn not null 
  );
 
 insert into mab_users values ('master', 'master', '마스터'); 
 commit;
+
+------------------------------------
 
 2.* mab_categories 카테고리 테이블
 
@@ -43,6 +47,7 @@ cate_name varchar2(20) constraint mab_cate_cname_nn not null,
 cate_code varchar2(10) constraint mab_cate_ccode_pk primary key,
 id varchar2(30) constraint mab_cate_id_nn not null );
 
+------------------------------------
 
 3.* mab_methods 결제수단 테이블
 
@@ -65,6 +70,7 @@ meth_name varchar2(20) constraint mab_meth_name_nn not null,
 meth_code varchar2(10) constraint mab_meth_mcode_pk primary key, 
 id varchar2(30) constraint mab_meth_id_nn not null );
 
+------------------------------------
 
 4.* mab_transactions 가계부 테이블
 
@@ -94,17 +100,18 @@ alter table mab_transactions add constraint mab_trans_catecode_fk foreign key(ca
 alter table mab_transactions add constraint mab_trans_methcode_fk foreign key(meth_code) references mab_methods(meth_code);
 
 
-
 ============================
-!@ sys 데이터
+@ system 기본 input 데이터
 
-insert into mab_users values ('master', 'master', '마스터', 'master@master.com', to_date('2000-01-01', 'yyyy-mm-dd')  ); 
+insert into mab_users values ('master', 'master', '마스터', 'master@master.com', to_date('2000-01-01', 'yyyy-mm-dd'), sysdate ); 
 commit;
 
-insert into mab_methods values(0, 'meNN', '미지정', 'meNN0');
+insert into mab_methods values(0, 'meNN', '미지정', 'meNN0', 'system');
 commit; 
-insert into mab_methods values (1, 'meNN', '해당없음', 'meNN1');
+insert into mab_methods values (1, 'meNN', '해당없음', 'meNN1', 'system');
+insert into mab_methods values (2, 'MN', '현금', 'MN2', 'system');
+insert into mab_methods values (3, 'CRD', '카드1', 'CRD3', 'system');
 commit;
 
-insert into mab_categories values(0, 'caNN', '미지정', 'caNN0');
+insert into mab_categories values(0, 'caNN', '미지정', 'caNN0', 'system');
 commit; 
