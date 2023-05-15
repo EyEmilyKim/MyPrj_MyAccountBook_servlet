@@ -1,5 +1,6 @@
 ■ MyAccountBook 테이블 정보
 -- 2022.10.18 4:47 updated --
+-- 2023.05.15 14:10 updated --
 
 ================================
 1.* mab_users
@@ -11,9 +12,9 @@
 1.* mab_users 회원 테이블
 
 * 회원 테이블 mab_users 최신 구조
-아이디(id) / 비밀번호(pwd) / 닉네임(nickname)
-varchar2(30) / varchar2(30) / varchar2(30)
-pk / nn / nn
+아이디(id) / 비밀번호(pwd) / 닉네임(nickname) / email / birthday / reg_date
+varchar2(30) /varchar2(30) /varchar2(30) /varchar2(50) /date /date
+pk / nn / nn / nn / nn / nn / nn
 
 * 최신 쿼리
 create table mab_users (
@@ -24,9 +25,6 @@ email varchar2(50) constraint mab_users_email_nn not null,
 birthday date constraint mab_users_bday_nn not null, 
 reg_date date constraint mab_users_rdate_nn not null 
  );
-
-insert into mab_users values ('master', 'master', '마스터'); 
-commit;
 
 ------------------------------------
 
