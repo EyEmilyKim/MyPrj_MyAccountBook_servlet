@@ -38,9 +38,9 @@ nn , uk / nn,ck('IN', 'EX', 'caNN') / nn / pk / nn
 
 create table mab_categories ( 
 seqno number(10) constraint mab_cate_seqno_nn not null, 
-constraint mab_cate_seqno_uk unique(seqno), 
+	constraint mab_cate_seqno_uk unique(seqno), 
 inex varchar2(10) constraint mab_cate_inex_nn not null 
-constraint mab_cate_inex_ck check(inex in ('IN', 'EX', 'caNN')), 
+	constraint mab_cate_inex_ck check(inex in ('IN', 'EX', 'caNN')), 
 cate_name varchar2(20) constraint mab_cate_cname_nn not null, 
 cate_code varchar2(10) constraint mab_cate_ccode_pk primary key,
 id varchar2(30) constraint mab_cate_id_nn not null );
@@ -61,9 +61,9 @@ nn, uk / nn, ck('MN', 'CRD', 'meNN') / nn / pk / nn
 
 create table mab_methods (
 seqno number(10) constraint mab_meth_seqno_nn not null 
-constraint mab_meth_seqno_uk unique,  
+	constraint mab_meth_seqno_uk unique,  
 mncrd varchar2(10) constraint mab_meth_mncrd_nn not null 
-constraint mab_meth_mncrd_ck check(mncrd in ('MN', 'CRD', 'meNN')), 
+	constraint mab_meth_mncrd_ck check(mncrd in ('MN', 'CRD', 'meNN')), 
 meth_name varchar2(20) constraint mab_meth_name_nn not null, 
 meth_code varchar2(10) constraint mab_meth_mcode_pk primary key, 
 id varchar2(30) constraint mab_meth_id_nn not null );
@@ -81,14 +81,14 @@ pk / nn, ck / nn / nn(default : 'caNN0'), fk(mab_categories) / - / nn / nn(defau
 create table mab_transactions (
 seqno number constraint mab_trans_seqno_pk primary key,
 inex varchar2(10) constraint mab_trans_inex_nn not null 
-constraint mab_trans_inex_ck check(inex in('IN', 'EX')),
+	constraint mab_trans_inex_ck check(inex in('IN', 'EX')),
 trans_date date constraint mab_trans_trnsdate_nn not null,
 cate_code varchar2(20) default 'caNN0' 
-constraint mab_trans_catecode_nn not null, 
+	constraint mab_trans_catecode_nn not null, 
 item varchar2(50), 
 amount number constraint mab_trans_amount_nn not null, 
 meth_code varchar2(20) default 'meNN0' 
-constraint mab_trans_methcode_nn not null,
+	constraint mab_trans_methcode_nn not null,
 reg_date date constraint mab_trans_regdate_nn not null, 
 id varchar2(30) constraint mab_trans_id_nn not null
  );
@@ -101,6 +101,7 @@ alter table mab_transactions add constraint mab_trans_methcode_fk foreign key(me
 ============================
 @ system 기본 input 데이터
 
+insert into mab_users values ('system', 'system', '마스터', 'system@system.com', to_date('2000-01-01', 'yyyy-mm-dd'), sysdate ); 
 insert into mab_users values ('master', 'master', '마스터', 'master@master.com', to_date('2000-01-01', 'yyyy-mm-dd'), sysdate ); 
 commit;
 
