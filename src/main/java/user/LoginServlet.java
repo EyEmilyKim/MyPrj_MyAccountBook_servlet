@@ -40,7 +40,6 @@ public class LoginServlet extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String id = request.getParameter("ID");
 		String pwd = request.getParameter("PWD");
-		String nname = null;
 		String flag = null;
 		UserDAO dao = new UserDAO();
 		String selectedPwd = dao.getPwd(id);
